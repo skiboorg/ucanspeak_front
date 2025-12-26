@@ -7,6 +7,7 @@ const current_module = ref(null)
 const {data:lesson,refresh,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.lesson(lesson_slug)))
 const video_tutorial_modal_visible = ref(false)
 const loading = ref(false)
+const fav_loading = ref(false)
 const module = ref(null)
 const tutorial_video = ref(null)
 const authStore = useAuthStore()
@@ -16,16 +17,17 @@ const {user} = storeToRefs(authStore)
 const fetch_module = async (id) => {
   current_module.value= id
   loading.value = true
+  await nextTick()
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
   try{
     module.value = await $api.lessons.module(id)
   }catch(error){}
   finally{
     loading.value = false
-    await nextTick()
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    })
+
   }
 }
 
@@ -51,15 +53,19 @@ const toggleBlockDone = async (id,index) => {
 }
 
 const handleToggleFav = async (id) => {
+  fav_loading.value = true
   await $api.lessons.toggle_dictionary_favorite({
     id: id
   })
   await refresh()
+  fav_loading.value = false
 }
 const handlePharaseToggleFav = async (id) => {
+  fav_loading.value = true
   await $api.lessons.toggle_phrase_favorite({
     id: id
   })
+  fav_loading.value = false
 }
 </script>
 
@@ -92,8 +98,9 @@ const handlePharaseToggleFav = async (id) => {
     </div>
     <div class="col-span-6">
       <template v-if="loading">
-        <div class="w-full h-screen flex flex-col items-center justify-center"></div>
-        <ProgressSpinner />
+        <div class="space-y-3">
+          <SkeletonLessonCard />
+        </div>
       </template>
       <template v-else>
         <div class="space-y-3">
@@ -109,7 +116,11 @@ const handlePharaseToggleFav = async (id) => {
           </div>
           <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3"></div>
           <div v-if="block.items.length>0" class="space-y-3">
-            <CardVoiceFile v-for="item in block.items" :key="item.id" :item="item" @toggle_fav="handlePharaseToggleFav"/>
+            <CardVoiceFile v-for="item in block.items"
+                           :key="item.id"
+                           :item="item"
+                           @toggle_fav="handlePharaseToggleFav"
+                           :loading="fav_loading"/>
           </div>
           <div class="flex gap-4 mt-3">
             <Button @click="toggleBlockDone(block.id,index)"
@@ -135,7 +146,7 @@ const handlePharaseToggleFav = async (id) => {
         <div class="space-y-3 mb-3"
              v-for=" group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
           <TypingText18 :text="group.title"/>
-          <CardDictionaryItem :item="item" v-for="item in group.items" @toggle_fav="handleToggleFav"/>
+          <CardDictionaryItem :item="item" v-for="item in group.items" @toggle_fav="handleToggleFav" :loading="fav_loading"/>
         </div>
       </CardBase>
     </div>

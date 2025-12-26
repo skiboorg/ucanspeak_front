@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const audio = new Audio()
 
-const props = defineProps(['item'])
+const props = defineProps(['item', 'loading'])
 
 const emits = defineEmits(['toggle_fav'])
 
@@ -42,7 +42,7 @@ const play = () => {
                 </svg>
             </div>
 
-            <UILikeBtn @click="emits('toggle_fav',item.id)" v-model:value="item.is_favorite" />
+            <UILikeBtn :class="loading ? 'disabled opacity-50' : ''"  @click="emits('toggle_fav',item.id)" v-model:value="item.is_favorite" />
 
         </div>
       <div v-if="isOpen" class="pt-2">

@@ -7,7 +7,7 @@ const loading = ref(false)
 const form_data = ref({
   full_name:'',//null,
   email:'',
-  is_school:'',
+  is_school:false,
   password:'',
   password1:'',
 })
