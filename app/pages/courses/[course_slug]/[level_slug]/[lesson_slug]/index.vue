@@ -196,7 +196,7 @@ const handlePharaseToggleFav = async (id) => {
           <p >{{dictionary_direction==='ruEN' ? 'Английский' : 'Русский'}} </p>
           <p></p>
         </div>
-        <div class="space-y-3 mb-3"
+        <div class="space-y-1 mb-3"
              v-for=" group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
           <TypingText18 :text="group.title"/>
           <CardDictionaryItem :dictionary_direction="dictionary_direction"

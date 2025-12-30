@@ -11,6 +11,7 @@ const props = withDefaults(defineProps<Props>(), {
 <template>
   <Button
       variant="outlined"
+      severity="secondary"
       class="shrink-0 bg-white border-[#e0e0eb] w-auto sm:w-14 h-10 sm:h-14 px-[10px] sm:p-0"
       @click="link ? $router.push(link) : $router.back()"
   >

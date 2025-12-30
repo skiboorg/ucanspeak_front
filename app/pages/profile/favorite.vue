@@ -37,7 +37,12 @@ const handleTrainerToggleFav = async (id) => {
   <CardBase padding="md">
     <TypingText28 text="Избранное" class="mb-6"/>
     <div class="mb-3">
-      <InputText fluid placeholder="Поиск по словарю"/>
+      <InputGroup>
+      <InputGroupAddon>
+        <i class="pi pi-search"></i>
+      </InputGroupAddon>
+      <InputText  v-model="Поиск" placeholder="Username" />
+      </InputGroup>
     </div>
 
     <Tabs value="0" class="relative">

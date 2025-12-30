@@ -15,7 +15,7 @@ const {data:topics_data,pending:pending} = useHttpRequest(await useAsyncData(()=
   ]"
   />
   <BlockCourseHeader :title="topics_data.level.name" />
-  <div class="space-y-3">
+  <div class="grid grid-cols-3 gap-3">
     <NuxtLink v-for="topic in topics_data.topics"  :to="`/courses/trainer/${course_slug}/${level_slug}/${topic.slug}`"
               class="hidden sm:flex items-center gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
       {{topic.order_txt}}

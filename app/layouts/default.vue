@@ -1,7 +1,7 @@
 <template>
   <BlockHeader/>
 
-  <div class="container">
+  <div class="container pb-10">
     <slot/>
   </div>
 

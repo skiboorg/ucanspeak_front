@@ -35,7 +35,10 @@ const links = [
       <NuxtLink v-for="link in links" :to="link.to">{{link.title}}</NuxtLink>
     </div>
     <div class="flex gap-3 items-center">
-      <Button severity="secondary" text icon="pi pi-search"/>
+      <NuxtLink to="/courses/search">
+        <Button severity="secondary" text icon="pi pi-search"/>
+      </NuxtLink>
+
       <NuxtLink  to="/profile">
         <Button severity="secondary" text outlined icon="pi pi-user"/>
       </NuxtLink>
