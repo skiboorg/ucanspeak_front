@@ -18,6 +18,7 @@ const props = defineProps<{
 /* DOM */
 const playerEl = ref<HTMLElement | null>(null)
 const videoEl = ref<HTMLVideoElement | null>(null)
+const visible = ref<boolean>(false)
 
 /* state */
 const currentTime = ref(0)
@@ -86,6 +87,8 @@ const playPhraseAudio = (file: string) => {
 </script>
 
 <template>
+  <img @click="visible = true" class="w-[120px] h-[90px] object-cover cursor-pointer" src="~assets/images/video_lesson.svg">
+  <Dialog v-model:visible="visible" modal header="Видео урок" class="w-[80%]">
   <div
       ref="playerEl"
       class="relative   rounded-xl overflow-hidden"
@@ -163,6 +166,7 @@ const playPhraseAudio = (file: string) => {
     </transition-group>
 
   </div>
+  </Dialog>
 </template>
 
 <style>

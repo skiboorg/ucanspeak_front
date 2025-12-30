@@ -39,7 +39,9 @@ const handleToggleFav = async (id) => {
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-4">
       <CardBase padding="sm" class="space-y-3">
-        <div @click="openAudio(audio_file)" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl" v-for="audio_file in topic_data.topic.audio_files">
+        <div @click="openAudio(audio_file)" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl"
+             :class="!show_test ? 'bg-[#EFEFF5]' : '' "
+             v-for="audio_file in topic_data.topic.audio_files">
           <div class="flex items-center gap-5">
 
             <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,7 +55,7 @@ const handleToggleFav = async (id) => {
 
           </div>
         </div>
-        <div @click="show_test=true" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl" >
+        <div @click="show_test=true" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl" :class="show_test ? 'bg-[#EFEFF5]' : '' ">
           <div class="flex items-center gap-5">
 
             <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -75,19 +77,32 @@ const handleToggleFav = async (id) => {
 
       <CardBase v-if="show_test" padding="md">
           <TypingText28 text="Проверьте себя" class="mb-6"/>
-        <div class="space-y-3">
+        <div class="space-y-3 mb-4">
           <CardVoiceFile v-for="item in topic_data.topic.phrases" :key="item.id" :item="item" @toggle_fav="handleToggleFav" />
         </div>
+        <Button
+                fluid
+                severity="success"
+                icon="pi pi-check-circle"
+                outlined
+                label="Выполнено"/>
 
       </CardBase>
-      <CardBase v-else padding="sm" class="flex flex-col items-center justify-evenly h-[500px]">
+      <CardBase v-else padding="sm" class=" bg-[url('/a_bg.png')] bg-contain bg-top bg-no-repeat bg-cover
+         flex flex-col items-center justify-evenly h-[500px]">
         <div class="">
           <TypingText28 :text="current_audio?.name" class="mb-6"/>
           <p>{{current_audio?.description}}</p>
         </div>
 
 
-        <audio controls :src="current_audio?.mp3"></audio>
+        <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="current_audio?.mp3"></audio>
+        <Button
+
+            severity="success"
+            icon="pi pi-check-circle"
+            outlined
+            label="Выполнено"/>
       </CardBase>
     </div>
   </div>

@@ -9,10 +9,20 @@ const fileInput = ref(null)
 const avatarPreview = ref(null)
 const toast = useToast()
 
+
+const time_zones = ref([
+  { name: '(GMT +03:00) Europe/Moscow', code: 'Europe/Moscow' },
+  { name: 'Rome', code: 'RM' },
+  { name: 'London', code: 'LDN' },
+  { name: 'Istanbul', code: 'IST' },
+  { name: 'Paris', code: 'PRS' }
+]);
+
 const user_data = ref({
   email: user.value.email,
   phone: user.value.phone || null,
   full_name: user.value.full_name || null,
+  time_zone: { "name": "(GMT +03:00) Europe/Moscow", "code": "Europe/Moscow" },
   password: '',
   password1: '',
 })
@@ -60,6 +70,7 @@ const { send, pending, errors } = useForm({
 </script>
 
 <template>
+  <div class="space-y-4 pb-10">
 <CardBase padding="md">
   <TypingText28 text="Ваш профиль" class="mb-6"/>
   <TypingText18 text="Фото профиля" class="mb-3"/>
@@ -95,27 +106,13 @@ const { send, pending, errors } = useForm({
              label="ФИО"
              id="full_name"
              v-model="user_data.full_name"/>
-    <UIInput fluid
-             placeholder="Адрес почты "
-             label="Email"
-             id="email"
-             v-model="user_data.email"/>
+
     <UIInput fluid
              placeholder="Телефон"
              label="Телефон"
              id="phone"
              v-model="user_data.phone"/>
-    <TypingText18 text="Смена пароля" />
-    <UIInput fluid
-             placeholder="Новый пароль"
-             label="Новый пароль"
-             id="password"
-             v-model="user_data.password"/>
-    <UIInput fluid
-             placeholder="Повторите пароль"
-             label="Повторите пароль"
-             id="password1"
-             v-model="user_data.password1"/>
+
   </div>
   <div v-if="errors" class="text-red-500">
     {{errors}}
@@ -124,6 +121,66 @@ const { send, pending, errors } = useForm({
   <Button severity="success" @click="send" :loading="pending" label="Обновить"/>
 
 </CardBase>
+  <CardBase padding="md">
+    <TypingText28 text="Аккаунт" class="mb-6"/>
+    <div class="space-y-3">
+      <TypingText18 text="Тип аккаунта" />
+      <p>{{user.is_school ? 'Школа' : 'Ученик'}}</p>
+      <div class="flex justify-between">
+        <div class="">
+          <TypingText18 text="Дата окончания подписки" />
+          <p>{{new Date(user.subscription_expire).toLocaleDateString()}}</p>
+        </div>
+        <Button severity="secondary" outlined label="Продлить"/>
+      </div>
+
+      <TypingText18 text="Email" />
+      <UIInput fluid
+               placeholder="Адрес почты "
+               label="Email"
+               id="email"
+               v-model="user_data.email"/>
+      <TypingText18 text="Пароль" />
+      <UIInput fluid
+               placeholder="Новый пароль"
+               label="Новый пароль"
+               id="password"
+               v-model="user_data.password"/>
+      <UIInput fluid
+               placeholder="Повторите пароль"
+               label="Повторите пароль"
+               id="password1"
+               v-model="user_data.password1"/>
+      <TypingText18 text="Таймзона" />
+
+      <IftaLabel>
+        <Select v-model="user_data.time_zone" inputId="dd-city" :options="time_zones" optionLabel="name" variant="filled" />
+        <label for="dd-city">Таймзона</label>
+      </IftaLabel>
+      <div class="flex justify-between">
+        <div class="">
+          <TypingText18 text="Выйти из аккаунта" />
+          <p>Выйти</p>
+        </div>
+        <Button severity="danger" outlined label="Выйти"/>
+      </div>
+
+      <div class="flex justify-between">
+        <div class="">
+          <TypingText18 text="Выйти со всех устройств" />
+          <p>Завершить все сессии</p>
+        </div>
+        <Button severity="danger" outlined label="Выйти отовсюду"/>
+      </div>
+      <div v-if="errors" class="text-red-500">
+        {{errors}}
+      </div>
+
+      <Button severity="success" @click="send" :loading="pending" label="Обновить"/>
+    </div>
+
+  </CardBase>
+  </div>
 </template>
 
 <style scoped>

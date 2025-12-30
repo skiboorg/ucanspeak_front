@@ -1,8 +1,11 @@
 :root {
     --p-inputtext-focus-ring-shadow: unset !important;
     --p-select-focus-ring-shadow: unset !important;
-
-    /* Настройки кнопок */
+    --p-checkbox-checked-background: #1AB266 !important;
+    --p-checkbox-checked-border-color: #1AB266 !important;
+    --p-checkbox-checked-hover-background: #1AB266 !important;
+    --p-checkbox-checked-hover-border-color: #1AB266 !important;
+        /* Настройки кнопок */
     /*--p-button-padding-y: 0.5rem;*/
     /*--p-button-padding-x: 1rem;*/
     --p-button-border-radius: 0.25rem;

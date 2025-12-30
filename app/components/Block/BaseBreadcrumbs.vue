@@ -29,7 +29,7 @@
             v-if="index !== items.length - 1"
             class="text-gray-400"
         >
-          /
+          >
         </span>
       </li>
     </ol>

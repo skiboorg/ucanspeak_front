@@ -12,7 +12,31 @@ const module = ref(null)
 const tutorial_video = ref(null)
 const authStore = useAuthStore()
 const {user} = storeToRefs(authStore)
+const openedId = ref<number | null>(null)
+const opened_dictionary_id = ref<number | null>(null)
 
+const dictionary_direction = ref('ruEN')
+
+const isPlaying = ref(false)
+const audio = new Audio()
+
+const play = () => {
+  if (isPlaying.value) {
+    audio.pause()
+    isPlaying.value = false
+  } else {
+    audio.src = lesson.value.mp3
+    audio.play()
+    isPlaying.value = true
+  }
+}
+
+const handleToggleOpen = (id: number) => {
+  openedId.value = openedId.value === id ? null : id
+}
+const handleToggleDictionaryOpen = (id: number) => {
+  opened_dictionary_id.value = opened_dictionary_id.value === id ? null : id
+}
 
 const fetch_module = async (id) => {
   current_module.value= id
@@ -81,7 +105,7 @@ const handlePharaseToggleFav = async (id) => {
   <BlockCourseHeader :title="lesson.title" show_profile/>
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-3 ">
-      <CardBase padding="sm" class="sticky top-5 space-y-2">
+      <CardBase padding="sm" class="mb-4 sticky top-5 space-y-2">
         <p
             v-for="(module, i) in lesson.modules"
             :key="i"
@@ -94,7 +118,17 @@ const handlePharaseToggleFav = async (id) => {
           <span> {{ i + 1 }}. {{ module.title }}</span>
           <i v-if="module.is_done" class="text-green-500 pi pi-check-circle"></i>
         </p>
+
+        <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer" @click="play">
+          <div class=" w-10 h-10 rounded-full bg-[#EFEFF5] flex items-center justify-center">
+            <i class="text-primary" :class="isPlaying ?  'pi pi-pause' : 'pi pi-play'"></i>
+          </div>
+
+          <p>Аудиоурок</p>
+        </div>
       </CardBase>
+
+
     </div>
     <div class="col-span-6">
       <template v-if="loading">
@@ -103,50 +137,75 @@ const handlePharaseToggleFav = async (id) => {
         </div>
       </template>
       <template v-else>
-        <div class="space-y-3">
-        <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
+        <div class="space-y-3 mb-6">
+          <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
+            <p class="text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>
 
-          <div class="text-lg font-medium" v-html="block.caption"></div>
+            <div class="text-lg font-medium" v-html="block.caption"></div>
 
-          <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3">
-              <Button @click="videoSelected(block.videos[0].video_src)" label="Открыть видео" icon="pi pi-play"/>
-          </div>
-          <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
-           <BlockKaraoke :data="block.videos[0]"/>
-          </div>
-          <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3"></div>
-          <div v-if="block.items.length>0" class="space-y-3">
-            <CardVoiceFile v-for="item in block.items"
-                           :key="item.id"
-                           :item="item"
-                           @toggle_fav="handlePharaseToggleFav"
-                           :loading="fav_loading"/>
-          </div>
-          <div class="flex gap-4 mt-3">
-            <Button @click="toggleBlockDone(block.id,index)"
-                    fluid
-                    severity="success"
-                    :icon="block.is_done ? 'pi pi-check-circle' :'pi pi-check' "
-                    :outlined="!block.is_done"
-                    :label="block.is_done ? 'Выполнено' : 'Выполнить'"/>
-            <a v-if="user.is_superuser" target="_blank" :href="`http://localhost:8000/admin/lesson/moduleblock/${block.id}/change/`">
-              <Button outlined severity="secondary" icon="pi pi-pencil"/>
-            </a>
-          </div>
+            <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
+              <img @click="videoSelected(block.videos[0].video_src)" class="cursor-pointer" src="~assets/images/tutorial_video.png">
 
-        </CardBase>
-    </div>
+            </div>
+            <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
+              <BlockKaraoke :data="block.videos[0]"/>
+            </div>
+            <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3"></div>
+            <div v-if="block.items.length>0" class="space-y-3">
+              <CardVoiceFile
+                  v-for="item in block.items"
+                  :key="item.id"
+                  :item="item"
+                  :opened="openedId === item.id"
+                  :loading="fav_loading"
+                  @toggle_open="handleToggleOpen"
+                  @toggle_fav="handlePharaseToggleFav"
+              />
+            </div>
+            <div class="flex gap-4 mt-3">
+              <Button v-if="block.can_be_done" @click="toggleBlockDone(block.id,index)"
+                      fluid
+                      severity="success"
+                      :icon="block.is_done ? 'pi pi-check-circle' :'' "
+                      :outlined="!block.is_done"
+                      label="Выполнено"/>
+              <a v-if="user.is_superuser" target="_blank" :href="`http://localhost:8000/admin/lesson/moduleblock/${block.id}/change/`">
+                <Button outlined severity="secondary" icon="pi pi-pencil"/>
+              </a>
+            </div>
 
+          </CardBase>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <Button outlined icon="pi pi-arrow-left" label="Предыдущий урок"/>
+          <Button  icon-pos="right" icon="pi pi-arrow-right" label="Следующий урок"/>
+        </div>
       </template>
 
     </div>
     <div class="col-span-3">
-      <CardBase padding="sm">
+      <CardBase padding="sm" class="sticky top-5">
         <TypingText20 text="Словарь" class="mb-4"/>
+        <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
+             @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">
+          <p >{{dictionary_direction==='ruEN' ? 'Русский' : 'Английский'}} </p>
+          <svg width="63" height="28" viewBox="0 0 63 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="63" height="28" rx="14" fill="#EFEFF5"/>
+            <path d="M24 11.918H39L34 6.91797M39.3329 16.0846H24.3329L29.3329 21.0846" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p >{{dictionary_direction==='ruEN' ? 'Английский' : 'Русский'}} </p>
+          <p></p>
+        </div>
         <div class="space-y-3 mb-3"
              v-for=" group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
           <TypingText18 :text="group.title"/>
-          <CardDictionaryItem :item="item" v-for="item in group.items" @toggle_fav="handleToggleFav" :loading="fav_loading"/>
+          <CardDictionaryItem :dictionary_direction="dictionary_direction"
+                              :item="item"
+                              v-for="item in group.items"
+                              :opened="opened_dictionary_id === item.id"
+                              @toggle_open="handleToggleDictionaryOpen"
+                              @toggle_fav="handleToggleFav"
+                              :loading="fav_loading"/>
         </div>
       </CardBase>
     </div>
