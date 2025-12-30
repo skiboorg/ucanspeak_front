@@ -183,8 +183,8 @@ const handlePharaseToggleFav = async (id) => {
       </template>
 
     </div>
-    <div class="col-span-3">
-      <CardBase padding="sm" class="sticky top-5">
+    <div class="col-span-3 sticky top-5 h-[90vh]">
+      <CardBase padding="sm" class="h-[90vh] overflow-y-auto">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
              @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">
