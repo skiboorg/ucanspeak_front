@@ -18,7 +18,7 @@ const links = [
   ]"/>
     <BlockCourseHeader title="Профиль" prev_link="/"/>
     <div class="grid grid-cols-12 gap-5">
-      <div class="col-span-3">
+      <div class="col-span-12 md:col-span-3">
         <CardBase padding="sm" class="sticky top-5 space-y-2">
           <nuxt-link
               v-for="(link, i) in links"
@@ -34,7 +34,7 @@ const links = [
           </nuxt-link>
         </CardBase>
       </div>
-      <div class="col-span-9">
+      <div class="col-span-12 md:col-span-9">
         <slot/>
       </div>
     </div>

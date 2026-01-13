@@ -40,7 +40,7 @@ const handleToggleFav = async (id) => {
     <div class="col-span-4">
       <CardBase padding="sm" class="space-y-3">
         <div @click="openAudio(audio_file)" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl"
-             :class="!show_test ? 'bg-[#EFEFF5]' : '' "
+             :class="!show_test ? 'bg-[#F6F6FB]' : '' "
              v-for="audio_file in topic_data.topic.audio_files">
           <div class="flex items-center gap-5">
 
@@ -55,7 +55,7 @@ const handleToggleFav = async (id) => {
 
           </div>
         </div>
-        <div @click="show_test=true" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl" :class="show_test ? 'bg-[#EFEFF5]' : '' ">
+        <div @click="show_test=true" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl" :class="show_test ? 'bg-[#F6F6FB]' : '' ">
           <div class="flex items-center gap-5">
 
             <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">

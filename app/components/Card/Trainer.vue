@@ -8,8 +8,9 @@ const {data:trainer,pending:pending} = useHttpRequest(await useAsyncData(()=>$ap
   <div class="flex flex-col gap-3">
     <div class="h-[241px] sm:h-[340px] lg:h-[300px] w-full rounded-2xl overflow-hidden relative z-[1] flex items-end border border-solid border-[rgba(24,24,27,0.05)]">
       <img src="~/assets/images/course-card-1.png" alt="" class="absolute z-[-1] left-0 top-0 w-full h-full object-cover">
-      <div class="w-full backdrop-blur-sm bg-gr p-3 pt-[5px] sm:pt-5 sm:px-6 sm:pb-6 text-base sm:text-[28px] font-semibold leading-[130%] text-white">
-        Разговорный тренажер
+      <div class="w-full  bg-gr p-3 pt-[5px] sm:pt-5 sm:px-6 sm:pb-6 text-base sm:text-[28px] font-semibold leading-[130%] text-white">
+        <p class="block md:hidden">Разговорный тренажер</p>
+
 
         <nuxt-link :to="`/courses/`" class="flex sm:hidden items-center justify-center w-full h-9 gap-1 bg-white text-sm text-[#3333E8] rounded-lg mt-2">
           <span>Перейти</span>
@@ -20,7 +21,7 @@ const {data:trainer,pending:pending} = useHttpRequest(await useAsyncData(()=>$ap
       </div>
     </div>
     <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="hidden sm:flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
-      <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px] bg-[#ffe5f7] border border-[18181b]/[0.5]">
+      <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
         <img :src="course.icon" alt="" class="mix-blend-luminosity">
       </div>
       <div class="w-full flex flex-col gap-[3px]">

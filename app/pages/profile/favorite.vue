@@ -41,7 +41,7 @@ const handleTrainerToggleFav = async (id) => {
       <InputGroupAddon>
         <i class="pi pi-search"></i>
       </InputGroupAddon>
-      <InputText  v-model="Поиск" placeholder="Username" />
+      <InputText  placeholder="Поиск" />
       </InputGroup>
     </div>
 
@@ -54,14 +54,14 @@ const handleTrainerToggleFav = async (id) => {
         </TabList>
         <TabPanels>
           <TabPanel value="0">
-            <div class="absolute cursor-pointer right-0 top-4 flex items-center justify-end gap-2 mb-3">
+            <div v-if="dictionary_favorites.length>0" class="relative md:absolute cursor-pointer right-0 md:top-4 flex items-center justify-end gap-2 mb-3">
               <svg width="18" height="19" viewBox="0 0 18 19" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M14 3V2C14 1.46957 13.7893 0.960859 13.4142 0.585786C13.0391 0.210714 12.5304 0 12 0H6C5.46957 0 4.96086 0.210714 4.58579 0.585786C4.21071 0.960859 4 1.46957 4 2V3H1C0.734784 3 0.48043 3.10536 0.292893 3.29289C0.105357 3.48043 0 3.73478 0 4C0 4.26522 0.105357 4.51957 0.292893 4.70711C0.48043 4.89464 0.734784 5 1 5H2V16C2 16.7956 2.31607 17.5587 2.87868 18.1213C3.44129 18.6839 4.20435 19 5 19H13C13.7956 19 14.5587 18.6839 15.1213 18.1213C15.6839 17.5587 16 16.7956 16 16V5H17C17.2652 5 17.5196 4.89464 17.7071 4.70711C17.8946 4.51957 18 4.26522 18 4C18 3.73478 17.8946 3.48043 17.7071 3.29289C17.5196 3.10536 17.2652 3 17 3H14ZM12 2H6V3H12V2ZM14 5H4V16C4 16.2652 4.10536 16.5196 4.29289 16.7071C4.48043 16.8946 4.73478 17 5 17H13C13.2652 17 13.5196 16.8946 13.7071 16.7071C13.8946 16.5196 14 16.2652 14 16V5Z" fill="#8F8FA3"/>
                 <path d="M6 7H8V15H6V7ZM10 7H12V15H10V7Z" fill="#8F8FA3"/>
               </svg>
-              <p class="text-gray-400">Очистить избранное</p>
+              <p  class="text-gray-400">Очистить избранное</p>
             </div>
-            <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
 
               <CardDictionaryItem v-if="dictionary_favorites.length>0"
                                   :item="item" v-for="item in dictionary_favorites"
@@ -73,7 +73,7 @@ const handleTrainerToggleFav = async (id) => {
             </div>
           </TabPanel>
           <TabPanel value="1">
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <CardVoiceFile v-if="lesson_item_favorites.length>0"
                              v-for="item in lesson_item_favorites"
                              :key="item.id"
@@ -81,11 +81,11 @@ const handleTrainerToggleFav = async (id) => {
                              :opened="openedId === item.id"
                              @toggle_open="handleToggleOpen"
                              @toggle_fav="handlePhraseToggleFav"/>
-              <p v-else class="text-sm text-gray-400 font-normal">В избранном пока ничего нет</p>
+              <p v-else class="text-sm text-gray-400 font-normal w-full">В избранном пока ничего нет</p>
             </div>
           </TabPanel>
           <TabPanel value="2">
-            <div class="grid grid-cols-2 gap-4 ">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
               <CardVoiceFile v-if="trainer_item_favorites.length>0"
                              v-for="item in trainer_item_favorites"
                              :key="item.id"

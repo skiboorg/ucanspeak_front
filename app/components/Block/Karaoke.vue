@@ -82,13 +82,13 @@ const jumpTo = (time: string) => {
 }
 
 const playPhraseAudio = (file: string) => {
-  new Audio(`https://platform.ucanspeak.ru${file}`).play()
+  new Audio(file).play()
 }
 </script>
 
 <template>
   <img @click="visible = true" class="w-[120px] h-[90px] object-cover cursor-pointer" src="~assets/images/video_lesson.svg">
-  <Dialog v-model:visible="visible" modal header="Видео урок" class="w-[80%]">
+  <Dialog v-model:visible="visible" modal header="Видео урок" :show-header="false" class="w-[65%] video-modal">
   <div
       ref="playerEl"
       class="relative   rounded-xl overflow-hidden"
@@ -110,7 +110,13 @@ const playPhraseAudio = (file: string) => {
 
     <!-- FULLSCREEN BUTTON -->
     <button
-        class="absolute top-4 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
+        class="absolute top-2 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
+        @click="visible=false"
+    >
+      <i class="pi pi-times"></i>
+    </button>
+    <button
+        class="absolute top-10 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
         @click="toggleFullscreen"
     >
       ⛶
@@ -145,23 +151,25 @@ const playPhraseAudio = (file: string) => {
       <div
           v-for="p in visiblePhrases"
           :key="p.id"
-          class="p-2 rounded flex items-center justify-between"
+          class="p-2 rounded-2xl flex gap-3 items-center justify-between"
           :class="{
-      'bg-primary text-white': currentPhrase?.id === p.id,
-      'bg-grey-300': currentPhrase?.id !== p.id
+      'bg-white ': currentPhrase?.id === p.id,
+      'bg-[#F6F6FB]': currentPhrase?.id !== p.id
         }"
       >
+
+          <svg @click.stop="playPhraseAudio(p.file)" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M17.8656 13.2C17.7171 13.0886 17.5404 13.0207 17.3554 13.004C17.1705 12.9874 16.9845 13.0225 16.8184 13.1056C16.6523 13.1886 16.5126 13.3163 16.415 13.4743C16.3173 13.6322 16.2656 13.8143 16.2656 14V26C16.2656 26.1857 16.3173 26.3678 16.415 26.5257C16.5126 26.6837 16.6523 26.8114 16.8184 26.8944C16.9845 26.9775 17.1705 27.0126 17.3554 26.996C17.5404 26.9793 17.7171 26.9114 17.8656 26.8L25.8656 20.8C25.9898 20.7069 26.0906 20.5861 26.1601 20.4472C26.2295 20.3084 26.2656 20.1552 26.2656 20C26.2656 19.8448 26.2295 19.6916 26.1601 19.5528C26.0906 19.4139 25.9898 19.2931 25.8656 19.2L17.8656 13.2Z" fill="#3333E8"/>
+          </svg>
+
+
         <div @click="jumpTo(p.start_time)" class="flex-1 cursor-pointer">
           <div class="font-semibold">{{ p.text_en }}</div>
-          <div class="text-sm text-gray-300">{{ p.text_ru }}</div>
+          <div class="text-sm text-gray-400">{{ p.text_ru }}</div>
         </div>
 
-        <button
-            class="ml-2 px-2 py-1 bg-gray-600 rounded hover:bg-gray-400"
-            @click.stop="playPhraseAudio(p.sound)"
-        >
-          ▶️
-        </button>
+
       </div>
     </transition-group>
 
@@ -169,7 +177,7 @@ const playPhraseAudio = (file: string) => {
   </Dialog>
 </template>
 
-<style>
+<style lang="scss">
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;
@@ -177,6 +185,11 @@ const playPhraseAudio = (file: string) => {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.video-modal {
+  .p-dialog-content{
+    padding: 0 !important;
+  }
 }
 </style>
 

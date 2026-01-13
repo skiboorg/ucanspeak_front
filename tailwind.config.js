@@ -19,7 +19,7 @@ module.exports = {
                 '2xl': '48px'
             },
             screens: {
-                sm: '640px',
+                sm: '990px',
                 md: '1024px',
                 lg: '1200px',
                 xl: '1400px',

@@ -7,7 +7,7 @@ const links = [
 </script>
 
 <template>
-<header class="bg-white py-6 mb-6">
+<header class="bg-white py-4 mb-3 md:py-6 md:mb-6">
   <div class="container flex items-center justify-between">
     <NuxtLink to="/courses">
       <svg width="137" height="24" viewBox="0 0 137 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -31,10 +31,10 @@ const links = [
 
     </NuxtLink>
 
-    <div class="flex gap-8 items-center">
+    <div class="hidden md:flex gap-8 items-center">
       <NuxtLink v-for="link in links" :to="link.to">{{link.title}}</NuxtLink>
     </div>
-    <div class="flex gap-3 items-center">
+    <div class="hidden md:flex gap-3 items-center">
       <NuxtLink to="/courses/search">
         <Button severity="secondary" text icon="pi pi-search"/>
       </NuxtLink>
