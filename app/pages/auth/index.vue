@@ -6,7 +6,7 @@ const changeFormHandler = (form:string) => {
 </script>
 
 <template>
-  <div class="container h-screen flex flex-col items-start justify-center w-screen">
+  <div class=" h-full flex flex-col items-start justify-center">
     <TypingText48 :text="current_form === 'login' ? 'Вход на сайт' : 'Регистрация аккаунта'" class="mb-8"/>
     <FormLogin v-if="current_form==='login'" @change_form="changeFormHandler"/>
     <FormRegister v-if="current_form==='register'" @change_form="changeFormHandler"/>

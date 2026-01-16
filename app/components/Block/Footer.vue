@@ -15,7 +15,7 @@ const {user} = storeToRefs(authStore)
 
       <p>Тренажёр</p>
     </NuxtLink>
-    <NuxtLink v-if="user.last_lesson_url" :to="user.last_lesson_url" class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active">
+    <NuxtLink v-if="user?.last_lesson_url" :to="user?.last_lesson_url" class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active">
       <i class="text-[20px] pi pi-play-circle"></i>
 
       <p>Продолжить</p>

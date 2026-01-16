@@ -11,7 +11,7 @@ const {data:level,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.
       :items="[
     { label: 'Главная', to: '/' },
     { label: 'Курсы', to: '/courses' },
-    { label: level.course.course_title },
+    { label: level.course?.course_title },
   ]"
   />
   <BlockCourseHeader :title="level.course.course_title" :count="level.lessons.length" show_profile>

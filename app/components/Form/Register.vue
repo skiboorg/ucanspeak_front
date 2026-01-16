@@ -83,8 +83,8 @@ const send = async () => {
 </script>
 
 <template>
-<CardBase padding="none" extra-class="w-full px-[240px]">
-  <div class="flex flex-col items-center justify-center w-full py-10">
+  <CardBase padding="none" extra-class="w-full px-3 lg:px-[240px]">
+    <div class="flex flex-col items-center justify-center py-10 md:p-[60px] w-full">
     <div class="space-y-3 w-full mb-8">
       <TypingText20 text="Введите данные для регистрации"/>
       <UIInput fluid placeholder="Ваше ФИО" label="ФИО" id="full_name" v-model="form_data.full_name"/>

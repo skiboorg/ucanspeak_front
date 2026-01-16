@@ -105,7 +105,7 @@ const handlePharaseToggleFav = async (id) => {
       :items="[
     { label: 'Главная', to: '/' },
     { label: 'Курсы', to: '/courses' },
-    { label: level_slug, to: `/courses/${course_slug}/${level_slug}` },
+    { label: lesson.level_title, to: `/courses/${course_slug}/${level_slug}` },
     { label: lesson.title },
   ]"
   />
@@ -163,9 +163,9 @@ const handlePharaseToggleFav = async (id) => {
         <template v-if="!show_trainer">
           <div class="space-y-3 mb-6">
             <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
-              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>
+<!--              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
 
-              <div class="text-lg font-medium" v-html="block.caption"></div>
+              <div class="text-lg font-medium" v-html="block.caption === '  None' ? '' : block.caption"></div>
 
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
                 <img @click="videoSelected(block.videos[0].video_src)" class="cursor-pointer" src="~assets/images/tutorial_video.png">

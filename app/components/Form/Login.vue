@@ -30,8 +30,8 @@ const login = async () => {
     window.location.reload()
     toast.add({ severity: 'success',summary:'Успешно', detail: 'Получение данных пользователя...', life: 3000 });
   }catch(error){
-    console.log(error)
-    toast.add({ severity: 'error',summary:'Ошибка', detail: 'Не удалось войти с такими данными', life: 3000 });
+
+    toast.add({ severity: 'error',summary:'Ошибка', detail: error.data.non_field_errors[0], life: 3000 });
   }
   finally {
     loading.value = false
@@ -41,7 +41,7 @@ const login = async () => {
 </script>
 
 <template>
-<CardBase padding="none" extra-class="w-full px-[240px]">
+<CardBase padding="none" extra-class="w-full px-3 lg:px-[240px]">
   <div class="flex flex-col items-center justify-center py-10 md:p-[60px] w-full">
     <div class="space-y-3 w-full mb-8">
       <TypingText20 text="Введите данные для входа"/>
