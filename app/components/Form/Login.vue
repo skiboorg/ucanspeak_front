@@ -9,14 +9,12 @@ const form_data = ref({
   login:'',
   password:'',
 })
-
 watch(
     () => form_data.value.login,
     (newEmail) => {
       form_data.value.login = newEmail.toLowerCase()
     }
 )
-
 const login = async () => {
   loading.value = true
   try{
@@ -26,22 +24,19 @@ const login = async () => {
     })
     const { authToken } = useAuthToken()
     authCookie.value = response.auth_token
-    //authToken.value = response.auth_token
     window.location.reload()
     toast.add({ severity: 'success',summary:'Успешно', detail: 'Получение данных пользователя...', life: 3000 });
   }catch(error){
-
     toast.add({ severity: 'error',summary:'Ошибка', detail: error.data.non_field_errors[0], life: 3000 });
   }
   finally {
     loading.value = false
   }
-
 }
 </script>
 
 <template>
-<CardBase padding="none" extra-class="w-full px-3 lg:px-[240px]">
+  <CardBase padding="none" extra-class="w-full px-3 lg:px-[240px]">
   <div class="flex flex-col items-center justify-center py-10 md:p-[60px] w-full">
     <div class="space-y-3 w-full mb-8">
       <TypingText20 text="Введите данные для входа"/>
@@ -71,7 +66,3 @@ const login = async () => {
   </div>
 </CardBase>
 </template>
-
-<style scoped>
-
-</style>

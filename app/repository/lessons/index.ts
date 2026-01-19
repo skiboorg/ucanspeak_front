@@ -19,6 +19,13 @@ export function createLessonsRepository(appFetch: typeof $fetch){
         },
         lesson(slug: string){
             return appFetch(`/api/lesson/lessons/${slug}`)
+        },
+        lesson_table(slug: string){
+            return appFetch(`/api/lesson/lessons/${slug}/get_table/`)
+        }
+        ,
+        lesson_videos(slug: string){
+            return appFetch(`/api/lesson/lessons/${slug}/videos/`)
         }
         ,
         module(id: string){

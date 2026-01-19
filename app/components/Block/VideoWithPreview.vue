@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+const config = useRuntimeConfig();
 
 const props = defineProps<{
   data: {
     video_src: string
+    file: string
     phrases: {
       id: number
       start_time: string
@@ -19,6 +21,7 @@ const props = defineProps<{
 const playerEl = ref<HTMLElement | null>(null)
 const videoEl = ref<HTMLVideoElement | null>(null)
 const visible = ref<boolean>(false)
+const firstFrame = ref<string | null>(null) // здесь будет base64 первого кадра
 
 /* state */
 const currentTime = ref(0)
@@ -53,6 +56,23 @@ const toggleFullscreen = () => {
 
 onMounted(() => {
   document.addEventListener('fullscreenchange', onFullscreenChange)
+  console.log(props.data.file)
+  // --- получаем первый кадр ---
+  const tempVideo = document.createElement('video')
+  tempVideo.src = config.public.apiUrl+props.data.file
+  tempVideo.crossOrigin = 'anonymous' // если видео с другого домена
+  tempVideo.muted = true
+  tempVideo.currentTime = 0
+  tempVideo.addEventListener('loadeddata', () => {
+    const canvas = document.createElement('canvas')
+    canvas.width = tempVideo.videoWidth
+    canvas.height = tempVideo.videoHeight
+    const ctx = canvas.getContext('2d')
+    if (ctx) {
+      ctx.drawImage(tempVideo, 0, 0, canvas.width, canvas.height)
+      firstFrame.value = canvas.toDataURL('image/png')
+    }
+  })
 })
 
 onUnmounted(() => {
@@ -88,76 +108,81 @@ const playPhraseAudio = (file: string) => {
 
 <template>
 
-  <img @click="visible = true" class="w-[120px] h-[90px] object-cover cursor-pointer" src="~assets/images/video_lesson.svg">
+  <img
+      v-if="firstFrame"
+      @click="visible = true"
+      class="w-[220px] h-[140px] object-cover cursor-pointer"
+      :src="firstFrame"
+  />
+  <img
+      v-else
+      @click="visible = true"
+      class="w-[120px] h-[90px] object-cover cursor-pointer"
+      src="~assets/images/video_lesson.svg"
+  />
+
   <Dialog v-model:visible="visible" modal header="Видео урок" :show-header="false" class="w-[65%] video-modal">
-  <div
-      ref="playerEl"
-      class="relative   rounded-xl overflow-hidden"
-  >
+    <div ref="playerEl" class="relative rounded-xl overflow-hidden">
+      <!-- VIDEO -->
+      <video
+          ref="videoEl"
+          controls
+          controlsList="nofullscreen"
+          class="w-full"
+          @timeupdate="onTimeUpdate"
+      >
+        <source :src="config.public.apiUrl+data.file+'#t=0.1'" type="video/mp4" />
+      </video>
 
-    <!-- VIDEO -->
-    <video
-        ref="videoEl"
-        controls
-        controlsList="nofullscreen"
-        class="w-full"
-        @timeupdate="onTimeUpdate"
-    >
-      <source
-          :src="data.file+'#t=0.1'"
-          type="video/mp4"
-      />
-    </video>
+      <!-- FULLSCREEN BUTTON -->
+      <button
+          class="absolute top-2 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
+          @click="visible=false"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+      <button
+          class="absolute top-10 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
+          @click="toggleFullscreen"
+      >
+        ⛶
+      </button>
 
-    <!-- FULLSCREEN BUTTON -->
-    <button
-        class="absolute top-2 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
-        @click="visible=false"
-    >
-      <i class="pi pi-times"></i>
-    </button>
-    <button
-        class="absolute top-10 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
-        @click="toggleFullscreen"
-    >
-      ⛶
-    </button>
-
-    <!-- SUBTITLES (ALWAYS OVER VIDEO) -->
-    <transition name="fade">
-      <div
-          v-if="isFullscreen && currentPhrase"
-          class="absolute bottom-10 left-1/2 -translate-x-1/2
+      <!-- SUBTITLES (ALWAYS OVER VIDEO) -->
+      <transition name="fade">
+        <div
+            v-if="isFullscreen && currentPhrase"
+            class="absolute bottom-10 left-1/2 -translate-x-1/2
                z-40 bg-black/70 px-6 py-3 rounded-xl
                text-center max-w-[90%]"
-      >
-        <div class="text-2xl text-white font-bold">
-          {{ currentPhrase.text_en }}
+        >
+          <div class="text-2xl text-white font-bold">
+            {{ currentPhrase.text_en }}
+          </div>
+          <div class="text-lg text-yellow-300 mt-1">
+            {{ currentPhrase.text_ru }}
+          </div>
         </div>
-        <div class="text-lg text-yellow-300 mt-1">
-          {{ currentPhrase.text_ru }}
-        </div>
-      </div>
-    </transition>
+      </transition>
 
-    <!-- PHRASES LIST (HIDDEN IN FULLSCREEN) -->
-    <transition-group
-        v-if="!isFullscreen"
-        name="fade"
-        tag="div"
-        class=" bottom-0 left-0 right-0
+      <!-- PHRASES LIST (HIDDEN IN FULLSCREEN) -->
+      <transition-group
+          v-if="!isFullscreen"
+          name="fade"
+          tag="div"
+          class=" bottom-0 left-0 right-0
              p-4 space-y-2 flex flex-col
              "
-    >
-      <div
-          v-for="p in visiblePhrases"
-          :key="p.id"
-          class="p-2 rounded-2xl flex gap-3 items-center justify-between"
-          :class="{
+      >
+        <div
+            v-for="p in visiblePhrases"
+            :key="p.id"
+            class="p-2 rounded-2xl flex gap-3 items-center justify-between"
+            :class="{
       'bg-white ': currentPhrase?.id === p.id,
       'bg-[#F6F6FB]': currentPhrase?.id !== p.id
         }"
-      >
+        >
 
           <svg @click.stop="playPhraseAudio(p.file)" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
@@ -165,32 +190,14 @@ const playPhraseAudio = (file: string) => {
           </svg>
 
 
-        <div @click="jumpTo(p.start_time)" class="flex-1 cursor-pointer">
-          <div class="font-semibold">{{ p.text_en }}</div>
-          <div class="text-sm text-gray-400">{{ p.text_ru }}</div>
+          <div @click="jumpTo(p.start_time)" class="flex-1 cursor-pointer">
+            <div class="font-semibold">{{ p.text_en }}</div>
+            <div class="text-sm text-gray-400">{{ p.text_ru }}</div>
+          </div>
+
+
         </div>
-
-
-      </div>
-    </transition-group>
-
-  </div>
+      </transition-group>
+    </div>
   </Dialog>
 </template>
-
-<style lang="scss">
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-.video-modal {
-  .p-dialog-content{
-    padding: 0 !important;
-  }
-}
-</style>
-

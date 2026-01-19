@@ -15,7 +15,11 @@ const {user} = storeToRefs(authStore)
 const openedId = ref<number | null>(null)
 const opened_dictionary_id = ref<number | null>(null)
 const show_trainer = ref(false)
+const show_table = ref(false)
+const show_videos = ref(false)
 const dictionary_modal_visible = ref(false)
+const table = ref(null)
+const videos = ref([])
 
 const dictionary_direction = ref('ruEN')
 
@@ -47,6 +51,8 @@ const handleToggleDictionaryOpen = (id: number) => {
 const fetch_module = async (id) => {
   current_module.value= id
   show_trainer.value = false
+  show_table.value = false
+  show_videos.value = false
   loading.value = true
   await nextTick()
   window.scrollTo({
@@ -98,7 +104,27 @@ const handlePharaseToggleFav = async (id) => {
   })
   fav_loading.value = false
 }
+
+const fetchTable = async () => {
+  if (!table.value) {
+    const resp =  await $api.lessons.lesson_table(lesson_slug)
+    table.value = resp.table
+  }
+  show_trainer.value = false
+  show_videos.value = false
+  show_table.value = true
+}
+
+const fetchVideos = async () => {
+  if (videos.value.length === 0) {
+    videos.value = await $api.lessons.lesson_videos(lesson_slug)
+  }
+  show_trainer.value = false
+  show_table.value = false
+  show_videos.value = true
+}
 </script>
+
 
 <template>
   <BlockBaseBreadcrumbs
@@ -126,6 +152,32 @@ const handlePharaseToggleFav = async (id) => {
           <span> {{ i + 1 }}. {{ module.title }}</span>
           <i v-if="module.is_done" class="text-green-500 pi pi-check-circle"></i>
         </p>
+        <div  class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]"
+             @click="fetchVideos"
+             :class="{
+                'bg-[#efeff5]': show_videos
+            }"
+        >
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
+            <path d="M20.573 28.6957H25.2174C25.6786 28.6957 26.121 28.5124 26.4471 28.1863C26.7733 27.8601 26.9565 27.4178 26.9565 26.9565V16.5217C26.9572 16.2462 26.9033 15.9732 26.7979 15.7186C26.6926 15.464 26.5378 15.2328 26.3426 15.0383L23.2226 11.9183C23.0281 11.7231 22.7969 11.5683 22.5423 11.4629C22.2877 11.3576 22.0147 11.3037 21.7391 11.3044H14.7826C14.3214 11.3044 13.879 11.4876 13.5529 11.8137C13.2267 12.1399 13.0435 12.5822 13.0435 13.0435V21.1652" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21.74 11.3043V15.6522C21.74 15.8828 21.8316 16.104 21.9947 16.267C22.1578 16.4301 22.3789 16.5217 22.6096 16.5217H26.9574M18.5904 20.5409C18.9367 20.1949 19.4062 20.0007 19.8957 20.001C20.3852 20.0012 20.8545 20.1959 21.2004 20.5422C21.5464 20.8885 21.7406 21.358 21.7403 21.8474C21.7401 22.3369 21.5454 22.8062 21.1991 23.1522L16.8357 27.5104C16.629 27.7172 16.3736 27.8685 16.093 27.9504L13.6 28.6783C13.5252 28.7001 13.4459 28.7014 13.3704 28.682C13.2949 28.6627 13.2259 28.6234 13.1708 28.5683C13.1157 28.5132 13.0764 28.4443 13.0571 28.3688C13.0377 28.2933 13.039 28.214 13.0609 28.1391L13.7878 25.6443C13.8699 25.3641 14.0212 25.109 14.2278 24.9026L18.5904 20.5409Z" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>Видео</p>
+        </div>
+        <div v-if="lesson.have_table" class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]"
+             @click="fetchTable"
+             :class="{
+                'bg-[#efeff5]': show_table
+            }"
+        >
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
+            <path d="M20.573 28.6957H25.2174C25.6786 28.6957 26.121 28.5124 26.4471 28.1863C26.7733 27.8601 26.9565 27.4178 26.9565 26.9565V16.5217C26.9572 16.2462 26.9033 15.9732 26.7979 15.7186C26.6926 15.464 26.5378 15.2328 26.3426 15.0383L23.2226 11.9183C23.0281 11.7231 22.7969 11.5683 22.5423 11.4629C22.2877 11.3576 22.0147 11.3037 21.7391 11.3044H14.7826C14.3214 11.3044 13.879 11.4876 13.5529 11.8137C13.2267 12.1399 13.0435 12.5822 13.0435 13.0435V21.1652" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21.74 11.3043V15.6522C21.74 15.8828 21.8316 16.104 21.9947 16.267C22.1578 16.4301 22.3789 16.5217 22.6096 16.5217H26.9574M18.5904 20.5409C18.9367 20.1949 19.4062 20.0007 19.8957 20.001C20.3852 20.0012 20.8545 20.1959 21.2004 20.5422C21.5464 20.8885 21.7406 21.358 21.7403 21.8474C21.7401 22.3369 21.5454 22.8062 21.1991 23.1522L16.8357 27.5104C16.629 27.7172 16.3736 27.8685 16.093 27.9504L13.6 28.6783C13.5252 28.7001 13.4459 28.7014 13.3704 28.682C13.2949 28.6627 13.2259 28.6234 13.1708 28.5683C13.1157 28.5132 13.0764 28.4443 13.0571 28.3688C13.0377 28.2933 13.039 28.214 13.0609 28.1391L13.7878 25.6443C13.8699 25.3641 14.0212 25.109 14.2278 24.9026L18.5904 20.5409Z" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>Таблица</p>
+        </div>
         <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]" @click="play">
           <svg v-if="!isPlaying" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
@@ -137,7 +189,7 @@ const handlePharaseToggleFav = async (id) => {
           </svg>
           <p>Аудиоурок</p>
         </div>
-        <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]" @click="show_trainer= !show_trainer"
+        <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]" @click="show_trainer= true"
              :class="{
                 'bg-[#efeff5]': show_trainer
             }"
@@ -149,10 +201,12 @@ const handlePharaseToggleFav = async (id) => {
           </svg>
           <p>Тренажер</p>
         </div>
+
       </CardBase>
 
 
     </div>
+
     <div class="col-span-12 md:col-span-6">
       <template v-if="loading">
         <div class="space-y-3">
@@ -160,10 +214,37 @@ const handlePharaseToggleFav = async (id) => {
         </div>
       </template>
       <template v-else>
-        <template v-if="!show_trainer">
+        <template v-if="show_table">
+          <CardBase padding="sm" >
+            <img :src="table"/>
+          </CardBase>
+        </template>
+        <template  v-else-if="show_trainer">
+          <CardBase padding="sm" >
+            <p class="text-lg font-medium mb-2">Тренажер</p>
+            <p class="font-medium mb-2">Переведите фразы целиком на английский язык для проверки орфографии</p>
+            <CardSpellingTrainer v-for="item in lesson.orthography_items" :item="item" lang="ru"/>
+          </CardBase>
+        </template>
+
+        <template v-else-if="show_videos">
+          <CardBase padding="sm">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              <div class="" v-for="video in videos" :key="video.id">
+                {{video.video_number}}
+                <BlockVideoWithPreview  :data="video"/>
+
+              </div>
+
+            </div>
+
+          </CardBase>
+
+        </template>
+        <template v-else>
           <div class="space-y-3 mb-6">
             <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
-<!--              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
+              <!--              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
 
               <div class="text-lg font-medium" v-html="block.caption === '  None' ? '' : block.caption"></div>
 
@@ -204,13 +285,6 @@ const handlePharaseToggleFav = async (id) => {
             <Button outlined icon="pi pi-arrow-left" label="Предыдущий урок"/>
             <Button  icon-pos="right" icon="pi pi-arrow-right" label="Следующий урок"/>
           </div>
-        </template>
-        <template v-else>
-          <CardBase padding="sm" >
-            <p class="text-lg font-medium mb-2">Тренажер</p>
-            <p class="font-medium mb-2">Переведите фразы целиком на английский язык для проверки орфографии</p>
-            <CardSpellingTrainer v-for="item in lesson.orthography_items" :item="item" lang="ru"/>
-          </CardBase>
         </template>
 
 
