@@ -8,7 +8,7 @@ const {data:courses,pending} = useHttpRequest(await useAsyncData(()=>$api.lesson
   <div class="grid grid-cols-2 gap-5" v-for="course in courses">
     <NuxtLink v-for="level in course.levels"  :to="`/courses/${course.slug}/${level.slug}`" class="hidden sm:flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
       <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px] bg-[#ffe5f7] border border-[18181b]/[0.5]">
-        <img src="~/assets/images/air-card.svg" alt="" class="mix-blend-luminosity">
+        <img src="~/assets/images/air-card.svg" alt="" class="">
       </div>
       <div class="w-full flex flex-col gap-[3px]">
         <div class="flex items-center">

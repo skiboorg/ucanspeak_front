@@ -78,6 +78,7 @@ const handleTrainerToggleFav = async (id) => {
                              v-for="item in lesson_item_favorites"
                              :key="item.id"
                              :item="item"
+                             :show_add_to_fav="true"
                              :opened="openedId === item.id"
                              @toggle_open="handleToggleOpen"
                              @toggle_fav="handlePhraseToggleFav"/>
@@ -90,6 +91,7 @@ const handleTrainerToggleFav = async (id) => {
                              v-for="item in trainer_item_favorites"
                              :key="item.id"
                              :item="item"
+                             :show_add_to_fav="true"
                              :opened="openedId === item.id"
                              @toggle_open="handleToggleOpen"
                              @toggle_fav="handleTrainerToggleFav"/>

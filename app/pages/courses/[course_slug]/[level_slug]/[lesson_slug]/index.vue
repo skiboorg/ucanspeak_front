@@ -1,5 +1,7 @@
 <!--lesson_slug-->
 <script setup lang="ts">
+type ViewMode = "module" | "videos" | "table" | "trainer"
+
 const {$api} = useNuxtApp()
 const {lesson_slug, level_slug, course_slug}  = useRoute().params
 const {m_id} = useRoute().query
@@ -14,12 +16,11 @@ const authStore = useAuthStore()
 const {user} = storeToRefs(authStore)
 const openedId = ref<number | null>(null)
 const opened_dictionary_id = ref<number | null>(null)
-const show_trainer = ref(false)
-const show_table = ref(false)
-const show_videos = ref(false)
+const viewMode = ref<ViewMode>("module")
 const dictionary_modal_visible = ref(false)
 const table = ref(null)
 const videos = ref([])
+const config = useRuntimeConfig();
 
 const dictionary_direction = ref('ruEN')
 
@@ -50,9 +51,7 @@ const handleToggleDictionaryOpen = (id: number) => {
 
 const fetch_module = async (id) => {
   current_module.value= id
-  show_trainer.value = false
-  show_table.value = false
-  show_videos.value = false
+  viewMode.value = "module"
   loading.value = true
   await nextTick()
   window.scrollTo({
@@ -110,19 +109,17 @@ const fetchTable = async () => {
     const resp =  await $api.lessons.lesson_table(lesson_slug)
     table.value = resp.table
   }
-  show_trainer.value = false
-  show_videos.value = false
-  show_table.value = true
+  viewMode.value = "table"
 }
 
 const fetchVideos = async () => {
   if (videos.value.length === 0) {
     videos.value = await $api.lessons.lesson_videos(lesson_slug)
   }
-  show_trainer.value = false
-  show_table.value = false
-  show_videos.value = true
+  viewMode.value = "videos"
 }
+
+
 </script>
 
 
@@ -136,6 +133,9 @@ const fetchVideos = async () => {
   ]"
   />
   <BlockCourseHeader :title="lesson.title" show_profile/>
+  <a v-if="user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
+    <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
+  </a>
   <Button @click="dictionary_modal_visible = true" fluid outlined class="mb-4 block md:hidden" label="Словарь"/>
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-12 md:col-span-3 ">
@@ -146,17 +146,15 @@ const fetchVideos = async () => {
             @click="fetch_module(module.id)"
             class="w-full cursor-pointer flex items-center justify-between gap-2 p-3 rounded-2xl hover:bg-[#F6F6FB] transition-[0.2s] duration-[ease-in-out] ease-[all]"
             :class="{
-                'bg-[#F6F6FB]': current_module===module.id
+              'bg-[#F6F6FB]': viewMode === 'module' && current_module === module.id
             }"
         >
           <span> {{ i + 1 }}. {{ module.title }}</span>
           <i v-if="module.is_done" class="text-green-500 pi pi-check-circle"></i>
         </p>
-        <div  class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]"
-             @click="fetchVideos"
-             :class="{
-                'bg-[#efeff5]': show_videos
-            }"
+        <div  class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer  hover:bg-[#F6F6FB]"
+              @click="fetchVideos"
+              :class="viewMode === 'videos' ? 'bg-[#efeff5]' : 'bg-white'"
         >
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
@@ -165,11 +163,9 @@ const fetchVideos = async () => {
           </svg>
           <p>Видео</p>
         </div>
-        <div v-if="lesson.have_table" class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]"
+        <div v-if="lesson.have_table" class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer  hover:bg-[#F6F6FB]"
              @click="fetchTable"
-             :class="{
-                'bg-[#efeff5]': show_table
-            }"
+             :class="viewMode === 'table' ? 'bg-[#efeff5]' : 'bg-white'"
         >
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
@@ -177,6 +173,16 @@ const fetchVideos = async () => {
             <path d="M21.74 11.3043V15.6522C21.74 15.8828 21.8316 16.104 21.9947 16.267C22.1578 16.4301 22.3789 16.5217 22.6096 16.5217H26.9574M18.5904 20.5409C18.9367 20.1949 19.4062 20.0007 19.8957 20.001C20.3852 20.0012 20.8545 20.1959 21.2004 20.5422C21.5464 20.8885 21.7406 21.358 21.7403 21.8474C21.7401 22.3369 21.5454 22.8062 21.1991 23.1522L16.8357 27.5104C16.629 27.7172 16.3736 27.8685 16.093 27.9504L13.6 28.6783C13.5252 28.7001 13.4459 28.7014 13.3704 28.682C13.2949 28.6627 13.2259 28.6234 13.1708 28.5683C13.1157 28.5132 13.0764 28.4443 13.0571 28.3688C13.0377 28.2933 13.039 28.214 13.0609 28.1391L13.7878 25.6443C13.8699 25.3641 14.0212 25.109 14.2278 24.9026L18.5904 20.5409Z" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <p>Таблица</p>
+        </div>
+        <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer  hover:bg-[#F6F6FB]" @click="viewMode = 'trainer'"
+             :class="viewMode === 'trainer' ? 'bg-[#efeff5]' : 'bg-white'"
+        >
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
+            <path d="M20.573 28.6957H25.2174C25.6786 28.6957 26.121 28.5124 26.4471 28.1863C26.7733 27.8601 26.9565 27.4178 26.9565 26.9565V16.5217C26.9572 16.2462 26.9033 15.9732 26.7979 15.7186C26.6926 15.464 26.5378 15.2328 26.3426 15.0383L23.2226 11.9183C23.0281 11.7231 22.7969 11.5683 22.5423 11.4629C22.2877 11.3576 22.0147 11.3037 21.7391 11.3044H14.7826C14.3214 11.3044 13.879 11.4876 13.5529 11.8137C13.2267 12.1399 13.0435 12.5822 13.0435 13.0435V21.1652" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M21.74 11.3043V15.6522C21.74 15.8828 21.8316 16.104 21.9947 16.267C22.1578 16.4301 22.3789 16.5217 22.6096 16.5217H26.9574M18.5904 20.5409C18.9367 20.1949 19.4062 20.0007 19.8957 20.001C20.3852 20.0012 20.8545 20.1959 21.2004 20.5422C21.5464 20.8885 21.7406 21.358 21.7403 21.8474C21.7401 22.3369 21.5454 22.8062 21.1991 23.1522L16.8357 27.5104C16.629 27.7172 16.3736 27.8685 16.093 27.9504L13.6 28.6783C13.5252 28.7001 13.4459 28.7014 13.3704 28.682C13.2949 28.6627 13.2259 28.6234 13.1708 28.5683C13.1157 28.5132 13.0764 28.4443 13.0571 28.3688C13.0377 28.2933 13.039 28.214 13.0609 28.1391L13.7878 25.6443C13.8699 25.3641 14.0212 25.109 14.2278 24.9026L18.5904 20.5409Z" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <p>Орфография</p>
         </div>
         <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]" @click="play">
           <svg v-if="!isPlaying" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -189,18 +195,7 @@ const fetchVideos = async () => {
           </svg>
           <p>Аудиоурок</p>
         </div>
-        <div class="flex items-center gap-3 border rounded-lg p-3 cursor-pointer bg-white hover:bg-[#F6F6FB]" @click="show_trainer= true"
-             :class="{
-                'bg-[#efeff5]': show_trainer
-            }"
-        >
-          <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
-            <path d="M20.573 28.6957H25.2174C25.6786 28.6957 26.121 28.5124 26.4471 28.1863C26.7733 27.8601 26.9565 27.4178 26.9565 26.9565V16.5217C26.9572 16.2462 26.9033 15.9732 26.7979 15.7186C26.6926 15.464 26.5378 15.2328 26.3426 15.0383L23.2226 11.9183C23.0281 11.7231 22.7969 11.5683 22.5423 11.4629C22.2877 11.3576 22.0147 11.3037 21.7391 11.3044H14.7826C14.3214 11.3044 13.879 11.4876 13.5529 11.8137C13.2267 12.1399 13.0435 12.5822 13.0435 13.0435V21.1652" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M21.74 11.3043V15.6522C21.74 15.8828 21.8316 16.104 21.9947 16.267C22.1578 16.4301 22.3789 16.5217 22.6096 16.5217H26.9574M18.5904 20.5409C18.9367 20.1949 19.4062 20.0007 19.8957 20.001C20.3852 20.0012 20.8545 20.1959 21.2004 20.5422C21.5464 20.8885 21.7406 21.358 21.7403 21.8474C21.7401 22.3369 21.5454 22.8062 21.1991 23.1522L16.8357 27.5104C16.629 27.7172 16.3736 27.8685 16.093 27.9504L13.6 28.6783C13.5252 28.7001 13.4459 28.7014 13.3704 28.682C13.2949 28.6627 13.2259 28.6234 13.1708 28.5683C13.1157 28.5132 13.0764 28.4443 13.0571 28.3688C13.0377 28.2933 13.039 28.214 13.0609 28.1391L13.7878 25.6443C13.8699 25.3641 14.0212 25.109 14.2278 24.9026L18.5904 20.5409Z" stroke="#3333E8" stroke-width="1.73913" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <p>Тренажер</p>
-        </div>
+
 
       </CardBase>
 
@@ -214,12 +209,12 @@ const fetchVideos = async () => {
         </div>
       </template>
       <template v-else>
-        <template v-if="show_table">
+        <template v-if="viewMode === 'table'">
           <CardBase padding="sm" >
             <img :src="table"/>
           </CardBase>
         </template>
-        <template  v-else-if="show_trainer">
+        <template  v-else-if="viewMode === 'trainer'">
           <CardBase padding="sm" >
             <p class="text-lg font-medium mb-2">Тренажер</p>
             <p class="font-medium mb-2">Переведите фразы целиком на английский язык для проверки орфографии</p>
@@ -227,12 +222,12 @@ const fetchVideos = async () => {
           </CardBase>
         </template>
 
-        <template v-else-if="show_videos">
+        <template v-else-if="viewMode === 'videos'">
           <CardBase padding="sm">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div class="" v-for="video in videos" :key="video.id">
                 {{video.video_number}}
-                <BlockVideoWithPreview  :data="video"/>
+                <BlockVideoWithPreview :showPreview = "true" :data="video"/>
 
               </div>
 
@@ -246,14 +241,14 @@ const fetchVideos = async () => {
             <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
               <!--              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
 
-              <div class="text-lg font-medium" v-html="block.caption === '  None' ? '' : block.caption"></div>
+              <div class="text-lg font-medium mb-3" v-html="block.caption === '  None' ? '' : block.caption"></div>
 
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
                 <img @click="videoSelected(block.videos[0].video_src)" class="cursor-pointer" src="~assets/images/tutorial_video.png">
 
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
-                <BlockKaraoke :data="block.videos[0]"/>
+                <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
               <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3"></div>
               <div v-if="block.items.length>0" class="space-y-1">
@@ -263,6 +258,7 @@ const fetchVideos = async () => {
                     :item="item"
                     :opened="openedId === item.id"
                     :loading="fav_loading"
+                    :show_add_to_fav="true"
                     @toggle_open="handleToggleOpen"
                     @toggle_fav="handlePharaseToggleFav"
                 />
@@ -274,17 +270,17 @@ const fetchVideos = async () => {
                         :icon="block.is_done ? 'pi pi-check-circle' :'' "
                         :outlined="!block.is_done"
                         label="Выполнено"/>
-                <a v-if="user.is_superuser" target="_blank" :href="`http://localhost:8000/admin/lesson/moduleblock/${block.id}/change/`">
+                <a v-if="user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/moduleblock/${block.id}/change/`">
                   <Button outlined severity="secondary" icon="pi pi-pencil"/>
                 </a>
               </div>
 
             </CardBase>
           </div>
-          <div class="grid grid-cols-2 gap-3">
-            <Button outlined icon="pi pi-arrow-left" label="Предыдущий урок"/>
-            <Button  icon-pos="right" icon="pi pi-arrow-right" label="Следующий урок"/>
-          </div>
+          <!--          <div class="grid grid-cols-2 gap-3">-->
+          <!--            <Button outlined icon="pi pi-arrow-left" label="Предыдущий урок"/>-->
+          <!--            <Button  icon-pos="right" icon="pi pi-arrow-right" label="Следующий урок"/>-->
+          <!--          </div>-->
         </template>
 
 
@@ -337,27 +333,27 @@ const fetchVideos = async () => {
           :style="{ width: '35rem','padding': '0' }">
 
 
-      <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
-           @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">
-        <p >{{dictionary_direction==='ruEN' ? 'Русский' : 'Английский'}} </p>
-        <svg width="63" height="28" viewBox="0 0 63 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="63" height="28" rx="14" fill="#EFEFF5"/>
-          <path d="M24 11.918H39L34 6.91797M39.3329 16.0846H24.3329L29.3329 21.0846" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <p >{{dictionary_direction==='ruEN' ? 'Английский' : 'Русский'}} </p>
-        <p></p>
-      </div>
-      <div class="space-y-1 mb-3"
-           v-for="group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
-        <TypingText18 :text="group.title"/>
-        <CardDictionaryItem :dictionary_direction="dictionary_direction"
-                            :item="item"
-                            v-for="item in group.items"
-                            :opened="opened_dictionary_id === item.id"
-                            @toggle_open="handleToggleDictionaryOpen"
-                            @toggle_fav="handleToggleFav"
-                            :loading="fav_loading"/>
-      </div>
+    <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
+         @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">
+      <p >{{dictionary_direction==='ruEN' ? 'Русский' : 'Английский'}} </p>
+      <svg width="63" height="28" viewBox="0 0 63 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="63" height="28" rx="14" fill="#EFEFF5"/>
+        <path d="M24 11.918H39L34 6.91797M39.3329 16.0846H24.3329L29.3329 21.0846" stroke="black" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p >{{dictionary_direction==='ruEN' ? 'Английский' : 'Русский'}} </p>
+      <p></p>
+    </div>
+    <div class="space-y-1 mb-3"
+         v-for="group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
+      <TypingText18 :text="group.title"/>
+      <CardDictionaryItem :dictionary_direction="dictionary_direction"
+                          :item="item"
+                          v-for="item in group.items"
+                          :opened="opened_dictionary_id === item.id"
+                          @toggle_open="handleToggleDictionaryOpen"
+                          @toggle_fav="handleToggleFav"
+                          :loading="fav_loading"/>
+    </div>
 
   </Dialog>
 </template>

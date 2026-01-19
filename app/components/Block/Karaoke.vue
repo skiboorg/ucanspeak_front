@@ -109,6 +109,8 @@ const playPhraseAudio = (file: string) => {
       />
     </video>
 
+    <p class="bg-white absolute left-3 top-3 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
+
     <!-- FULLSCREEN BUTTON -->
     <button
         class="absolute top-2 right-4 z-50 text-white bg-black/70 px-3 py-1 rounded"
@@ -187,10 +189,6 @@ const playPhraseAudio = (file: string) => {
 .fade-leave-to {
   opacity: 0;
 }
-.video-modal {
-  .p-dialog-content{
-    padding: 0 !important;
-  }
-}
+
 </style>
 

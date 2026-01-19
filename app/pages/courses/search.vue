@@ -4,12 +4,22 @@ const {data:dictionary_favorites,refresh:refresh_dictionary_favorites} = useHttp
 const {data:lesson_item_favorites,refresh:refresh_lesson_item_favorites} = useHttpRequest(await useAsyncData(()=>$api.lessons.lesson_item_favorites()))
 const {data:trainer_item_favorites,refresh:refresh_trainer_item_favorites} = useHttpRequest(await useAsyncData(()=>$api.trainer.favorites()))
 const openedId = ref<number | null>(null)
+const loading = ref(false)
+const result = ref([])
+const q = ref('')
 const opened_dictionary_id = ref<number | null>(null)
 const handleToggleOpen = (id: number) => {
   openedId.value = openedId.value === id ? null : id
 }
 const handleToggleDictionaryOpen = (id: number) => {
   opened_dictionary_id.value = opened_dictionary_id.value === id ? null : id
+}
+
+const search = async () => {
+  loading.value = true
+  result.value = await $api.lessons.search(q.value)
+
+  loading.value = false
 }
 
 
@@ -47,9 +57,9 @@ const handleTrainerToggleFav = async (id) => {
       <InputGroupAddon>
         <i class="pi pi-search"></i>
       </InputGroupAddon>
-      <InputText   placeholder="Поиск" />
+      <InputText :disabled="loading" v-model="q" @keydown.enter="search" placeholder="Поиск" />
     </InputGroup>
-    <p class="text-gray-400">Найдено 135 результатов</p>
+<!--    <p class="text-gray-400">Найдено 135 результатов</p>-->
     <Tabs value="0" class="relative">
 
       <TabList>
@@ -59,39 +69,41 @@ const handleTrainerToggleFav = async (id) => {
       </TabList>
       <TabPanels>
         <TabPanel value="0">
-          <div class="grid grid-cols-3 gap-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
-            <CardDictionaryItem v-if="dictionary_favorites.length>0"
-                                :item="item" v-for="item in dictionary_favorites"
+            <CardDictionaryItem
+                                :item="item" v-for="item in result.dictionary"
                                 dictionary_direction="ruEN"
                                 :opened="opened_dictionary_id === item.id"
                                 @toggle_open="handleToggleDictionaryOpen"
                                 @toggle_fav="handleToggleDictionaryFav"/>
-            <p v-else class="text-sm text-gray-400 font-normal">В избранном пока ничего нет</p>
+
           </div>
         </TabPanel>
         <TabPanel value="1">
-          <div class="grid grid-cols-2 gap-4 mb-6">
-            <CardVoiceFile v-if="lesson_item_favorites.length>0"
-                           v-for="item in lesson_item_favorites"
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <CardVoiceFile
+                           v-for="item in result.phrases"
                            :key="item.id"
                            :item="item"
+                           :show_add_to_fav="true"
                            :opened="openedId === item.id"
                            @toggle_open="handleToggleOpen"
                            @toggle_fav="handlePhraseToggleFav"/>
-            <p v-else class="text-sm text-gray-400 font-normal">В избранном пока ничего нет</p>
+
           </div>
         </TabPanel>
         <TabPanel value="2">
-          <div class="grid grid-cols-2 gap-4 ">
-            <CardVoiceFile v-if="trainer_item_favorites.length>0"
-                           v-for="item in trainer_item_favorites"
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <CardVoiceFile
+                      v-for="item in result.trainer_phrases"
                            :key="item.id"
                            :item="item"
+                        :show_add_to_fav="true"
                            :opened="openedId === item.id"
                            @toggle_open="handleToggleOpen"
                            @toggle_fav="handleTrainerToggleFav"/>
-            <p v-else class="text-sm text-gray-400 font-normal">В избранном пока ничего нет</p>
+
           </div>
         </TabPanel>
       </TabPanels>

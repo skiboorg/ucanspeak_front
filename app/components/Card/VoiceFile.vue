@@ -1,27 +1,27 @@
 <script setup lang="ts">
 const audio = new Audio()
+const config = useRuntimeConfig();
 
 const props = defineProps<{
   item: any
   loading: boolean
   opened: boolean
+  show_add_to_fav: boolean
 }>()
 const emits = defineEmits(['toggle_fav','toggle_open'])
 
 const isOpen = ref<boolean>(false)
 const isPlaying = ref<boolean>(false)
-
 audio.src = props.item.file
+console.log(audio.src)
 audio.addEventListener('ended', () => {
   isPlaying.value = false
 })
 const play = () => {
-
   if (isPlaying.value) {
     audio.pause()
     isPlaying.value = false
   } else {
-
     audio.play()
     isPlaying.value = true
   }
@@ -32,6 +32,7 @@ const play = () => {
 
 <template>
 <div >
+
   <div class="relative flex flex-col items-start gap-1 " >
 <!--    <Button @click="play" icon="pi pi-play" outlined rounded/>-->
     <div class="flex gap-2">
@@ -45,7 +46,7 @@ const play = () => {
           <path d="M14 26.4V13.6C14 13.4409 14.0632 13.2883 14.1757 13.1757C14.2883 13.0632 14.4409 13 14.6 13H17.4C17.5591 13 17.7117 13.0632 17.8243 13.1757C17.9368 13.2883 18 13.4409 18 13.6V26.4C18 26.5591 17.9368 26.7117 17.8243 26.8243C17.7117 26.9368 17.5591 27 17.4 27H14.6C14.4409 27 14.2883 26.9368 14.1757 26.8243C14.0632 26.7117 14 26.5591 14 26.4ZM22 26.4V13.6C22 13.4409 22.0632 13.2883 22.1757 13.1757C22.2883 13.0632 22.4409 13 22.6 13H25.4C25.5591 13 25.7117 13.0632 25.8243 13.1757C25.9368 13.2883 26 13.4409 26 13.6V26.4C26 26.5591 25.9368 26.7117 25.8243 26.8243C25.7117 26.9368 25.5591 27 25.4 27H22.6C22.4409 27 22.2883 26.9368 22.1757 26.8243C22.0632 26.7117 22 26.5591 22 26.4Z" fill="#3333E8" stroke="#3333E8" stroke-width="1.5"/>
         </svg>
       </div>
-      <div class="bg-[#EFEFF5] hover:bg-[#e9e9e9] overflow-hidden p-2 rounded-lg">
+      <div class="bg-[#EFEFF5] hover:bg-[#e9e9e9] overflow-hidden p-2.5 rounded-lg">
         <div @click="emits('toggle_open', item.id)"
              class="flex items-center gap-3 cursor-pointer">
           <div @click="play" class="flex items-center cursor-pointer">
@@ -54,7 +55,7 @@ const play = () => {
               <span v-else>{{ item.text_ru }}</span>
             </div>
           </div>
-          <UILikeBtn :class="loading ? 'disabled opacity-50' : ''" @click.stop="emits('toggle_fav',item.id)" v-model:value="item.is_like" />
+          <UILikeBtn v-if="show_add_to_fav" :class="loading ? 'disabled opacity-50' : ''" @click.stop="emits('toggle_fav',item.id)" v-model:value="item.is_like" />
         </div>
 
       </div>
