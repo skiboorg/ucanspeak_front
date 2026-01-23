@@ -6,10 +6,13 @@ const {data:trainer,pending:pending} = useHttpRequest(await useAsyncData(()=>$ap
 <template>
 
   <div class="flex flex-col gap-3">
-    <div class="h-[241px] sm:h-[340px] lg:h-[300px] w-full rounded-2xl overflow-hidden relative z-[1] flex items-end border border-solid border-[rgba(24,24,27,0.05)]">
-      <img src="~/assets/images/course-card-1.png" alt="" class="absolute z-[-1] left-0 top-0 w-full h-full object-cover">
+    <div class=" h-[241px] sm:h-[340px] lg:h-[300px] w-full rounded-2xl overflow-hidden relative z-[1] flex items-end border border-solid border-[rgba(24,24,27,0.05)]">
+      <div class="absolute bg-[#ff0000] text-white left-3 top-3 rounded-lg px-3 py-2 ">
+        <p class="font-bold text-sm md:">Разговорный тренажер</p>
+      </div>
+      <img src="~/assets/images/trainer.svg" alt="" class="absolute z-[-1] left-0 top-0 w-full h-full object-cover">
       <div class="w-full  bg-gr p-3 pt-[5px] sm:pt-5 sm:px-6 sm:pb-6 text-base sm:text-[28px] font-semibold leading-[130%] text-white">
-        <p class="block md:hidden">Разговорный тренажер</p>
+
 
 
         <nuxt-link :to="`/courses/`" class="flex sm:hidden items-center justify-center w-full h-9 gap-1 bg-white text-sm text-[#3333E8] rounded-lg mt-2">

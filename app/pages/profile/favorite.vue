@@ -100,17 +100,6 @@ const handleTrainerToggleFav = async (id) => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-
-
-
-
-
-
-
-
-
-
-
   </CardBase>
 </template>
 

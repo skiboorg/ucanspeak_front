@@ -216,8 +216,9 @@ const fetchVideos = async () => {
         </template>
         <template  v-else-if="viewMode === 'trainer'">
           <CardBase padding="sm" >
-            <p class="text-lg font-medium mb-2">Тренажер</p>
-            <p class="font-medium mb-2">Переведите фразы целиком на английский язык для проверки орфографии</p>
+            <p class="text-lg font-medium mb-2">Орфография</p>
+
+            <p class="font-medium mb-2">{{lesson.orthography_description}}</p>
             <CardSpellingTrainer v-for="item in lesson.orthography_items" :item="item" lang="ru"/>
           </CardBase>
         </template>
@@ -302,7 +303,12 @@ const fetchVideos = async () => {
         </div>
         <div class="space-y-1 mb-3"
              v-for="group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
-          <TypingText18 :text="group.title"/>
+
+          <a v-if="user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/dictionarygroup/${group.id}/change/`">
+            <Button outlined  severity="secondary" icon="pi pi-pencil" :label="`${group.title}`"/>
+          </a>
+          <TypingText18 v-else :text="group.title"/>
+
           <CardDictionaryItem :dictionary_direction="dictionary_direction"
                               :item="item"
                               v-for="item in group.items"
