@@ -23,6 +23,10 @@ const handleToggleFav = async (id) => {
   })
   await refresh()
 }
+
+useSeoMeta({
+  title: `${topic_data.value.topic.name}`,
+})
 </script>
 
 <template>
@@ -30,6 +34,7 @@ const handleToggleFav = async (id) => {
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
+    { label: 'Тренажер', to: '/courses/trainer/' },
     { label: topic_data.course.name, to: `/courses/trainer/${course_slug}`  },
     { label: topic_data.level.name, to: `/courses/trainer/${course_slug}/${level_slug}`  },
     { label: topic_data.topic.name  },

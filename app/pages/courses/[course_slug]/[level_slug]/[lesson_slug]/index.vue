@@ -119,7 +119,9 @@ const fetchVideos = async () => {
   viewMode.value = "videos"
 }
 
-
+useSeoMeta({
+  title: `${lesson.value.title} `,
+})
 </script>
 
 
@@ -128,6 +130,7 @@ const fetchVideos = async () => {
       :items="[
     { label: 'Главная', to: '/' },
     { label: 'Курсы', to: '/courses' },
+    { label: lesson.course_title, to: `/courses/${course_slug}` },
     { label: lesson.level_title, to: `/courses/${course_slug}/${level_slug}` },
     { label: lesson.title },
   ]"

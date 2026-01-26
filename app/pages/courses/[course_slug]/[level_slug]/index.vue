@@ -4,6 +4,9 @@ const completed  = ref(false)
 const {level_slug}  = useRoute().params
 const {$api} = useNuxtApp()
 const {data:level,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.level(level_slug)))
+useSeoMeta({
+  title: `${level.value.title} `,
+})
 </script>
 
 <template>
@@ -11,10 +14,12 @@ const {data:level,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.
       :items="[
     { label: 'Главная', to: '/' },
     { label: 'Курсы', to: '/courses' },
-    { label: level.course?.course_title },
+    { label: level.course?.course_title, to: `/courses/${level.course?.course_slug}` },
+    { label: level.title },
   ]"
   />
-  <BlockCourseHeader :title="level.course.course_title" :count="level.lessons.length" show_profile>
+
+  <BlockCourseHeader :title="level.title" :count="level.lessons.length" show_profile>
     <template #extra>
       <div @click="completed = !completed" class="flex items-center gap-4 justify-between cursor-pointer">
         <p class="select-none">Показывать только выполненные</p>

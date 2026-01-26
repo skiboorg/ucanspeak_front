@@ -3,12 +3,16 @@
 const {$api} = useNuxtApp()
 const {course_slug,level_slug} = useRoute().params
 const {data:topics_data,pending:pending} = useHttpRequest(await useAsyncData(()=>$api.trainer.topics(level_slug)))
+useSeoMeta({
+  title: `${topics_data.value.level.name}`,
+})
 </script>
 
 <template>
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
+     { label: 'Тренажер', to: '/courses/trainer/' },
     { label: topics_data.course.name, to: `/courses/trainer/${course_slug}`  },
     { label: topics_data.level.name  },
 

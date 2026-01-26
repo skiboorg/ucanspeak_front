@@ -29,9 +29,10 @@ const {data:trainer,pending:pending} = useHttpRequest(await useAsyncData(()=>$ap
       </div>
       <div class="w-full flex flex-col gap-[3px]">
 
-        <div class="font-medium text-sm leading-[130%] text-[#778]">{{course.name}}</div>
-        <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{course.description}} </p>
-
+        <div class="font-bold text-lg leading-[130%] text-[#2c2c2c] uppercase">{{course.name}}</div>
+        <p class="font-medium text-sm leading-[130%] text-[#778]">{{course.description}} </p>
+        <UIPLine :value="0" class="my-[5px]"/>
+        <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">0 из 0 уроков пройдено</p>
 
       </div>
     </NuxtLink>

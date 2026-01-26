@@ -4,7 +4,9 @@ const authStore = useAuthStore()
 const {user} = storeToRefs(authStore)
 await $api.auth.me()
 const {data:courses,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.courses()))
-
+useSeoMeta({
+  title: `Курсы `,
+})
 </script>
 
 <template>

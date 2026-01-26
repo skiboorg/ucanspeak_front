@@ -3,6 +3,9 @@
 const {course_slug}  = useRoute().params
 const {$api} = useNuxtApp()
 const {data:course,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.course(course_slug)))
+useSeoMeta({
+  title: `${course.value.title} `,
+})
 </script>
 
 <template>
