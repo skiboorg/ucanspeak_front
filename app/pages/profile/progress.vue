@@ -4,7 +4,6 @@ const {data:courses,pending} = useHttpRequest(await useAsyncData(()=>$api.lesson
 </script>
 
 <template>
-
   <div class="grid grid-cols-2 gap-5 mb-5" v-for="course in courses">
     <NuxtLink v-for="level in course.levels"  :to="`/courses/${course.slug}/${level.slug}`" class="hidden sm:flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
       <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
@@ -19,17 +18,10 @@ const {data:courses,pending} = useHttpRequest(await useAsyncData(()=>$api.lesson
         </div>
         <div class="font-medium text-sm leading-[130%] text-[#778]">{{level.title}}</div>
         <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{level.description}} </p>
-
         <UIPLine :value="level.progress" class="my-[5px]"/>
         <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{level.done_lessons_count}} из {{level.lessons_count}} уроков пройдено</p>
       </div>
     </NuxtLink>
-
   </div>
-
-
 </template>
 
-<style scoped>
-
-</style>

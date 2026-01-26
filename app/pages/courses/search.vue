@@ -69,7 +69,7 @@ const handleTrainerToggleFav = async (id) => {
       </TabList>
       <TabPanels>
         <TabPanel value="0">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-6">
 
             <CardDictionaryItem
                                 :item="item" v-for="item in result.dictionary"
@@ -81,7 +81,7 @@ const handleTrainerToggleFav = async (id) => {
           </div>
         </TabPanel>
         <TabPanel value="1">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-6">
             <CardVoiceFile
                            v-for="item in result.phrases"
                            :key="item.id"
@@ -94,7 +94,7 @@ const handleTrainerToggleFav = async (id) => {
           </div>
         </TabPanel>
         <TabPanel value="2">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-1 ">
             <CardVoiceFile
                       v-for="item in result.trainer_phrases"
                            :key="item.id"

@@ -9,9 +9,9 @@ useSeoMeta({
 </script>
 
 <template>
-  <BlockCourseHeader title="Курс для взрослых" :count="course?.levels.length" show_profile/>
+  <BlockCourseHeader :title="course.title" :count="course?.levels.length" show_profile/>
     <div class="space-y-4">
-      <NuxtLink v-for="level in course.levels"  :to="`/courses/${course.slug}/${level.slug}`" class="hidden sm:flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
+      <NuxtLink v-for="level in course.levels"  :to="`/courses/${course.slug}/${level.slug}`" class="flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
         <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
           <img :src="level.icon" alt="" class="">
         </div>

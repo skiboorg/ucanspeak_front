@@ -19,7 +19,7 @@ useSeoMeta({
   </BlockCourseHeader>
   <div class="flex flex-col gap-3">
 
-    <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="hidden sm:flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
+    <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
       <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
         <img :src="course.icon" alt="" class="">
       </div>

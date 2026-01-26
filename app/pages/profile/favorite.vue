@@ -61,7 +61,7 @@ const handleTrainerToggleFav = async (id) => {
               </svg>
               <p  class="text-gray-400">Очистить избранное</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+            <div class="grid grid-cols-2 md:grid-cols-2 gap-1 mb-6">
 
               <CardDictionaryItem v-if="dictionary_favorites.length>0"
                                   :item="item" v-for="item in dictionary_favorites"
@@ -73,7 +73,7 @@ const handleTrainerToggleFav = async (id) => {
             </div>
           </TabPanel>
           <TabPanel value="1">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-6">
               <CardVoiceFile v-if="lesson_item_favorites.length>0"
                              v-for="item in lesson_item_favorites"
                              :key="item.id"
@@ -86,7 +86,7 @@ const handleTrainerToggleFav = async (id) => {
             </div>
           </TabPanel>
           <TabPanel value="2">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 ">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-1 ">
               <CardVoiceFile v-if="trainer_item_favorites.length>0"
                              v-for="item in trainer_item_favorites"
                              :key="item.id"

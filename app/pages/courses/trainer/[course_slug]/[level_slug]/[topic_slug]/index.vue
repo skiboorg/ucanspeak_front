@@ -82,7 +82,7 @@ useSeoMeta({
 
       <CardBase v-if="show_test" padding="md">
           <TypingText28 text="Проверьте себя" class="mb-6"/>
-        <div class="space-y-3 mb-4">
+        <div class="space-y-1 mb-4">
           <CardVoiceFile v-for="item in topic_data.topic.phrases" :key="item.id" :item="item" @toggle_fav="handleToggleFav" />
         </div>
         <Button
