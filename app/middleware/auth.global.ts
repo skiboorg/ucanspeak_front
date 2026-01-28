@@ -1,7 +1,12 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-  if(to.meta.auth || to.meta.guest){
-    const authStore = useAuthStore();
+  const authStore = useAuthStore()
+  const {user} = storeToRefs(authStore)
 
+  if (user.value && user.value.is_subscription_expired && to.name !== 'tariff') {
+    return  navigateTo({ name: 'tariff' })
+  }
+
+  if(to.meta.auth || to.meta.guest){
     if(to.meta.auth && !authStore.user){
       return navigateTo({ name: 'index' })
     }

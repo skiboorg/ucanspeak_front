@@ -18,6 +18,7 @@ const openedId = ref<number | null>(null)
 const opened_dictionary_id = ref<number | null>(null)
 const viewMode = ref<ViewMode>("module")
 const dictionary_modal_visible = ref(false)
+const table_modal_visible = ref(false)
 const table = ref(null)
 const videos = ref([])
 const config = useRuntimeConfig();
@@ -109,7 +110,8 @@ const fetchTable = async () => {
     const resp =  await $api.lessons.lesson_table(lesson_slug)
     table.value = resp.table
   }
-  viewMode.value = "table"
+  table_modal_visible.value = true
+  //viewMode.value = "table"
 }
 
 const fetchVideos = async () => {
@@ -136,10 +138,13 @@ useSeoMeta({
   ]"
   />
   <BlockCourseHeader :title="lesson.title" show_profile/>
-  <a v-if="user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
+  <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
     <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
   </a>
-  <Button @click="dictionary_modal_visible = true" fluid outlined class="mb-4 block md:hidden" label="Словарь"/>
+  <div class="mb-4 block md:hidden">
+    <Button @click="dictionary_modal_visible = true" fluid outlined  label="Словарь"/>
+  </div>
+
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-12 md:col-span-3 ">
       <CardBase padding="sm" class="mb-4 sticky top-5 space-y-1">
@@ -253,6 +258,7 @@ useSeoMeta({
 
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
+
                 <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
               <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3"></div>
@@ -261,6 +267,7 @@ useSeoMeta({
                     v-for="item in block.items"
                     :key="item.id"
                     :item="item"
+                    :reverse="false"
                     :opened="openedId === item.id"
                     :loading="fav_loading"
                     :show_add_to_fav="true"
@@ -269,13 +276,13 @@ useSeoMeta({
                 />
               </div>
               <div class="flex gap-4 mt-3">
-                <Button v-if="block.can_be_done" @click="toggleBlockDone(block.id,index)"
+                <Button v-if="user && !user.is_pupil && block.can_be_done" @click="toggleBlockDone(block.id,index)"
                         fluid
                         severity="success"
                         :icon="block.is_done ? 'pi pi-check-circle' :'' "
                         :outlined="!block.is_done"
                         label="Выполнено"/>
-                <a v-if="user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/moduleblock/${block.id}/change/`">
+                <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/moduleblock/${block.id}/change/`">
                   <Button outlined severity="secondary" icon="pi pi-pencil"/>
                 </a>
               </div>
@@ -308,7 +315,7 @@ useSeoMeta({
         <div class="space-y-1 mb-3"
              v-for="group in  module?.module_dictionary_groups.length>0 ? module?.module_dictionary_groups : lesson.dictionary_groups ">
 
-          <a v-if="user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/dictionarygroup/${group.id}/change/`">
+          <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/dictionarygroup/${group.id}/change/`">
             <Button outlined  severity="secondary" icon="pi pi-pencil" :label="`${group.title}`"/>
           </a>
           <TypingText18 v-else :text="group.title"/>
@@ -324,16 +331,25 @@ useSeoMeta({
       </CardBase>
     </div>
   </div>
+  <Dialog v-model:visible="table_modal_visible"
+          modal
+          :show-header="false"
+          class="relative p-0 w-[90%] md:w-[50%]"
+          >
+    <i class="pi pi-times absolute top-3 right-3 cursor-pointer z-40" @click="table_modal_visible=false"></i>
+    <img class="w-full h-auto object-contain" :src="table"/>
+
+  </Dialog>
   <Dialog v-model:visible="video_tutorial_modal_visible"
           modal
           :show-header="false"
-          header="Edit Profile"
+
           class="relative"
           :style="{ width: '35rem','padding': '0' }">
     <i class="pi pi-times absolute top-3 right-3 cursor-pointer z-40" @click="video_tutorial_modal_visible=false"></i>
     <video width="100%" height="auto" preload="none" playsinline="true" id="video_player"
            controls="controls" autoplay="autoplay">
-      <source :src="`https://platform.ucanspeak.ru/${tutorial_video}`" type="video/mp4">
+      <source :src="tutorial_video" type="video/mp4">
     </video>
   </Dialog>
   <Dialog v-model:visible="dictionary_modal_visible"

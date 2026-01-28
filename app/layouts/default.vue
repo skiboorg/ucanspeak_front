@@ -5,5 +5,5 @@
     <slot/>
   </div>
   <BlockFooter/>
-
+  <ModalNotAuth/>
 </template>

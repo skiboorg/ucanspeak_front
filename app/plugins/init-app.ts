@@ -5,5 +5,6 @@ export default defineNuxtPlugin(async (nuxtApp):Promise<any> => {
   const authCookie = useCookie('auth_token')
   if (authCookie.value) {
     await $api.auth.me()
+
   }
 })

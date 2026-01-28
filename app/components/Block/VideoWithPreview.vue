@@ -134,12 +134,13 @@ const handleToggleOpen = (id: number) => {
       <video
           ref="videoEl"
           controls
+          preload="metadata"
           controlsList="nofullscreen"
           class="w-full"
           @timeupdate="onTimeUpdate"
       >
 
-        <source :src="data.file+'#t=0.1'" type="video/mp4" />
+        <source :src="data.file" type="video/mp4" />
       </video>
       <p class="bg-white absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
       <!-- FULLSCREEN BUTTON -->
@@ -187,6 +188,8 @@ const handleToggleOpen = (id: number) => {
             v-for="item in visiblePhrases"
             :key="item.id"
             :item="item"
+            :reverse="true"
+            :show_add_to_fav="false"
             :opened="openedId === item.id"
             :loading="fav_loading"
             @toggle_open="handleToggleOpen"

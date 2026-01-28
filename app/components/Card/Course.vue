@@ -1,5 +1,7 @@
 <script setup lang="ts">
 const props = defineProps(['course'])
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
 </script>
 
 <template>
@@ -35,8 +37,8 @@ const props = defineProps(['course'])
         <div class="font-medium text-sm leading-[130%] text-[#778]">{{level.description}}</div>
 <!--        <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{level.description}} </p>-->
 
-        <UIPLine :value="level.progress" class="my-[5px]"/>
-        <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{level.done_lessons_count}} из {{level.lessons_count}} уроков пройдено</p>
+        <UIPLine v-if="user && !user.is_pupil"  :value="level.progress" class="my-[5px]"/>
+        <p v-if="user && !user.is_pupil" class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{level.done_lessons_count}} из {{level.lessons_count}} уроков пройдено</p>
       </div>
     </NuxtLink>
   </div>

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 const {level_slug, course_slug}  = useRoute().params
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
+const showNotAuthModal = useState('showNotAuthModal')
 interface Lesson {
   id: number
   title: string
@@ -17,7 +20,19 @@ interface Props {
 const props = defineProps<Props>()
 
 const gotoLesson = () => {
-  navigateTo(`/courses/${course_slug}/${level_slug}/${props.lesson.slug}`)
+  if (user.value){
+    navigateTo(`/courses/${course_slug}/${level_slug}/${props.lesson.slug}`)
+    return
+  }
+
+
+  if (props.lesson.is_free) {
+    navigateTo(`/courses/${course_slug}/${level_slug}/${props.lesson.slug}`)
+    return
+  }
+
+  showNotAuthModal.value = true
+
 }
 </script>
 
@@ -36,7 +51,7 @@ const gotoLesson = () => {
     <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{lesson.short_description}} </p>
     <div class="flex flex-col gap-1">
       <p class="font-normal text-sm leading-[120%] text-[#8f8fa3]">{{ lesson.text }}</p>
-      <UIPLine :value="lesson.progress"/>
+      <UIPLine v-if="user && !user.is_pupil" :value="lesson.progress"/>
     </div>
   </div>
 </template>

@@ -162,7 +162,7 @@ const { send, pending, errors } = useForm({
           <TypingText18 text="Выйти из аккаунта" />
           <p>Выйти</p>
         </div>
-        <Button severity="danger" outlined label="Выйти"/>
+        <Button @click="$api.auth.logout(false)" severity="danger" outlined label="Выйти"/>
       </div>
 
       <div class="flex justify-between">
@@ -170,7 +170,7 @@ const { send, pending, errors } = useForm({
           <TypingText18 text="Выйти со всех устройств" />
           <p>Завершить все сессии</p>
         </div>
-        <Button severity="danger" outlined label="Выйти отовсюду"/>
+        <Button @click="$api.auth.logout(true)" severity="danger" outlined label="Выйти отовсюду"/>
       </div>
       <div v-if="errors" class="text-red-500">
         {{errors}}

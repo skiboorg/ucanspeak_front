@@ -1,5 +1,11 @@
 <script setup lang="ts">
+const init_form = useRoute().query.form
+
+
 const current_form = ref('login')
+if (init_form) {
+  current_form.value = init_form
+}
 const changeFormHandler = (form:string) => {
   current_form.value = form
 }

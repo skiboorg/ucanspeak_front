@@ -1,11 +1,22 @@
 <!--trainer level slug index-->
 <script setup lang="ts">
 const {$api} = useNuxtApp()
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
+const showNotAuthModal = useState('showNotAuthModal')
 const {course_slug,level_slug} = useRoute().params
 const {data:topics_data,pending:pending} = useHttpRequest(await useAsyncData(()=>$api.trainer.topics(level_slug)))
 useSeoMeta({
   title: `${topics_data.value.level.name}`,
 })
+const goto = (slug) => {
+  if (user.value){
+    navigateTo(`/courses/trainer/${course_slug}/${level_slug}/${slug}`)
+    return
+  }
+  showNotAuthModal.value = true
+
+}
 </script>
 
 <template>
@@ -29,7 +40,7 @@ useSeoMeta({
 <!--      </div>-->
 <!--    </NuxtLink>-->
 
-    <nuxt-link v-for="topic in topics_data.topics"  :to="`/courses/trainer/${course_slug}/${level_slug}/${topic.slug}`"
+    <nuxt-link v-for="topic in topics_data.topics"  @click="goto(topic.slug)"
          class="bg-white border border-solid border-[rgba(24,24,27,0.1)] rounded-2xl p-4 flex flex-col gap-2 cursor-pointer">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2">
@@ -48,7 +59,7 @@ useSeoMeta({
 <!--      <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{topic.description}} </p>-->
       <div class="flex flex-col gap-1">
         <p class="font-normal text-sm leading-[120%] text-[#8f8fa3]">{{ topic.description }}</p>
-        <UIPLine :value="0"/>
+        <UIPLine v-if="user && !user.is_pupil" :value="0"/>
       </div>
     </nuxt-link>
 

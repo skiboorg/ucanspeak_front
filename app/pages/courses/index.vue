@@ -2,7 +2,7 @@
 const {$api} = useNuxtApp()
 const authStore = useAuthStore()
 const {user} = storeToRefs(authStore)
-await $api.auth.me()
+if (user.value) await $api.auth.me()
 const {data:courses,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.courses()))
 useSeoMeta({
   title: `Курсы `,
@@ -17,7 +17,7 @@ useSeoMeta({
   ]"
   />
       <BlockCourseHeader title="Курсы" :count="courses?.length" show_profile>
-        <template #extra>
+        <template v-if="user" #extra>
           <NuxtLink v-if="user.last_lesson_url" :to="user.last_lesson_url" class="text-lg font-medium text-[#3333e8] hidden sm:flex items-center gap-3">
 
             <span>Продолжить с последнего места</span>

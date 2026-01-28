@@ -1,8 +1,10 @@
 <script setup lang="ts">
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
 const links = [
-  {title:'Платформа',to:'/'},
-  {title:'О проекте',to:'/'},
-  {title:'Тарифы',to:'/'},
+  {title:'Платформа',to:'/courses'},
+  {title:'О проекте',to:'/about'},
+  {title:'Тарифы',to:'/tariff'},
 ]
 </script>
 
@@ -35,12 +37,15 @@ const links = [
       <NuxtLink v-for="link in links" :to="link.to">{{link.title}}</NuxtLink>
     </div>
     <div class="hidden md:flex gap-3 items-center">
-      <NuxtLink to="/courses/search">
+      <NuxtLink v-if="user" to="/courses/search">
         <Button severity="secondary" text icon="pi pi-search"/>
       </NuxtLink>
 
-      <NuxtLink  to="/profile">
+      <NuxtLink v-if="user"  to="/profile">
         <Button severity="secondary" text outlined icon="pi pi-user"/>
+      </NuxtLink>
+      <NuxtLink v-else to="/auth">
+        <Button  label="Вход / Регистрация"/>
       </NuxtLink>
     </div>
 

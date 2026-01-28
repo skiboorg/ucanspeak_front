@@ -18,9 +18,12 @@ export function createAuthRepository(appFetch: typeof $fetch){
                 body
             })
         },
-        async logout(){
+        async logout(all_devices:boolean){
             authCookie.value = null
-            await appFetch('/auth/token/logout/',{method:'post'})
+            await appFetch('/auth/token/logout/',{
+                method:'post',
+                body:{all_devices}
+            })
             window.location.href='/'
         },
         async update(formData: FormData){
