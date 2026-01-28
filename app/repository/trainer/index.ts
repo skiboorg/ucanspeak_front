@@ -20,6 +20,12 @@ export function createTrainerRepository(appFetch: typeof $fetch){
                 body
             })
         },
+        topic_done(topic_id){
+            return appFetch(`/api/trainer/topic_done/`,{
+                method:'POST',
+                body:{topic_id}
+            })
+        },
         favorites(){
             return appFetch('/api/trainer/favorites/')
         },

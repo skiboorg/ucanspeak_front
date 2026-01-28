@@ -1,9 +1,11 @@
 <template>
 
-
-  <div class="container h-screen lg:pb-[120px] lg:pb-10">
+  <BlockHeader/>
+  <div class="container">
     <slot/>
   </div>
 
 
 </template>
+<script setup lang="ts">
+</script>

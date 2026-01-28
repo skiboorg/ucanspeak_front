@@ -5,6 +5,7 @@ const {course_slug,level_slug,topic_slug} = useRoute().params
 const {data:topic_data,pending,refresh} = useHttpRequest(await useAsyncData(()=>$api.trainer.topic(topic_slug)))
 
 const show_test = ref(false)
+const loading = ref(false)
 const current_audio = ref()
 
 onMounted(()=>{
@@ -27,6 +28,13 @@ const handleToggleFav = async (id) => {
 useSeoMeta({
   title: `${topic_data.value.topic.name}`,
 })
+
+const topic_done = async (id)=>{
+  loading.value = true
+  await $api.trainer.topic_done(id)
+  await refresh()
+  loading.value = false
+}
 </script>
 
 <template>
@@ -83,13 +91,24 @@ useSeoMeta({
       <CardBase v-if="show_test" padding="md">
           <TypingText28 text="Проверьте себя" class="mb-6"/>
         <div class="space-y-1 mb-4">
-          <CardVoiceFile v-for="item in topic_data.topic.phrases" :key="item.id" :item="item" @toggle_fav="handleToggleFav" />
+          <CardVoiceFile
+              v-for="item in topic_data.topic.phrases"
+              :reverse="false"
+              :show_add_to_fav="false"
+              :opened="false"
+              :loading="false"
+              :key="item.id"
+              :item="item"
+              @toggle_fav="handleToggleFav" />
         </div>
+
         <Button
                 fluid
                 severity="success"
                 icon="pi pi-check-circle"
-                outlined
+                :outlined="!topic_data.topic.is_done"
+                :loading="loading"
+                @click="topic_data.topic.is_done ? null : topic_done(topic_data.topic.id)"
                 label="Выполнено"/>
 
       </CardBase>
@@ -102,12 +121,7 @@ useSeoMeta({
 
 
         <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="current_audio?.mp3"></audio>
-        <Button
 
-            severity="success"
-            icon="pi pi-check-circle"
-            outlined
-            label="Выполнено"/>
       </CardBase>
     </div>
   </div>

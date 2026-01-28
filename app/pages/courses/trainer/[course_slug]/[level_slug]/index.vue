@@ -59,7 +59,7 @@ const goto = (slug) => {
 <!--      <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{topic.description}} </p>-->
       <div class="flex flex-col gap-1">
         <p class="font-normal text-sm leading-[120%] text-[#8f8fa3]">{{ topic.description }}</p>
-        <UIPLine v-if="user && !user.is_pupil" :value="0"/>
+        <UIPLine v-if="user && !user.is_pupil" :value="topic.is_done ? 100 : 0"/>
       </div>
     </nuxt-link>
 
