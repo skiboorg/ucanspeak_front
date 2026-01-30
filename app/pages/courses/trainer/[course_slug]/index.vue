@@ -19,9 +19,9 @@ useSeoMeta({
   />
 
   <BlockCourseHeader :title="levels_data.course.name" />
-  <div class="grid grid-cols-3 gap-3">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
     <NuxtLink v-for="level in levels_data.levels"  :to="`/courses/trainer/${course_slug}/${level.slug}`"
-              class="hidden sm:flex items-center gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
+              class="flex  items-center gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
       <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
         <img :src="level.icon" alt="" class="">
       </div>

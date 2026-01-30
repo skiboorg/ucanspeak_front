@@ -49,8 +49,8 @@ const topic_done = async (id)=>{
 
   ]"/>
   <BlockCourseHeader :title="topic_data.topic.order_txt + ' - '+ topic_data.topic.name" />
-  <div class="grid grid-cols-12 gap-4">
-    <div class="col-span-4">
+  <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+    <div class="col-span-12 md:col-span-4">
       <CardBase padding="sm" class="space-y-3">
         <div @click="openAudio(audio_file)" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl"
              :class="!show_test ? 'bg-[#F6F6FB]' : '' "
@@ -86,7 +86,7 @@ const topic_done = async (id)=>{
         </div>
       </CardBase>
     </div>
-    <div class="col-span-8">
+    <div class="col-span-12 md:col-span-8">
 
       <CardBase v-if="show_test" padding="md">
           <TypingText28 text="Проверьте себя" class="mb-6"/>

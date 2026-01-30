@@ -1,6 +1,11 @@
 <!--lesson_slug-->
 <script setup lang="ts">
-type ViewMode = "module" | "videos" | "table" | "trainer"
+definePageMeta({
+  guest: false,
+  auth:true,
+  layout: 'lesson'
+})
+type ViewMode = "module" | "videos" | "audio" | "trainer" | "table"
 
 const {$api} = useNuxtApp()
 const {lesson_slug, level_slug, course_slug}  = useRoute().params
@@ -124,10 +129,21 @@ const fetchVideos = async () => {
 useSeoMeta({
   title: `${lesson.value.title} `,
 })
+const hanleModeChange = async (mode:ViewMode)=>{
+  console.log(mode)
+  if (mode === "videos") {
+    await fetchVideos()
+  }
+  if (mode === "table") {
+    await fetchTable()
+  }
+  viewMode.value = mode
+}
 </script>
 
 
 <template>
+  <BlockLessonFooter @mode_change = "hanleModeChange"/>
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -160,7 +176,7 @@ useSeoMeta({
           <span> {{ i + 1 }}. {{ module.title }}</span>
           <i v-if="module.is_done" class="text-green-500 pi pi-check-circle"></i>
         </p>
-        <div  class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
+        <div  class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
               @click="fetchVideos"
               :class="viewMode === 'videos' ? 'bg-[#efeff5]' : 'bg-white'"
         >
@@ -172,7 +188,7 @@ useSeoMeta({
           </svg>
           <p>Видео</p>
         </div>
-        <div v-if="lesson.have_table" class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
+        <div v-if="lesson.have_table" class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
              @click="fetchTable"
              :class="viewMode === 'table' ? 'bg-[#efeff5]' : 'bg-white'"
         >
@@ -183,7 +199,7 @@ useSeoMeta({
 
           <p>Таблица</p>
         </div>
-        <div class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]" @click="viewMode = 'trainer'"
+        <div class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]" @click="viewMode = 'trainer'"
              :class="viewMode === 'trainer' ? 'bg-[#efeff5]' : 'bg-white'"
         >
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -193,7 +209,10 @@ useSeoMeta({
           </svg>
           <p>Орфография</p>
         </div>
-        <div class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer bg-white hover:bg-[#F6F6FB]" @click="play">
+        <div class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer bg-white hover:bg-[#F6F6FB]"
+             @click="viewMode = 'audio'"
+             :class="viewMode === 'audio' ? 'bg-[#efeff5]' : 'bg-white'"
+        >
           <svg v-if="!isPlaying" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="40" height="40" rx="20" fill="#EFEFF5"/>
             <path fill-rule="evenodd" clip-rule="evenodd" d="M17.8656 13.2C17.7171 13.0886 17.5404 13.0207 17.3554 13.004C17.1705 12.9874 16.9845 13.0225 16.8184 13.1056C16.6523 13.1886 16.5126 13.3163 16.415 13.4743C16.3173 13.6322 16.2656 13.8143 16.2656 14V26C16.2656 26.1857 16.3173 26.3678 16.415 26.5257C16.5126 26.6837 16.6523 26.8114 16.8184 26.8944C16.9845 26.9775 17.1705 27.0126 17.3554 26.996C17.5404 26.9793 17.7171 26.9114 17.8656 26.8L25.8656 20.8C25.9898 20.7069 26.0906 20.5861 26.1601 20.4472C26.2295 20.3084 26.2656 20.1552 26.2656 20C26.2656 19.8448 26.2295 19.6916 26.1601 19.5528C26.0906 19.4139 25.9898 19.2931 25.8656 19.2L17.8656 13.2Z" fill="#3333E8"/>
@@ -218,9 +237,10 @@ useSeoMeta({
         </div>
       </template>
       <template v-else>
-        <template v-if="viewMode === 'table'">
-          <CardBase padding="sm" >
-            <img :src="table"/>
+        <template v-if="viewMode === 'audio'">
+          <CardBase padding="sm" class=" bg-[url('/a_bg.png')] bg-contain bg-top bg-no-repeat bg-cover flex flex-col items-center justify-evenly h-[500px]">
+             <TypingText28 text="Аудио урок"/>
+            <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="lesson.file"></audio>
           </CardBase>
         </template>
         <template  v-else-if="viewMode === 'trainer'">

@@ -18,7 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
 
-  <div class="mb-4 md:mb-12 flex flex-wrap items-center gap-4 md:gap-0 justify-between pt-4 md:pt-10">
+  <div class="mb-4  flex flex-wrap items-center gap-4 md:gap-0 justify-between ">
     <div class="flex items-center gap-4">
       <UIBackBtn :link="prev_link"/>
       <TypingText48 :text="title" />

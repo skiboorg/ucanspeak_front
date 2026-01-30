@@ -1,6 +1,6 @@
 <template>
-
-  <nav class="flex items-center text-[12px] md:text-sm font-normal text-gray-500">
+<!--  md:flex-->
+  <nav class="hidden  items-center text-[12px] md:text-sm font-normal text-gray-500">
     <ol class="flex flex-wrap items-center gap-2">
       <li
           v-for="(item, index) in items"

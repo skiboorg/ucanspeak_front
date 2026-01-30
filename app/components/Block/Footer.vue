@@ -5,7 +5,7 @@ const {user} = storeToRefs(authStore)
 
 <template>
 <footer class="block md:hidden">
-  <div class="fixed bottom-0 w-full h-[100px] bg-white pt-3 flex items-center justify-evenly">
+  <div class="fixed bottom-0 w-full h-[60px] bg-white pt-1 flex items-center justify-evenly">
     <NuxtLink class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/courses">
       <i class="text-[20px] pi pi-bookmark"></i>
       <p>Курсы</p>
