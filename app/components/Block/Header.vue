@@ -16,12 +16,12 @@ const links = [
 </script>
 
 <template>
-<header class="bg-white py-2 md:py-2 mb-0 md:mb-6">
+<header id="top" class="bg-white py-2 md:py-2 mb-2 md:mb-6">
   <div class="container flex items-center justify-between">
     <div class=" flex items-center gap-2">
       <div class="block md:hidden">
 
-        <Button @click="$router.back()" outlined size="small" icon="pi pi-chevron-left"/>
+        <Button @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
 
       </div>
       <NuxtLink to="/courses">
@@ -50,16 +50,18 @@ const links = [
 
     <div class="hidden md:flex gap-8 items-center">
       <NuxtLink v-for="link in links" :to="link.to">{{link.title}}</NuxtLink>
+
     </div>
-    <div class="hidden md:flex gap-3 items-center">
+
+    <div class="flex gap-3 items-center">
       <NuxtLink v-if="user" to="/courses/search">
         <Button severity="secondary" text icon="pi pi-search"/>
       </NuxtLink>
 
-      <NuxtLink v-if="user"  to="/profile">
+      <NuxtLink class="hidden md:inline-block" v-if="user"  to="/profile">
         <Button severity="secondary" text outlined icon="pi pi-user"/>
       </NuxtLink>
-      <NuxtLink v-else to="/auth">
+      <NuxtLink class="hidden md:inline-block" v-else to="/auth">
         <Button  label="Вход / Регистрация"/>
       </NuxtLink>
     </div>

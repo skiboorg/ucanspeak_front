@@ -1,5 +1,21 @@
 <!--lesson_slug-->
 <script setup lang="ts">
+
+import { useBreakpoints } from '@vueuse/core'
+
+const breakpoints = useBreakpoints({
+  mobile: 0, // optional
+  tablet: 640,
+  laptop: 1024,
+  desktop: 1280,
+})
+
+
+const activeBreakpoint = breakpoints.active()
+
+const is_mobile = computed(()=>{
+  return activeBreakpoint.value === 'mobile'
+})
 definePageMeta({
   guest: false,
   auth:true,
@@ -25,6 +41,8 @@ const viewMode = ref<ViewMode>("module")
 const dictionary_modal_visible = ref(false)
 const table_modal_visible = ref(false)
 const table = ref(null)
+const showMenu = ref(true)
+
 const videos = ref([])
 const config = useRuntimeConfig();
 
@@ -57,6 +75,7 @@ const handleToggleDictionaryOpen = (id: number) => {
 
 const fetch_module = async (id) => {
   current_module.value= id
+  if (is_mobile.value) showMenu.value = false
   viewMode.value = "module"
   loading.value = true
   await nextTick()
@@ -76,11 +95,13 @@ const fetch_module = async (id) => {
 onMounted(async () => {
   const id = m_id ? Number(m_id) : lesson.value.modules[0].id
   await fetch_module(id)
+  showMenu.value = true
 })
 
 const videoSelected = (video_src) =>{
   tutorial_video.value = video_src
   video_tutorial_modal_visible.value = true
+
 }
 
 const toggleBlockDone = async (id,index) => {
@@ -123,27 +144,34 @@ const fetchVideos = async () => {
   if (videos.value.length === 0) {
     videos.value = await $api.lessons.lesson_videos(lesson_slug)
   }
+  if (is_mobile.value) showMenu.value = false
   viewMode.value = "videos"
 }
 
 useSeoMeta({
   title: `${lesson.value.title} `,
 })
-const hanleModeChange = async (mode:ViewMode)=>{
-  console.log(mode)
-  if (mode === "videos") {
-    await fetchVideos()
+const toggleMenu = async ()=>{
+  showMenu.value = !showMenu.value
+  await nextTick()
+  if (showMenu.value) {
+    const el = document.getElementById('top')
+    el?.scrollIntoView({ behavior: 'auto' })
   }
-  if (mode === "table") {
-    await fetchTable()
-  }
+
+}
+
+const toggleView = async (mode:ViewMode)=>{
+  if (is_mobile.value) showMenu.value = false
   viewMode.value = mode
 }
+
+
 </script>
 
 
 <template>
-  <BlockLessonFooter @mode_change = "hanleModeChange"/>
+
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -153,17 +181,16 @@ const hanleModeChange = async (mode:ViewMode)=>{
     { label: lesson.title },
   ]"
   />
+
   <BlockCourseHeader :title="lesson.title" show_profile/>
   <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
     <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
   </a>
-  <div class="mb-4 block md:hidden">
-    <Button @click="dictionary_modal_visible = true" fluid outlined  label="Словарь"/>
-  </div>
+
 
   <div class="grid grid-cols-12 gap-4">
     <div class="col-span-12 md:col-span-3 ">
-      <CardBase padding="sm" class="mb-4 sticky top-5 space-y-1">
+      <CardBase  v-if="showMenu" padding="sm" class="mb-4 sticky top-5 space-y-1">
         <p
             v-for="(module, i) in lesson.modules"
             :key="i"
@@ -176,7 +203,7 @@ const hanleModeChange = async (mode:ViewMode)=>{
           <span> {{ i + 1 }}. {{ module.title }}</span>
           <i v-if="module.is_done" class="text-green-500 pi pi-check-circle"></i>
         </p>
-        <div  class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
+        <div  class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
               @click="fetchVideos"
               :class="viewMode === 'videos' ? 'bg-[#efeff5]' : 'bg-white'"
         >
@@ -188,7 +215,7 @@ const hanleModeChange = async (mode:ViewMode)=>{
           </svg>
           <p>Видео</p>
         </div>
-        <div v-if="lesson.have_table" class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
+        <div v-if="lesson.have_table" class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
              @click="fetchTable"
              :class="viewMode === 'table' ? 'bg-[#efeff5]' : 'bg-white'"
         >
@@ -199,7 +226,7 @@ const hanleModeChange = async (mode:ViewMode)=>{
 
           <p>Таблица</p>
         </div>
-        <div class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]" @click="viewMode = 'trainer'"
+        <div class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]" @click="toggleView('trainer')"
              :class="viewMode === 'trainer' ? 'bg-[#efeff5]' : 'bg-white'"
         >
           <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,8 +236,8 @@ const hanleModeChange = async (mode:ViewMode)=>{
           </svg>
           <p>Орфография</p>
         </div>
-        <div class="hidden md:flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer bg-white hover:bg-[#F6F6FB]"
-             @click="viewMode = 'audio'"
+        <div class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer bg-white hover:bg-[#F6F6FB]"
+             @click="toggleView('audio')"
              :class="viewMode === 'audio' ? 'bg-[#efeff5]' : 'bg-white'"
         >
           <svg v-if="!isPlaying" width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -226,8 +253,6 @@ const hanleModeChange = async (mode:ViewMode)=>{
 
 
       </CardBase>
-
-
     </div>
 
     <div class="col-span-12 md:col-span-6">
@@ -402,9 +427,61 @@ const hanleModeChange = async (mode:ViewMode)=>{
     </div>
 
   </Dialog>
+
+  <footer class="block md:hidden">
+    <div class="fixed left-0 bottom-0 w-full h-[70px] bg-white pt-3 flex items-center justify-evenly z-50">
+      <div @click="toggleMenu" class="footer-link flex flex-col items-center justify-center gap-1" >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 18C3.71667 18 3.47933 17.904 3.288 17.712C3.09667 17.52 3.00067 17.2827 3 17C2.99933 16.7173 3.09533 16.48 3.288 16.288C3.48067 16.096 3.718 16 4 16H20C20.2833 16 20.521 16.096 20.713 16.288C20.905 16.48 21.0007 16.7173 21 17C20.9993 17.2827 20.9033 17.5203 20.712 17.713C20.5207 17.9057 20.2833 18.0013 20 18H4ZM4 13C3.71667 13 3.47933 12.904 3.288 12.712C3.09667 12.52 3.00067 12.2827 3 12C2.99933 11.7173 3.09533 11.48 3.288 11.288C3.48067 11.096 3.718 11 4 11H20C20.2833 11 20.521 11.096 20.713 11.288C20.905 11.48 21.0007 11.7173 21 12C20.9993 12.2827 20.9033 12.5203 20.712 12.713C20.5207 12.9057 20.2833 13.0013 20 13H4ZM4 8C3.71667 8 3.47933 7.904 3.288 7.712C3.09667 7.52 3.00067 7.28267 3 7C2.99933 6.71733 3.09533 6.48 3.288 6.288C3.48067 6.096 3.718 6 4 6H20C20.2833 6 20.521 6.096 20.713 6.288C20.905 6.48 21.0007 6.71733 21 7C20.9993 7.28267 20.9033 7.52033 20.712 7.713C20.5207 7.90567 20.2833 8.00133 20 8H4Z" :fill="showMenu ? '#3333E8' : '#8F8FA3'"/>
+        </svg>
+
+
+        <p>Навигация</p>
+      </div>
+      <div @click="fetchTable" class="footer-link flex flex-col items-center justify-center gap-1" >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 10H21M10 3V21M3 5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V5Z" stroke="#777788" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+
+
+        <p>Таблица</p>
+      </div>
+      <div @click="toggleView('audio')" class="footer-link flex flex-col items-center justify-center gap-1" >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="24" height="24" fill="white"/>
+          <path d="M10.0176 7.91699C10.1071 7.92018 10.1941 7.94779 10.2695 7.99609L15.8457 11.5791C15.9162 11.6243 15.9744 11.6864 16.0146 11.7598C16.0549 11.8333 16.0762 11.9162 16.0762 12C16.0762 12.0839 16.0549 12.1667 16.0146 12.2402C15.9744 12.3137 15.9162 12.3757 15.8457 12.4209L10.2695 16.0049C10.1941 16.0532 10.1071 16.0808 10.0176 16.084C9.92811 16.0871 9.83936 16.0663 9.76074 16.0234C9.68203 15.9805 9.61616 15.9169 9.57031 15.8398C9.52447 15.7628 9.50015 15.6746 9.5 15.585V8.41602C9.50015 8.32634 9.52447 8.23821 9.57031 8.16113C9.61615 8.08411 9.68205 8.02046 9.76074 7.97754C9.83934 7.93473 9.92813 7.91385 10.0176 7.91699Z" fill="#8F8FA3"/>
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12 1C18.075 1 23 5.925 23 12C23 18.075 18.075 23 12 23C5.925 23 1 18.075 1 12C1 5.925 5.925 1 12 1ZM12 2.5C9.48044 2.5 7.06382 3.50063 5.28223 5.28223C3.50063 7.06382 2.5 9.48044 2.5 12C2.5 14.5196 3.50063 16.9362 5.28223 18.7178C7.06382 20.4994 9.48044 21.5 12 21.5C14.5196 21.5 16.9362 20.4994 18.7178 18.7178C20.4994 16.9362 21.5 14.5196 21.5 12C21.5 9.48044 20.4994 7.06382 18.7178 5.28223C16.9362 3.50063 14.5196 2.5 12 2.5Z" fill="#8F8FA3"/>
+        </svg>
+
+
+
+        <p>Аудиоурок</p>
+      </div>
+
+      <div @click="dictionary_modal_visible = true" class="footer-link flex flex-col items-center justify-center gap-1" >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 19.025C2.45 19.025 1.97933 18.8293 1.588 18.438C1.19667 18.0466 1.00067 17.5756 1 17.025V15.025C1 14.7416 1.096 14.5043 1.288 14.313C1.48 14.1216 1.71733 14.0256 2 14.025C2.28267 14.0243 2.52033 14.1203 2.713 14.313C2.90567 14.5056 3.00133 14.743 3 15.025V17.025H21V15.025C21 14.7416 21.096 14.504 21.288 14.312C21.48 14.12 21.7173 14.0243 22 14.025C22.2827 14.0256 22.5203 14.1216 22.713 14.313C22.9057 14.5043 23.0013 14.7416 23 15.025V17.025C23 17.575 22.8043 18.046 22.413 18.438C22.0217 18.83 21.5507 19.0256 21 19.025H3ZM7.35 15.225C6.53333 15.225 5.89167 15.0126 5.425 14.588C4.95833 14.1633 4.725 13.584 4.725 12.85C4.725 12.15 4.996 11.5793 5.538 11.138C6.08 10.6966 6.77567 10.4756 7.625 10.475C8.00833 10.475 8.36267 10.5043 8.688 10.563C9.01333 10.6216 9.29233 10.7173 9.525 10.85V10.5C9.525 10.05 9.371 9.69164 9.063 9.42498C8.755 9.15831 8.334 9.02498 7.8 9.02498C7.55 9.02498 7.31267 9.06264 7.088 9.13798C6.86333 9.21331 6.659 9.31731 6.475 9.44998C6.325 9.56664 6.16267 9.63331 5.988 9.64998C5.81333 9.66664 5.65067 9.61664 5.5 9.49998C5.34933 9.38331 5.25767 9.23764 5.225 9.06298C5.19233 8.88831 5.24233 8.73398 5.375 8.59998C5.675 8.31664 6.02933 8.09998 6.438 7.94998C6.84667 7.79998 7.309 7.72498 7.825 7.72498C8.85833 7.72498 9.65 7.97098 10.2 8.46298C10.75 8.95498 11.025 9.66731 11.025 10.6V14.275C11.025 14.475 10.954 14.646 10.812 14.788C10.67 14.93 10.4993 15.0006 10.3 15C10.0833 15 9.90433 14.929 9.763 14.787C9.62167 14.645 9.55067 14.466 9.55 14.25V14.15H9.475C9.25833 14.4833 8.96667 14.746 8.6 14.938C8.23333 15.13 7.81667 15.2256 7.35 15.225ZM7.9 11.65C7.36667 11.65 6.95833 11.7543 6.675 11.963C6.39167 12.1716 6.25 12.4673 6.25 12.85C6.25 13.1833 6.375 13.4543 6.625 13.663C6.875 13.8716 7.2 13.9756 7.6 13.975C8.13333 13.975 8.58767 13.7876 8.963 13.413C9.33833 13.0383 9.52567 12.584 9.525 12.05C9.29167 11.9166 9.025 11.8166 8.725 11.75C8.425 11.6833 8.15 11.65 7.9 11.65ZM16.325 15.225C15.6417 15.225 15.121 15.075 14.763 14.775C14.405 14.475 14.1757 14.2416 14.075 14.075H14V14.4C14 14.6 13.9293 14.771 13.788 14.913C13.6467 15.055 13.4757 15.1256 13.275 15.125C13.0743 15.1243 12.8993 15.0493 12.75 14.9C12.6007 14.7506 12.5257 14.5756 12.525 14.375V5.74998C12.525 5.53331 12.6 5.34998 12.75 5.19998C12.9 5.04998 13.0833 4.97498 13.3 4.97498C13.5167 4.97498 13.7 5.04998 13.85 5.19998C14 5.34998 14.075 5.53331 14.075 5.74998V7.79998L14 8.79998H14.075C14.125 8.71664 14.325 8.50398 14.675 8.16198C15.025 7.81998 15.575 7.64931 16.325 7.64998C17.3917 7.64998 18.2333 8.03331 18.85 8.79998C19.4667 9.56664 19.775 10.45 19.775 11.45C19.775 12.45 19.471 13.3293 18.863 14.088C18.255 14.8466 17.409 15.2256 16.325 15.225ZM16.1 9.04998C15.4333 9.04998 14.9167 9.29598 14.55 9.78798C14.1833 10.28 14 10.8256 14 11.425C14 12.0416 14.1833 12.5916 14.55 13.075C14.9167 13.5583 15.4333 13.8 16.1 13.8C16.7667 13.8 17.2877 13.5583 17.663 13.075C18.0383 12.5916 18.2257 12.0416 18.225 11.425C18.2243 10.8083 18.037 10.2583 17.663 9.77498C17.289 9.29164 16.768 9.04998 16.1 9.04998Z" fill="#777788"/>
+        </svg>
+
+        <p>Словарь</p>
+      </div>
+      <div @click="$router.push('/profile/favorite')" class="footer-link flex flex-col items-center justify-center gap-1" >
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12.0017 4.52804C10.8376 3.48411 9.31182 2.93592 7.74946 3.00019C6.1871 3.06447 4.71155 3.73614 3.63705 4.87217C2.56255 6.00819 1.974 7.51881 1.99673 9.08233C2.01946 10.6458 2.65167 12.1387 3.75874 13.243L10.5877 20.071C10.9628 20.446 11.4714 20.6566 12.0017 20.6566C12.5321 20.6566 13.0407 20.446 13.4157 20.071L20.2447 13.243C21.3518 12.1387 21.984 10.6458 22.0067 9.08233C22.0295 7.51881 21.4409 6.00819 20.3664 4.87217C19.2919 3.73614 17.8164 3.06447 16.254 3.00019C14.6917 2.93592 13.1659 3.48411 12.0017 4.52804ZM10.8297 6.17204L11.2947 6.63604C11.4823 6.82351 11.7366 6.92883 12.0017 6.92883C12.2669 6.92883 12.5212 6.82351 12.7087 6.63604L13.1737 6.17204C13.5427 5.79 13.9841 5.48527 14.4721 5.27563C14.9601 5.066 15.485 4.95565 16.0161 4.95104C16.5472 4.94642 17.074 5.04763 17.5656 5.24875C18.0571 5.44988 18.5037 5.74689 18.8793 6.12246C19.2549 6.49803 19.5519 6.94464 19.753 7.43622C19.9541 7.92781 20.0554 8.45453 20.0507 8.98564C20.0461 9.51676 19.9358 10.0416 19.7261 10.5297C19.5165 11.0177 19.2118 11.4591 18.8297 11.828L12.0017 18.657L5.17374 11.828C4.4451 11.0736 4.04193 10.0632 4.05104 9.01443C4.06015 7.96565 4.48083 6.9624 5.22246 6.22076C5.96409 5.47913 6.96734 5.05846 8.01613 5.04934C9.06492 5.04023 10.0753 5.44341 10.8297 6.17204Z" fill="#8F8FA3"/>
+        </svg>
+
+        <p>Избранное</p>
+      </div>
+    </div>
+  </footer>
 </template>
 
 <style >
+.footer-link{
+  color: #777788;
+  font-size: 11px
+}
+
 /* Общие стили таблицы */
 table {
   width: 100%;
