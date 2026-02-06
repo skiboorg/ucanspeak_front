@@ -24,7 +24,8 @@ const login = async () => {
     })
     const { authToken } = useAuthToken()
     authCookie.value = response.auth_token
-    window.location.reload()
+    //window.location.reload()
+    navigateTo('/courses')
     toast.add({ severity: 'success',summary:'Успешно', detail: 'Получение данных пользователя...', life: 3000 });
   }catch(error){
     toast.add({ severity: 'error',summary:'Ошибка', detail: error.data.non_field_errors[0], life: 3000 });
