@@ -30,7 +30,7 @@ const goto = (slug) => {
   ]"
   />
   <BlockCourseHeader :title="topics_data.level.name" />
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 pb-20">
 <!--    <NuxtLink v-for="topic in topics_data.topics"  :to="`/courses/trainer/${course_slug}/${level_slug}/${topic.slug}`"-->
 <!--              class="hidden sm:flex items-center gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">-->
 <!--      {{topic.order_txt}}-->

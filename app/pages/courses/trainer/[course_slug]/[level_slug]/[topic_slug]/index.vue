@@ -48,7 +48,7 @@ const topic_done = async (id)=>{
     { label: topic_data.topic.name  },
 
   ]"/>
-  <BlockCourseHeader :title="topic_data.topic.order_txt + ' - '+ topic_data.topic.name" />
+  <BlockCourseHeader :title="topic_data.topic.name" />
   <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
     <div class="col-span-12 md:col-span-4">
       <CardBase padding="sm" class="space-y-3">
@@ -86,11 +86,11 @@ const topic_done = async (id)=>{
         </div>
       </CardBase>
     </div>
-    <div class="col-span-12 md:col-span-8">
+    <div class="col-span-12 md:col-span-8 pb-20">
 
       <CardBase v-if="show_test" padding="md">
           <TypingText28 text="Проверьте себя" class="mb-6"/>
-        <div class="space-y-1 mb-4">
+        <div class="space-y-1 mb-4 ">
           <CardVoiceFile
               v-for="item in topic_data.topic.phrases"
               :reverse="false"
@@ -113,14 +113,16 @@ const topic_done = async (id)=>{
 
       </CardBase>
       <CardBase v-else padding="sm" class=" bg-[url('/a_bg.png')] bg-contain bg-top bg-no-repeat bg-cover
-         flex flex-col items-center justify-evenly h-[500px]">
-        <div class="">
-          <TypingText28 :text="current_audio?.name" class="mb-6"/>
-          <p>{{current_audio?.description}}</p>
-        </div>
+         flex flex-col items-center justify-evenly р-[300px] md:h-[500px]">
+
+          <TypingText28 :text="current_audio?.name" class="mb-1"/>
+          <p class="mb-2">{{current_audio?.description}}</p>
 
 
-        <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="current_audio?.mp3"></audio>
+        <BlockAudioPlayer :src="current_audio?.mp3" />
+
+
+<!--        <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="current_audio?.mp3"></audio>-->
 
       </CardBase>
     </div>

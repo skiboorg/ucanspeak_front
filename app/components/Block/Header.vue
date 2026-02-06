@@ -6,6 +6,8 @@ const {user} = storeToRefs(authStore)
 //   {title:'О проекте',to:'/about'},
 //   {title:'Тарифы',to:'/tariff'},
 // ]
+const props = defineProps(['is_lesson_header'])
+const emits = defineEmits(['back_click'])
 const links = [
   {title:'Курс для взрослых',to:'/courses/adult_course'},
   {title:'Школьный курс',to:'/courses/school_course'},
@@ -16,12 +18,14 @@ const links = [
 </script>
 
 <template>
-<header id="top" class="bg-white py-2 md:py-2 mb-2 md:mb-6">
+<header id="top" class="fixed w-full z-50 border-b border-[#EFEFEF] bg-white py-2 md:py-2 mb-2 md:mb-6">
+
   <div class="container flex items-center justify-between">
     <div class=" flex items-center gap-2">
       <div class="block md:hidden">
 
-        <Button @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
+        <Button v-if="!is_lesson_header" @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
+        <Button v-else @click="emits('back_click')" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
 
       </div>
       <NuxtLink to="/courses">
@@ -49,7 +53,7 @@ const links = [
     </div>
 
     <div class="hidden md:flex gap-8 items-center">
-      <NuxtLink v-for="link in links" :to="link.to">{{link.title}}</NuxtLink>
+      <NuxtLink v-for="link in links" :to="link.to" >{{link.title}}</NuxtLink>
 
     </div>
 

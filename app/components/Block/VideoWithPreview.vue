@@ -28,7 +28,7 @@ const firstFrame = ref<string | null>(null) // здесь будет base64 пе
 const currentTime = ref(0)
 const isFullscreen = ref(false)
 const phrases = ref(props.data.phrases)
-
+const isPaused = ref(false)
 /* utils */
 const parseTime = (time: string): number => {
   const [hh, mm, ss] = time.split('.').map(Number)
@@ -43,6 +43,14 @@ const onTimeUpdate = () => {
 /* fullscreen */
 const onFullscreenChange = () => {
   isFullscreen.value = !!document.fullscreenElement
+}
+
+const onPlay = () => {
+  isPaused.value = false
+}
+
+const onPause = () => {
+  isPaused.value = true
 }
 
 const toggleFullscreen = () => {
@@ -111,6 +119,11 @@ const openedId = ref<number | null>(null)
 const handleToggleOpen = (id: number) => {
   openedId.value = openedId.value === id ? null : id
 }
+
+const handleHide = () => {
+  // phrases.value = []
+  isPaused.value = false
+}
 </script>
 
 <template>
@@ -128,7 +141,7 @@ const handleToggleOpen = (id: number) => {
       src="~assets/images/video_lesson.svg"
   />
 
-  <Dialog v-model:visible="visible" modal header="Видео урок" :show-header="false" class="w-[90%] lg:w-[65%] video-modal">
+  <Dialog v-model:visible="visible" @hide="handleHide" modal header="Видео урок" :show-header="false" class="w-[90%] lg:w-[65%] video-modal">
     <div ref="playerEl" class="relative rounded-xl overflow-hidden">
       <!-- VIDEO -->
       <video
@@ -138,12 +151,15 @@ const handleToggleOpen = (id: number) => {
           controlsList="nofullscreen"
           class="w-full"
           @timeupdate="onTimeUpdate"
+          @play="onPlay"
+          @pause="onPause"
       >
 
         <source :src="data.file" type="video/mp4" />
       </video>
       <p class="bg-black/40 text-white absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
       <!-- FULLSCREEN BUTTON -->
+
       <button
           class="absolute top-2 right-2 z-50 text-white bg-black/40 px-3 py-1 rounded"
           @click="visible=false"
@@ -159,13 +175,17 @@ const handleToggleOpen = (id: number) => {
 
       <!-- SUBTITLES (ALWAYS OVER VIDEO) -->
       <transition name="fade">
+
         <div
+
             v-if="isFullscreen && currentPhrase"
             class="absolute bottom-10 left-1/2 -translate-x-1/2
                z-40 bg-black/70 px-6 py-3 rounded-xl
                text-center max-w-[90%]"
         >
+
           <div class="text-2xl text-white font-bold">
+
             {{ currentPhrase.text_en }}
           </div>
           <div class="text-lg text-yellow-300 mt-1">
@@ -175,11 +195,12 @@ const handleToggleOpen = (id: number) => {
       </transition>
 
       <!-- PHRASES LIST (HIDDEN IN FULLSCREEN) -->
+      <div v-if="isPaused">
       <transition-group
           v-if="!isFullscreen"
           name="fade"
           tag="div"
-          class=" bottom-0 left-0 right-0
+          class="max-h-[160px] overflow-y-auto bottom-0 left-0 right-0
              p-4 space-y-2 flex flex-col
              "
       >
@@ -197,6 +218,7 @@ const handleToggleOpen = (id: number) => {
         />
 
       </transition-group>
+      </div>
     </div>
   </Dialog>
 </template>

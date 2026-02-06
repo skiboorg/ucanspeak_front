@@ -9,7 +9,7 @@ const links = [
 <template>
   <BlockHeader/>
 
-  <div class="container">
+  <div class="container pt-20">
     <BlockBaseBreadcrumbs
         :items="[
     { label: 'Главная', to: '/' },

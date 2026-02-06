@@ -5,6 +5,9 @@ export function createLessonsRepository(appFetch: typeof $fetch){
         search(q){
             return appFetch(`/api/search/?q=${q}`)
         },
+        tariffs(){
+            return appFetch('/api/lesson/tariffs/')
+        },
         dictionary_favorites(){
             return appFetch('/api/lesson/dictionary_favorites/')
         },

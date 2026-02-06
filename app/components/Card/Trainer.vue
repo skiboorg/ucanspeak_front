@@ -7,7 +7,7 @@ const {user} = storeToRefs(authStore)
 
 <template>
 
-  <div class="flex flex-col gap-3">
+  <div class="flex flex-col gap-2">
     <div @click="$router.push('/courses/trainer')" class=" h-[241px] sm:h-[340px] lg:h-[300px] w-full rounded-2xl overflow-hidden relative z-[1] flex items-end border border-solid border-[rgba(24,24,27,0.05)]">
       <div class="absolute bg-[#9A519F] text-white left-3 top-3 rounded-lg px-3 py-2 ">
         <p class="font-bold text-sm md:text-xl">Разговорный тренажер</p>
@@ -25,11 +25,11 @@ const {user} = storeToRefs(authStore)
 <!--        </nuxt-link>-->
       </div>
     </div>
-    <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="hidden sm:flex items-start gap-4 p-5 bg-white border border-[#18181b]/10 rounded-[20px]">
+    <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="hidden sm:flex items-start gap-4 p-3 bg-white border border-[#18181b]/10 rounded-[20px]">
       <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
         <img :src="course.icon" alt="" class="">
       </div>
-      <div class="w-full flex flex-col gap-[3px]">
+      <div class="w-full flex flex-col ">
 
         <div class="font-bold text-lg leading-[130%] text-[#2c2c2c] uppercase">{{course.name}}</div>
         <p class="font-medium text-sm leading-[130%] text-[#778]">{{course.description}} </p>

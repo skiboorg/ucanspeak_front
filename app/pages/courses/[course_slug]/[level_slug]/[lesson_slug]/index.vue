@@ -17,12 +17,12 @@ const is_mobile = computed(()=>{
   return activeBreakpoint.value === 'mobile'
 })
 definePageMeta({
-  guest: false,
-  auth:true,
+  // guest: false,
+  // auth:true,
   layout: 'lesson'
 })
 type ViewMode = "module" | "videos" | "audio" | "trainer" | "table"
-
+const router = useRouter()
 const {$api} = useNuxtApp()
 const {lesson_slug, level_slug, course_slug}  = useRoute().params
 const {m_id} = useRoute().query
@@ -166,12 +166,21 @@ const toggleView = async (mode:ViewMode)=>{
   viewMode.value = mode
 }
 
+const handleBackClick = () => {
+    showMenu.value = true
+}
+
+const showContent =  computed(()=>{
+  if (!is_mobile.value) return true
+  return !showMenu.value
+})
 
 </script>
 
 
 <template>
-
+  <BlockHeader :is_lesson_header="true" @back_click="handleBackClick"/>
+  <div class="container pb-[60px] lg:pb-10 !pt-20">
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -188,14 +197,14 @@ const toggleView = async (mode:ViewMode)=>{
   </a>
 
 
-  <div class="grid grid-cols-12 gap-4">
+  <div class="grid grid-cols-12 gap-0 md:gap-4">
     <div class="col-span-12 md:col-span-3 ">
-      <CardBase  v-if="showMenu" padding="sm" class="mb-4 sticky top-5 space-y-1">
+      <CardBase  v-if="showMenu" padding="sm" class="mb-4 sticky top-20 space-y-1">
         <p
             v-for="(module, i) in lesson.modules"
             :key="i"
             @click="fetch_module(module.id)"
-            class="w-full cursor-pointer flex items-center justify-between gap-2 p-3 rounded-2xl hover:bg-[#F6F6FB] transition-[0.2s] duration-[ease-in-out] ease-[all]"
+            class="w-full border cursor-pointer flex items-center justify-between gap-2 p-3 rounded-lg hover:bg-[#F6F6FB] transition-[0.2s] duration-[ease-in-out] ease-[all]"
             :class="{
               'bg-[#F6F6FB]': viewMode === 'module' && current_module === module.id
             }"
@@ -255,7 +264,7 @@ const toggleView = async (mode:ViewMode)=>{
       </CardBase>
     </div>
 
-    <div class="col-span-12 md:col-span-6">
+    <div v-if="showContent" class="col-span-12 md:col-span-6">
       <template v-if="loading">
         <div class="space-y-3">
           <SkeletonLessonCard />
@@ -265,7 +274,8 @@ const toggleView = async (mode:ViewMode)=>{
         <template v-if="viewMode === 'audio'">
           <CardBase padding="sm" class=" bg-[url('/a_bg.png')] bg-contain bg-top bg-no-repeat bg-cover flex flex-col items-center justify-evenly h-[500px]">
              <TypingText28 text="Аудио урок"/>
-            <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="lesson.file"></audio>
+<!--            <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="lesson.file"></audio>-->
+            <BlockAudioPlayer :src="lesson.file" />
           </CardBase>
         </template>
         <template  v-else-if="viewMode === 'trainer'">
@@ -296,17 +306,17 @@ const toggleView = async (mode:ViewMode)=>{
             <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
               <!--              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
 
-              <div class="text-lg font-medium mb-3" v-html="block.caption === '  None' ? '' : block.caption"></div>
+              <div class="text-[16px] md:text-lg font-medium mb-3 leading-[110%]" v-html="block.caption === '  None' ? '' : block.caption"></div>
 
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
-                <img @click="videoSelected(block.videos[0].video_src)" class="cursor-pointer" src="~assets/images/tutorial_video.png">
+                <img @click="videoSelected(block.videos[0].file)" class="cursor-pointer" src="~assets/images/tutorial_video.png">
 
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
 
                 <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
-              <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3"></div>
+              <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
               <div v-if="block.items.length>0" class="space-y-1">
                 <CardVoiceFile
                     v-for="item in block.items"
@@ -344,7 +354,7 @@ const toggleView = async (mode:ViewMode)=>{
       </template>
 
     </div>
-    <div class="hidden md:block col-span-3 sticky top-5 h-[90vh]">
+    <div class="hidden md:block col-span-3 sticky top-20 h-[90vh]">
       <CardBase padding="sm" class="h-[90vh] overflow-y-auto">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
@@ -376,6 +386,7 @@ const toggleView = async (mode:ViewMode)=>{
       </CardBase>
     </div>
   </div>
+  </div>
   <Dialog v-model:visible="table_modal_visible"
           modal
           :show-header="false"
@@ -389,8 +400,8 @@ const toggleView = async (mode:ViewMode)=>{
           modal
           :show-header="false"
 
-          class="relative"
-          :style="{ width: '35rem','padding': '0' }">
+          class="w-[90%] lg:w-[65%] relative video-modal overflow-hidden"
+          >
     <i class="pi pi-times absolute top-3 right-3 cursor-pointer z-40" @click="video_tutorial_modal_visible=false"></i>
     <video width="100%" height="auto" preload="none" playsinline="true" id="video_player"
            controls="controls" autoplay="autoplay">
@@ -429,7 +440,7 @@ const toggleView = async (mode:ViewMode)=>{
   </Dialog>
 
   <footer class="block md:hidden">
-    <div class="fixed left-0 bottom-0 w-full h-[70px] bg-white pt-3 flex items-center justify-evenly z-50">
+    <div class="fixed left-0 bottom-0 w-full h-[60px] bg-white pt-3 flex border-t border-[#EFEFEF] items-center justify-evenly z-50">
       <div @click="toggleMenu" class="footer-link flex flex-col items-center justify-center gap-1" >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M4 18C3.71667 18 3.47933 17.904 3.288 17.712C3.09667 17.52 3.00067 17.2827 3 17C2.99933 16.7173 3.09533 16.48 3.288 16.288C3.48067 16.096 3.718 16 4 16H20C20.2833 16 20.521 16.096 20.713 16.288C20.905 16.48 21.0007 16.7173 21 17C20.9993 17.2827 20.9033 17.5203 20.712 17.713C20.5207 17.9057 20.2833 18.0013 20 18H4ZM4 13C3.71667 13 3.47933 12.904 3.288 12.712C3.09667 12.52 3.00067 12.2827 3 12C2.99933 11.7173 3.09533 11.48 3.288 11.288C3.48067 11.096 3.718 11 4 11H20C20.2833 11 20.521 11.096 20.713 11.288C20.905 11.48 21.0007 11.7173 21 12C20.9993 12.2827 20.9033 12.5203 20.712 12.713C20.5207 12.9057 20.2833 13.0013 20 13H4ZM4 8C3.71667 8 3.47933 7.904 3.288 7.712C3.09667 7.52 3.00067 7.28267 3 7C2.99933 6.71733 3.09533 6.48 3.288 6.288C3.48067 6.096 3.718 6 4 6H20C20.2833 6 20.521 6.096 20.713 6.288C20.905 6.48 21.0007 6.71733 21 7C20.9993 7.28267 20.9033 7.52033 20.712 7.713C20.5207 7.90567 20.2833 8.00133 20 8H4Z" :fill="showMenu ? '#3333E8' : '#8F8FA3'"/>

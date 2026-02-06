@@ -19,6 +19,7 @@ const isThisPlaying = computed(() =>
 )
 const handlePlay = () => {
   play(props.item.id, props.item.file)
+  emits('toggle_open')
 }
 
 </script>

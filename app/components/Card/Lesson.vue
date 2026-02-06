@@ -24,8 +24,6 @@ const gotoLesson = () => {
     navigateTo(`/courses/${course_slug}/${level_slug}/${props.lesson.slug}`)
     return
   }
-
-
   if (props.lesson.is_free) {
     navigateTo(`/courses/${course_slug}/${level_slug}/${props.lesson.slug}`)
     return
@@ -38,9 +36,9 @@ const gotoLesson = () => {
 
 <template>
   <div @click="gotoLesson"
-       class="bg-white border border-solid border-[rgba(24,24,27,0.1)] rounded-2xl p-4 flex flex-col gap-2 cursor-pointer">
+       class="bg-white border border-solid border-[rgba(24,24,27,0.1)] rounded-2xl p-3 md:p-4 flex flex-col gap-1  cursor-pointer">
     <div class="flex items-center justify-between">
-      <div class="flex items-center gap-1">
+      <div class="flex items-center ">
 <!--        <img v-if="data.pin" src="~/assets/images/pin-icon.svg" alt="" class="shrink-0">-->
         <h3 class="font-medium text-lg leading-[130%] text-black">{{ lesson.title }}</h3>
 
