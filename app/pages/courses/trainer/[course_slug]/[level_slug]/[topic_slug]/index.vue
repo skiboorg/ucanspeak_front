@@ -1,11 +1,15 @@
 <!--trainer topic index-->
 <script setup lang="ts">
+
+
 const {$api} = useNuxtApp()
 const {course_slug,level_slug,topic_slug} = useRoute().params
 const {data:topic_data,pending,refresh} = useHttpRequest(await useAsyncData(()=>$api.trainer.topic(topic_slug)))
 
 const show_test = ref(false)
 const loading = ref(false)
+const is_play = ref(false)
+const show_player = ref(false)
 const current_audio = ref()
 
 onMounted(()=>{
@@ -15,6 +19,18 @@ onMounted(()=>{
 const openAudio = (file) =>{
   current_audio.value = file
   show_test.value = false
+
+}
+const openAudioMobile = (file) =>{
+  current_audio.value = file
+  show_test.value = false
+  is_play.value = true
+  show_player.value = true
+}
+
+const stopAudioMobile = () =>{
+  is_play.value = false
+  show_player.value = false
 }
 
 const handleToggleFav = async (id) => {
@@ -52,7 +68,7 @@ const topic_done = async (id)=>{
   <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
     <div class="col-span-12 md:col-span-4">
       <CardBase padding="sm" class="space-y-3">
-        <div @click="openAudio(audio_file)" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl"
+        <div @click="openAudio(audio_file)" class="hidden md:block cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl"
              :class="!show_test ? 'bg-[#F6F6FB]' : '' "
              v-for="audio_file in topic_data.topic.audio_files">
           <div class="flex items-center gap-5">
@@ -68,6 +84,53 @@ const topic_done = async (id)=>{
 
           </div>
         </div>
+
+
+        <div
+            v-for="audio_file in topic_data.topic.audio_files"
+            :key="audio_file.id"
+            class="block md:hidden border border-[#E8E8E9] px-5 py-4 rounded-3xl"
+            :class="!show_test ? 'bg-[#F6F6FB]' : ''"
+        >
+          <div
+              @click.stop="openAudioMobile(audio_file)"
+              class="flex items-center gap-5 cursor-pointer"
+          >
+            <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect width="46" height="46" rx="23" fill="#EFEFF5"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M20.1747 14.9417C19.9658 14.8044 19.7175 14.7208 19.4576 14.7003C19.1976 14.6797 18.9362 14.7231 18.7028 14.8254C18.4693 14.9277 18.2729 15.085 18.1357 15.2797C17.9985 15.4743 17.9258 15.6986 17.9258 15.9275V30.7132C17.9258 30.942 17.9985 31.1663 18.1357 31.3609C18.2729 31.5556 18.4693 31.7129 18.7028 31.8152C18.9362 31.9176 19.1976 31.9609 19.4576 31.9403C19.7175 31.9198 19.9658 31.8362 20.1747 31.6989L31.4191 24.306C31.5937 24.1913 31.7354 24.0424 31.8329 23.8713C31.9305 23.7003 31.9813 23.5116 31.9813 23.3203C31.9813 23.129 31.9305 22.9404 31.8329 22.7693C31.7354 22.5982 31.5937 22.4494 31.4191 22.3346L20.1747 14.9417Z" fill="#3333E8"/>
+            </svg>
+            <div class="flex w-full items-start justify-between">
+              <div class="">
+                <TypingText18 :text="audio_file.name"/>
+                <p class="text-sm text-gray-400 font-normal">{{ audio_file.description }}</p>
+              </div>
+                <Button v-if="show_player" @click.stop="stopAudioMobile" size="small" outlined rounded icon="pi pi-times"/>
+            </div>
+          </div>
+
+          <!-- Плавное появление/скрытие плеера -->
+          <Transition
+              enter-active-class="transition-all duration-300 ease-out"
+              leave-active-class="transition-all duration-200 ease-in"
+              enter-from-class="opacity-0 -translate-y-2"
+              enter-to-class="opacity-100 translate-y-0"
+              leave-from-class="opacity-100 translate-y-0"
+              leave-to-class="opacity-0 -translate-y-2"
+          >
+            <div v-show="show_player" class="mt-4">
+              <BlockAudioPlayer v-if="current_audio"  :play="is_play" :src="current_audio.mp3" />
+            </div>
+          </Transition>
+        </div>
+
+
+
+
+
+
+
+
         <div @click="show_test=true" class="cursor-pointer border border-[#E8E8E9] px-5 py-4 rounded-3xl" :class="show_test ? 'bg-[#F6F6FB]' : '' ">
           <div class="flex items-center gap-5">
 
@@ -112,18 +175,11 @@ const topic_done = async (id)=>{
                 label="Выполнено"/>
 
       </CardBase>
-      <CardBase v-else padding="sm" class=" bg-[url('/a_bg.png')] bg-contain bg-top bg-no-repeat bg-cover
-         flex flex-col items-center justify-evenly р-[300px] md:h-[500px]">
-
+      <CardBase v-else padding="sm" class="hidden md:flex  bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover
+          flex-col items-center justify-evenly р-[300px] md:h-[500px]">
           <TypingText28 :text="current_audio?.name" class="mb-1"/>
           <p class="mb-2">{{current_audio?.description}}</p>
-
-
-        <BlockAudioPlayer :src="current_audio?.mp3" />
-
-
-<!--        <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="current_audio?.mp3"></audio>-->
-
+        <BlockAudioPlayer v-if="current_audio" :src="current_audio?.mp3" />
       </CardBase>
     </div>
   </div>

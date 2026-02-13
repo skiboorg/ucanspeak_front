@@ -1,5 +1,6 @@
 <template>
   <div class="audio-player w-full">
+
     <audio
         ref="audio"
         :src="src"
@@ -45,12 +46,16 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 
 const props = defineProps({
   src: {
     type: String,
     required: true
+  },
+  play: {
+    type: Boolean,
+    default: false
+
   }
 })
 
@@ -59,6 +64,33 @@ const isPlaying = ref(false)
 const duration = ref(0)
 const currentTime = ref(0)
 const progress = ref(0)
+
+
+watch(() => props.play, async (newValue) => {
+  console.log('play changed:', newValue, 'audio:', audio.value)
+
+  await nextTick()
+
+  if (!audio.value) {
+    console.log('audio element not ready')
+    return
+  }
+
+  if (newValue && !isPlaying.value) {
+    try {
+      await audio.value.play()
+      isPlaying.value = true
+      console.log('started playing')
+    } catch (error) {
+      console.error('play error:', error)
+    }
+  } else if (!newValue && isPlaying.value) {
+    audio.value.pause()
+    isPlaying.value = false
+    console.log('paused')
+  }
+})
+
 
 const togglePlay = () => {
   if (!audio.value) return

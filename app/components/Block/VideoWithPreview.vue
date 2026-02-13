@@ -67,13 +67,20 @@ onMounted(() => {
   if(!props.showPreview) return
   document.addEventListener('fullscreenchange', onFullscreenChange)
   console.log(props.data.file)
-  // --- получаем первый кадр ---
+
   const tempVideo = document.createElement('video')
   tempVideo.src = props.data.file
-  tempVideo.crossOrigin = 'anonymous' // если видео с другого домена
+  tempVideo.crossOrigin = 'anonymous'
   tempVideo.muted = true
-  tempVideo.currentTime = 0
-  tempVideo.addEventListener('loadeddata', () => {
+  tempVideo.preload = 'metadata' // добавьте это
+
+  tempVideo.addEventListener('loadedmetadata', () => {
+    // Устанавливаем currentTime ПОСЛЕ загрузки метаданных
+    tempVideo.currentTime = 0.1 // небольшой offset, т.к. 0 может быть проблемным
+  })
+
+  tempVideo.addEventListener('seeked', () => {
+    // Рисуем кадр ПОСЛЕ завершения перемотки
     const canvas = document.createElement('canvas')
     canvas.width = tempVideo.videoWidth
     canvas.height = tempVideo.videoHeight
@@ -141,7 +148,7 @@ const handleHide = () => {
       src="~assets/images/video_lesson.svg"
   />
 
-  <Dialog v-model:visible="visible" @hide="handleHide" modal header="Видео урок" :show-header="false" class="w-[90%] lg:w-[65%] video-modal">
+  <Dialog v-model:visible="visible" @hide="handleHide" modal header="Видео урок" :show-header="false" class="video-modal">
     <div ref="playerEl" class="relative rounded-xl overflow-hidden">
       <!-- VIDEO -->
       <video

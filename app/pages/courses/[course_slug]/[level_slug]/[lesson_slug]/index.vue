@@ -25,7 +25,8 @@ type ViewMode = "module" | "videos" | "audio" | "trainer" | "table"
 const router = useRouter()
 const {$api} = useNuxtApp()
 const {lesson_slug, level_slug, course_slug}  = useRoute().params
-const {m_id} = useRoute().query
+const route = useRoute()
+const {m_id} = route.query
 const current_module = ref(null)
 const {data:lesson,refresh,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.lesson(lesson_slug)))
 const video_tutorial_modal_visible = ref(false)
@@ -78,6 +79,13 @@ const fetch_module = async (id) => {
   if (is_mobile.value) showMenu.value = false
   viewMode.value = "module"
   loading.value = true
+  await router.push({
+    query: {
+      ...route.query, // сохраняем остальные query параметры
+      m_id: id
+    }
+  })
+
   await nextTick()
   window.scrollTo({
     top: 0,
@@ -132,6 +140,11 @@ const handlePharaseToggleFav = async (id) => {
 }
 
 const fetchTable = async () => {
+  if (lesson.value.table_file) {
+    table.value = lesson.value.table_file
+    table_modal_visible.value = true
+    return
+  }
   if (!table.value) {
     const resp =  await $api.lessons.lesson_table(lesson_slug)
     table.value = resp.table

@@ -70,40 +70,55 @@ const handleTrainerToggleFav = async (id) => {
       <TabPanels>
         <TabPanel value="0">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-6">
+            <div class="flex items-center gap-2" v-for="item in result.dictionary">
+              <CardDictionaryItem
+                  :item="item"
+                  dictionary_direction="ruEN"
+                  :opened="opened_dictionary_id === item.id"
+                  @toggle_open="handleToggleDictionaryOpen"
+                  @toggle_fav="handleToggleDictionaryFav"/>
 
-            <CardDictionaryItem
-                                :item="item" v-for="item in result.dictionary"
-                                dictionary_direction="ruEN"
-                                :opened="opened_dictionary_id === item.id"
-                                @toggle_open="handleToggleDictionaryOpen"
-                                @toggle_fav="handleToggleDictionaryFav"/>
+              <a target="_blank" :href="`/courses/${item.group__lesson__level__course__slug}/${item.group__lesson__level__slug}/${item.group__lesson__slug}`">
+                <i class="pi pi-link"></i>
+              </a>
+            </div>
+
+
 
           </div>
         </TabPanel>
         <TabPanel value="1">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-6">
+            <div class="flex items-center gap-2" v-for="item in result.phrases">
             <CardVoiceFile
-                           v-for="item in result.phrases"
                            :key="item.id"
                            :item="item"
                            :show_add_to_fav="true"
                            :opened="openedId === item.id"
                            @toggle_open="handleToggleOpen"
                            @toggle_fav="handlePhraseToggleFav"/>
+              <a target="_blank" :href="`/courses/${item.video__block__module__lesson__level__course__slug}/${item.video__block__module__lesson__level__slug}/${item.video__block__module__lesson__slug}`">
+                <i class="pi pi-link"></i>
+              </a>
+            </div>
+
 
           </div>
         </TabPanel>
         <TabPanel value="2">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-1 ">
+            <div class="flex items-center gap-2" v-for="item in result.trainer_phrases">
             <CardVoiceFile
-                      v-for="item in result.trainer_phrases"
                            :key="item.id"
                            :item="item"
                         :show_add_to_fav="true"
                            :opened="openedId === item.id"
                            @toggle_open="handleToggleOpen"
                            @toggle_fav="handleTrainerToggleFav"/>
-
+              <a target="_blank" :href="`/courses/trainer/${item.topic__level__course__slug}/${item.topic__level__slug}/${item.topic__slug}`">
+                <i class="pi pi-link"></i>
+              </a>
+            </div>
           </div>
         </TabPanel>
       </TabPanels>
