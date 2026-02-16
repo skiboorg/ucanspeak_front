@@ -38,9 +38,9 @@ const login = async () => {
 
 <template>
   <CardBase padding="none" extra-class="w-full px-3 lg:px-[240px]">
-  <div class="flex flex-col items-center justify-center py-10 md:p-[60px] w-full">
+  <div class="flex flex-col items-center justify-center py-4 md:py-10 md:p-[60px] w-full">
     <div class="space-y-3 w-full mb-8">
-      <TypingText20 text="Введите данные для входа"/>
+      <TypingText28 text="Авторизация"/>
       <UIInput fluid
                placeholder="Введите адрес почты или телефон"
                label="Email/Логин"

@@ -43,6 +43,7 @@ const dictionary_modal_visible = ref(false)
 const table_modal_visible = ref(false)
 const table = ref(null)
 const showMenu = ref(true)
+const is_play = ref(false)
 
 const videos = ref([])
 const config = useRuntimeConfig();
@@ -79,7 +80,7 @@ const fetch_module = async (id) => {
   if (is_mobile.value) showMenu.value = false
   viewMode.value = "module"
   loading.value = true
-  await router.push({
+  await router.replace({
     query: {
       ...route.query, // сохраняем остальные query параметры
       m_id: id
@@ -176,6 +177,9 @@ const toggleMenu = async ()=>{
 
 const toggleView = async (mode:ViewMode)=>{
   if (is_mobile.value) showMenu.value = false
+  if (mode === 'audio') {
+    is_play.value = true
+  }
   viewMode.value = mode
 }
 
@@ -192,7 +196,7 @@ const showContent =  computed(()=>{
 
 
 <template>
-  <BlockHeader :is_lesson_header="true" @back_click="handleBackClick"/>
+  <BlockHeader  @back_click="handleBackClick"/>
   <div class="container pb-[60px] lg:pb-10 !pt-20">
   <BlockBaseBreadcrumbs
       :items="[
@@ -258,7 +262,7 @@ const showContent =  computed(()=>{
           </svg>
           <p>Орфография</p>
         </div>
-        <div class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer bg-white hover:bg-[#F6F6FB]"
+        <div class="flex items-center gap-3 border rounded-lg px-2 py-1 cursor-pointer  hover:bg-[#F6F6FB]"
              @click="toggleView('audio')"
              :class="viewMode === 'audio' ? 'bg-[#efeff5]' : 'bg-white'"
         >
@@ -273,7 +277,6 @@ const showContent =  computed(()=>{
           <p>Аудиоурок</p>
         </div>
 
-
       </CardBase>
     </div>
 
@@ -285,10 +288,17 @@ const showContent =  computed(()=>{
       </template>
       <template v-else>
         <template v-if="viewMode === 'audio'">
-          <CardBase padding="sm" class=" bg-[url('/a_bg.png')] bg-contain bg-top bg-no-repeat bg-cover flex flex-col items-center justify-evenly h-[500px]">
-             <TypingText28 text="Аудио урок"/>
+          <CardBase padding="sm" class=" bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover flex flex-col items-center justify-evenly h-[400px]">
+            <div class="space-y-4 text-center">
+              <TypingText28 text="Аудиоурок"/>
+              <p class="text-gray-500">{{lesson.title}}</p>
+            </div>
+
 <!--            <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="lesson.file"></audio>-->
-            <BlockAudioPlayer :src="lesson.file" />
+            <div class="px-0 md:px-10 w-full">
+              <BlockAudioPlayer :play="is_play" :src="lesson.file" />
+            </div>
+
           </CardBase>
         </template>
         <template  v-else-if="viewMode === 'trainer'">
@@ -296,7 +306,10 @@ const showContent =  computed(()=>{
             <p class="text-lg font-medium mb-2">Орфография</p>
 
             <p class="font-medium mb-2">{{lesson.orthography_description}}</p>
-            <CardSpellingTrainer v-for="item in lesson.orthography_items" :item="item" lang="ru"/>
+            <div class="space-y-1">
+              <CardSpellingTrainer v-for="item in lesson.orthography_items" :item="item" lang="ru"/>
+            </div>
+
           </CardBase>
         </template>
 
@@ -322,7 +335,7 @@ const showContent =  computed(()=>{
               <div class="text-[16px] md:text-lg font-medium mb-3 leading-[110%]" v-html="block.caption === '  None' ? '' : block.caption"></div>
 
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
-                <img @click="videoSelected(block.videos[0].file)" class="cursor-pointer" src="~assets/images/tutorial_video.png">
+                <img @click="videoSelected(block.videos[0].file)" class="cursor-pointer w-[120px] h-[90px] object-contain" src="~assets/images/tutorial_video.png">
 
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">

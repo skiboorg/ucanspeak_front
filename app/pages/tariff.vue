@@ -10,7 +10,7 @@ const {user} = storeToRefs(authStore)
 
   <BlockCourseHeader title="Тарифы" />
 
-  <div v-if="user" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+  <div v-if="user" class="grid grid-cols-1 md:grid-cols-4 gap-4 pb-20">
     <CardTariff v-for="tariff in tariffs" :key="tariff.id" :tariff="tariff" />
   </div>
   <div v-else class="h-[70vh] flex flex-col items-center justify-center">

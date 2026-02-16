@@ -147,7 +147,7 @@ const handleKeydown = (event, index) => {
     </div>
 
     <!-- Инпуты для ВВОДА ПЕРЕВОДА -->
-    <div class="flex flex-wrap gap-3">
+    <div class="flex flex-wrap gap-2">
       <div
           v-for="(word, index) in correctWords"
           :key="index"
@@ -175,14 +175,16 @@ const handleKeydown = (event, index) => {
     </div>
 
     <!-- Кнопки -->
-    <div class="flex gap-3 pt-2">
+    <div class="flex flex-wrap gap-3 pt-2">
       <Button
+          size="small"
           severity="secondary"
           :disabled="!isFull"
           @click="check"
           label="Проверить"
       />
       <Button
+          size="small"
           outlined
           severity="warn"
           @click="showHint = !showHint"

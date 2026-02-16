@@ -34,7 +34,7 @@ const {user} = storeToRefs(authStore)
 
       <p>Продолжить</p>
     </NuxtLink>
-    <NuxtLink class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/profile/favorite">
+    <NuxtLink v-if="user" class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/profile/favorite">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M12.0017 4.52804C10.8376 3.48411 9.31182 2.93592 7.74946 3.00019C6.1871 3.06447 4.71155 3.73614 3.63705 4.87217C2.56255 6.00819 1.974 7.51881 1.99673 9.08233C2.01946 10.6458 2.65167 12.1387 3.75874 13.243L10.5877 20.071C10.9628 20.446 11.4714 20.6566 12.0017 20.6566C12.5321 20.6566 13.0407 20.446 13.4157 20.071L20.2447 13.243C21.3518 12.1387 21.984 10.6458 22.0067 9.08233C22.0295 7.51881 21.4409 6.00819 20.3664 4.87217C19.2919 3.73614 17.8164 3.06447 16.254 3.00019C14.6917 2.93592 13.1659 3.48411 12.0017 4.52804ZM10.8297 6.17204L11.2947 6.63604C11.4823 6.82351 11.7366 6.92883 12.0017 6.92883C12.2669 6.92883 12.5212 6.82351 12.7087 6.63604L13.1737 6.17204C13.5427 5.79 13.9841 5.48527 14.4721 5.27563C14.9601 5.066 15.485 4.95565 16.0161 4.95104C16.5472 4.94642 17.074 5.04763 17.5656 5.24875C18.0571 5.44988 18.5037 5.74689 18.8793 6.12246C19.2549 6.49803 19.5519 6.94464 19.753 7.43622C19.9541 7.92781 20.0554 8.45453 20.0507 8.98564C20.0461 9.51676 19.9358 10.0416 19.7261 10.5297C19.5165 11.0177 19.2118 11.4591 18.8297 11.828L12.0017 18.657L5.17374 11.828C4.4451 11.0736 4.04193 10.0632 4.05104 9.01443C4.06015 7.96565 4.48083 6.9624 5.22246 6.22076C5.96409 5.47913 6.96734 5.05846 8.01613 5.04934C9.06492 5.04023 10.0753 5.44341 10.8297 6.17204Z" fill="#8F8FA3"/>
       </svg>
@@ -42,7 +42,7 @@ const {user} = storeToRefs(authStore)
 
       <p>Избранное</p>
     </NuxtLink>
-    <NuxtLink class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/profile">
+    <NuxtLink v-if="user" class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/profile">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4 18C4 16.9391 4.42143 15.9217 5.17157 15.1716C5.92172 14.4214 6.93913 14 8 14H16C17.0609 14 18.0783 14.4214 18.8284 15.1716C19.5786 15.9217 20 16.9391 20 18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7893 18.5304 20 18 20H6C5.46957 20 4.96086 19.7893 4.58579 19.4142C4.21071 19.0391 4 18.5304 4 18Z" stroke="#8F8FA3" stroke-width="2" stroke-linejoin="round"/>
         <path d="M12 10C13.6569 10 15 8.65685 15 7C15 5.34315 13.6569 4 12 4C10.3431 4 9 5.34315 9 7C9 8.65685 10.3431 10 12 10Z" stroke="#8F8FA3" stroke-width="2"/>
@@ -50,6 +50,15 @@ const {user} = storeToRefs(authStore)
 
 
       <p>Профиль</p>
+    </NuxtLink>
+    <NuxtLink v-else class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/auth">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 18C4 16.9391 4.42143 15.9217 5.17157 15.1716C5.92172 14.4214 6.93913 14 8 14H16C17.0609 14 18.0783 14.4214 18.8284 15.1716C19.5786 15.9217 20 16.9391 20 18C20 18.5304 19.7893 19.0391 19.4142 19.4142C19.0391 19.7893 18.5304 20 18 20H6C5.46957 20 4.96086 19.7893 4.58579 19.4142C4.21071 19.0391 4 18.5304 4 18Z" stroke="#8F8FA3" stroke-width="2" stroke-linejoin="round"/>
+        <path d="M12 10C13.6569 10 15 8.65685 15 7C15 5.34315 13.6569 4 12 4C10.3431 4 9 5.34315 9 7C9 8.65685 10.3431 10 12 10Z" stroke="#8F8FA3" stroke-width="2"/>
+      </svg>
+
+
+      <p>Авторизация</p>
     </NuxtLink>
   </div>
 </footer>

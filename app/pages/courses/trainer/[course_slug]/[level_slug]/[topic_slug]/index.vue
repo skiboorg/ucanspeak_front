@@ -1,7 +1,7 @@
 <!--trainer topic index-->
 <script setup lang="ts">
 
-
+type ViewMode =  "audio" | "trainer"
 const {$api} = useNuxtApp()
 const {course_slug,level_slug,topic_slug} = useRoute().params
 const {data:topic_data,pending,refresh} = useHttpRequest(await useAsyncData(()=>$api.trainer.topic(topic_slug)))
@@ -177,9 +177,13 @@ const topic_done = async (id)=>{
       </CardBase>
       <CardBase v-else padding="sm" class="hidden md:flex  bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover
           flex-col items-center justify-evenly р-[300px] md:h-[500px]">
+        <div class="text-center">
           <TypingText28 :text="current_audio?.name" class="mb-1"/>
-          <p class="mb-2">{{current_audio?.description}}</p>
+          <p class="text-gray-500">{{current_audio?.description}}</p>
+        </div>
+        <div class="px-0 md:px-10 w-full">
         <BlockAudioPlayer v-if="current_audio" :src="current_audio?.mp3" />
+        </div>
       </CardBase>
     </div>
   </div>

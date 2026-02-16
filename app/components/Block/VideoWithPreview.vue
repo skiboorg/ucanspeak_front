@@ -145,7 +145,7 @@ const handleHide = () => {
       v-else
       @click="visible = true"
       class="w-[120px] h-[90px] object-cover cursor-pointer"
-      src="~assets/images/video_lesson.svg"
+      src="~assets/images/lesson_video.png"
   />
 
   <Dialog v-model:visible="visible" @hide="handleHide" modal header="Видео урок" :show-header="false" class="video-modal">
@@ -207,7 +207,7 @@ const handleHide = () => {
           v-if="!isFullscreen"
           name="fade"
           tag="div"
-          class="max-h-[160px] overflow-y-auto bottom-0 left-0 right-0
+          class="max-h-[50vh] lg:max-h-[30vh] overflow-y-auto bottom-0 left-0 right-0
              p-4 space-y-2 flex flex-col
              "
       >
