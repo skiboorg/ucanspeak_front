@@ -118,7 +118,7 @@ const { send, pending, errors } = useForm({
     {{errors}}
   </div>
 
-  <Button severity="success" @click="send" :loading="pending" label="Обновить"/>
+
 
 </CardBase>
   <CardBase padding="md">
@@ -151,26 +151,21 @@ const { send, pending, errors } = useForm({
                label="Повторите пароль"
                id="password1"
                v-model="user_data.password1"/>
-      <TypingText18 text="Таймзона" />
 
-      <IftaLabel>
-        <Select v-model="user_data.time_zone" inputId="dd-city" :options="time_zones" optionLabel="name" variant="filled" />
-        <label for="dd-city">Таймзона</label>
-      </IftaLabel>
-      <div class="flex justify-between">
+      <div class="flex flex-wrap justify-between">
         <div class="">
           <TypingText18 text="Выйти из аккаунта" />
           <p>Выйти</p>
         </div>
-        <Button @click="$api.auth.logout(false)" severity="danger" outlined label="Выйти"/>
+        <Button size="small" @click="$api.auth.logout(false)" severity="danger" outlined label="Выйти"/>
       </div>
 
-      <div class="flex justify-between">
+      <div class="flex flex-wrap justify-between">
         <div class="">
           <TypingText18 text="Выйти со всех устройств" />
           <p>Завершить все сессии</p>
         </div>
-        <Button @click="$api.auth.logout(true)" severity="danger" outlined label="Выйти отовсюду"/>
+        <Button size="small" @click="$api.auth.logout(true)" severity="danger" outlined label="Выйти отовсюду"/>
       </div>
       <div v-if="errors" class="text-red-500">
         {{errors}}

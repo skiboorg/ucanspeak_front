@@ -311,7 +311,6 @@ const showContent =  computed(()=>{
         </template>
         <template  v-else-if="viewMode === 'trainer'">
           <CardBase padding="sm" >
-            <p class="text-lg font-medium mb-2">Орфография</p>
 
             <p class="font-medium mb-2">{{lesson.orthography_description}}</p>
             <div class="space-y-1">

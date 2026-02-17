@@ -167,17 +167,17 @@ const handleHide = () => {
 
         <source :src="data.file" type="video/mp4" />
       </video>
-      <p class="bg-black/40 text-white absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
+      <p class="bg-black/40 text-gray-500 absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
       <!-- FULLSCREEN BUTTON -->
 
       <button
-          class="absolute top-2 right-2 z-50 text-white bg-black/40 px-3 py-1 rounded"
+          class="absolute top-2 right-2 z-50 text-gray-500 bg-black/40 px-3 py-1 rounded"
           @click="visible=false"
       >
         <i class="pi pi-times"></i>
       </button>
       <button
-          class="absolute top-2 right-14 z-50 text-white bg-black/40 px-3 py-1 rounded"
+          class="absolute top-2 right-14 z-50 text-gray-500 bg-black/40 px-3 py-1 rounded"
           @click="toggleFullscreen"
       >
         ⛶

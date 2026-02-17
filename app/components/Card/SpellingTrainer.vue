@@ -160,7 +160,7 @@ const handleKeydown = (event, index) => {
             @keydown="handleKeydown($event, index)"
             :maxlength="word.length"
             :style="{width: `${word.length > 1 ? word.length * 20 : 30}px`}"
-            class="border rounded py-1 text-center text-lg"
+            class="border rounded py-1 text-center text-lg inpuut"
             :class="{
               'border-green-500 bg-green-50 text-green-700': result[index] === true,
               'border-red-500 bg-red-50 text-red-700': result[index] === false
@@ -194,3 +194,9 @@ const handleKeydown = (event, index) => {
 
   </div>
 </template>
+<style>
+.inpuut{
+  caret-color: transparent;
+}
+
+</style>

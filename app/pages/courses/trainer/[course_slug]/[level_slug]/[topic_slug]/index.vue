@@ -197,8 +197,9 @@ const stopAudioMobile = () => {
           <CardVoiceFile
               v-for="item in topic_data.topic.phrases"
               :reverse="false"
-              :show_add_to_fav="false"
+
               :opened="false"
+              :show_add_to_fav="true"
               :loading="false"
               :key="item.id"
               :item="item"
