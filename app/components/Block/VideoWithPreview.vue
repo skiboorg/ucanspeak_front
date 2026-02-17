@@ -4,6 +4,7 @@ const config = useRuntimeConfig();
 
 const props = defineProps<{
   showPreview: boolean;
+
   data: {
     video_src: string
     file: string
@@ -134,22 +135,24 @@ const handleHide = () => {
 </script>
 
 <template>
+  <div class="" v-if="!visible">
+    <img
+        v-if="showPreview && firstFrame"
+        @click="visible = true"
+        class="w-[220px] h-[140px] object-cover cursor-pointer"
+        :src="firstFrame"
+    />
+    <img
+        v-else
+        @click="visible = true"
+        class="w-[120px] h-[90px] object-cover cursor-pointer"
+        src="~assets/images/lesson_video.png"
+    />
+  </div>
 
-  <img
-      v-if="showPreview && firstFrame"
-      @click="visible = true"
-      class="w-[220px] h-[140px] object-cover cursor-pointer"
-      :src="firstFrame"
-  />
-  <img
-      v-else
-      @click="visible = true"
-      class="w-[120px] h-[90px] object-cover cursor-pointer"
-      src="~assets/images/lesson_video.png"
-  />
 
-  <Dialog v-model:visible="visible" @hide="handleHide" modal header="Видео урок" :show-header="false" class="video-modal">
-    <div ref="playerEl" class="relative rounded-xl overflow-hidden">
+  <Dialog v-model:visible="visible" @hide="handleHide"  header="Видео урок" :show-header="false" class="video-modal">
+    <div  ref="playerEl" class="relative rounded-xl overflow-hidden">
       <!-- VIDEO -->
       <video
           ref="videoEl"
@@ -184,13 +187,11 @@ const handleHide = () => {
       <transition name="fade">
 
         <div
-
             v-if="isFullscreen && currentPhrase"
             class="absolute bottom-10 left-1/2 -translate-x-1/2
                z-40 bg-black/70 px-6 py-3 rounded-xl
                text-center max-w-[90%]"
         >
-
           <div class="text-2xl text-white font-bold">
 
             {{ currentPhrase.text_en }}
@@ -202,30 +203,32 @@ const handleHide = () => {
       </transition>
 
       <!-- PHRASES LIST (HIDDEN IN FULLSCREEN) -->
-      <div v-if="isPaused">
-      <transition-group
-          v-if="!isFullscreen"
-          name="fade"
-          tag="div"
-          class="max-h-[50vh] lg:max-h-[30vh] overflow-y-auto bottom-0 left-0 right-0
+
+        <div v-if="isPaused">
+          <transition-group
+              v-if="!isFullscreen"
+              name="fade"
+              tag="div"
+              class=" bottom-0 left-0 right-0
              p-4 space-y-2 flex flex-col
-             "
-      >
+             ">
+            <CardVoiceFile
+                v-for="item in visiblePhrases"
+                :key="item.id"
+                :item="item"
+                :reverse="true"
+                :show_add_to_fav="false"
+                :opened="openedId === item.id"
+                :loading="fav_loading"
+                @toggle_open="handleToggleOpen"
+            />
+          </transition-group>
+        </div>
 
-        <CardVoiceFile
-            v-for="item in visiblePhrases"
-            :key="item.id"
-            :item="item"
-            :reverse="true"
-            :show_add_to_fav="false"
-            :opened="openedId === item.id"
-            :loading="fav_loading"
-            @toggle_open="handleToggleOpen"
 
-        />
 
-      </transition-group>
-      </div>
     </div>
   </Dialog>
+
+
 </template>

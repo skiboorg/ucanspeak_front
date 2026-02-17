@@ -76,6 +76,7 @@ const handleToggleDictionaryOpen = (id: number) => {
 }
 
 const fetch_module = async (id) => {
+  is_play.value = false
   current_module.value= id
   if (is_mobile.value) showMenu.value = false
   viewMode.value = "module"
@@ -114,6 +115,7 @@ const videoSelected = (video_src) =>{
 }
 
 const toggleBlockDone = async (id,index) => {
+
   loading.value = false
   module.value.blocks.splice(index, 1, {
     ...module.value.blocks[index],
@@ -141,6 +143,7 @@ const handlePharaseToggleFav = async (id) => {
 }
 
 const fetchTable = async () => {
+  is_play.value = false
   if (lesson.value.table_file) {
     table.value = lesson.value.table_file
     table_modal_visible.value = true
@@ -155,6 +158,7 @@ const fetchTable = async () => {
 }
 
 const fetchVideos = async () => {
+  is_play.value = false
   if (videos.value.length === 0) {
     videos.value = await $api.lessons.lesson_videos(lesson_slug)
   }
@@ -166,6 +170,7 @@ useSeoMeta({
   title: `${lesson.value.title} `,
 })
 const toggleMenu = async ()=>{
+  is_play.value = false
   showMenu.value = !showMenu.value
   await nextTick()
   if (showMenu.value) {
@@ -176,11 +181,14 @@ const toggleMenu = async ()=>{
 }
 
 const toggleView = async (mode:ViewMode)=>{
+  console.log(mode)
   if (is_mobile.value) showMenu.value = false
-  if (mode === 'audio') {
-    is_play.value = true
-  }
+
+
   viewMode.value = mode
+  await nextTick()
+  mode === 'audio'? is_play.value = true : is_play.value = false
+
 }
 
 const handleBackClick = () => {
@@ -208,7 +216,7 @@ const showContent =  computed(()=>{
   ]"
   />
 
-  <BlockCourseHeader :title="lesson.title" show_profile/>
+  <BlockCourseHeader :is_fixed="true" :title="lesson.title" show_profile/>
   <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
     <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
   </a>
@@ -216,7 +224,7 @@ const showContent =  computed(()=>{
 
   <div class="grid grid-cols-12 gap-0 md:gap-4">
     <div class="col-span-12 md:col-span-3 ">
-      <CardBase  v-if="showMenu" padding="sm" class="mb-4 sticky top-20 space-y-1">
+      <CardBase  v-if="showMenu" padding="sm" class="mb-4 sticky top-40 space-y-1">
         <p
             v-for="(module, i) in lesson.modules"
             :key="i"
@@ -318,7 +326,7 @@ const showContent =  computed(()=>{
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div class="" v-for="video in videos" :key="video.id">
                 {{video.video_number}}
-                <BlockVideoWithPreview :showPreview = "true" :data="video"/>
+                <BlockVideoWithPreview :use_modal="true" :showPreview = "true" :data="video"/>
 
               </div>
 
@@ -340,7 +348,7 @@ const showContent =  computed(()=>{
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
 
-                <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
+                <BlockVideoWithPreview :showPreview = "true" :data="block.videos[0]"/>
               </div>
               <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
               <div v-if="block.items.length>0" class="space-y-1">
@@ -380,7 +388,7 @@ const showContent =  computed(()=>{
       </template>
 
     </div>
-    <div class="hidden md:block col-span-3 sticky top-20 h-[90vh]">
+    <div class="hidden md:block col-span-3 sticky top-40 h-[70vh]">
       <CardBase padding="sm" class="h-[90vh] overflow-y-auto">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
@@ -423,7 +431,7 @@ const showContent =  computed(()=>{
 
   </Dialog>
   <Dialog v-model:visible="video_tutorial_modal_visible"
-          modal
+
           :show-header="false"
 
           class="w-[90%] lg:w-[65%] relative video-modal overflow-hidden"

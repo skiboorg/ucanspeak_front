@@ -104,10 +104,12 @@ const togglePlay = () => {
 }
 
 const onLoaded = () => {
+  if (!audio.value) return
   duration.value = audio.value.duration
 }
 
 const onTimeUpdate = () => {
+  if (!audio.value) return
   currentTime.value = audio.value.currentTime
   progress.value = audio.value.currentTime
 }
@@ -121,6 +123,14 @@ const formatTime = (seconds) => {
   const s = Math.floor(seconds % 60)
   return `${m}:${s.toString().padStart(2, '0')}`
 }
+
+onBeforeUnmount(() => {
+  if (audio.value) {
+    audio.value.pause()
+    audio.value.removeEventListener('timeupdate', onTimeUpdate)
+    audio.value.removeEventListener('loadedmetadata', onLoaded)
+  }
+})
 </script>
 
 <style scoped>

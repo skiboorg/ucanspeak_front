@@ -33,8 +33,16 @@ const {user} = storeToRefs(authStore)
 
         <div class="font-bold text-lg leading-[130%] text-[#2c2c2c] uppercase">{{course.name}}</div>
         <p class="font-medium text-sm leading-[130%] text-[#778]">{{course.description}} </p>
-        <UIPLine v-if="user && !user.is_pupil" :value="course.progress_percentage" class="my-[5px]"/>
-        <p v-if="user && !user.is_pupil" class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{course.completed_levels}} из {{course.total_levels}} уроков пройдено</p>
+        <div v-if="user">
+          <UIPLine v-if="user.is_pupil" :value="course.progress_percentage" class="my-[5px]"/>
+          <p v-if="!user.is_pupil" class="font-normal text-xs leading-[130%] text-[#8f8fa3]">{{course.completed_levels}} из {{course.total_levels}} уроков пройдено</p>
+
+        </div>
+        <div v-else>
+          <UIPLine :value="0" class="my-[5px]"/>
+          <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">0 из {{course.total_levels}} уровней пройдено</p>
+
+        </div>
 
       </div>
     </NuxtLink>
