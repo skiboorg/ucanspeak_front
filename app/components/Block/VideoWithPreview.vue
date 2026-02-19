@@ -132,6 +132,12 @@ const handleHide = () => {
   // phrases.value = []
   isPaused.value = false
 }
+
+watch(visible, (val) => {
+  if (val) {
+    nextTick(() => videoEl.value?.play())
+  }
+})
 </script>
 
 <template>
@@ -159,6 +165,7 @@ const handleHide = () => {
           controls
           preload="metadata"
           controlsList="nofullscreen"
+
           class="w-full"
           @timeupdate="onTimeUpdate"
           @play="onPlay"

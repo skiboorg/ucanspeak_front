@@ -13,6 +13,7 @@ const current_audio = ref()
 const selected_audio_id = ref<number | null>(null)
 const show_desktop_player = ref(false)
 const desktop_player_key = ref(0)
+const openedId = ref<number | null>(null)
 
 const openAudio = async (file) => {
   // Останавливаем текущее воспроизведение
@@ -76,6 +77,11 @@ useSeoMeta({
   title: `${topic_data.value.topic.name}`,
 })
 
+
+const handleToggleOpen = (id: number) => {
+  openedId.value = openedId.value === id ? null : id
+}
+
 const topic_done = async (id) => {
   loading.value = true
   await $api.trainer.topic_done(id)
@@ -86,6 +92,13 @@ const topic_done = async (id) => {
 const stopAudioMobile = () => {
   is_play_mobile.value = false
   selected_audio_id.value = null
+}
+const stopAudio = async () => {
+  is_play_mobile.value = false
+  await nextTick()
+  selected_audio_id.value = null
+  desktop_player_key.value++
+  current_audio.value = null
 }
 </script>
 
@@ -198,11 +211,13 @@ const stopAudioMobile = () => {
               v-for="item in topic_data.topic.phrases"
               :reverse="false"
 
-              :opened="false"
+
               :show_add_to_fav="true"
               :loading="false"
               :key="item.id"
               :item="item"
+              :opened="openedId === item.id"
+              @toggle_open="handleToggleOpen"
               @toggle_fav="handleToggleFav"/>
         </div>
 
@@ -219,8 +234,11 @@ const stopAudioMobile = () => {
 
       <!-- Плеер для ПК - показывается только после клика -->
       <CardBase v-if="show_desktop_player && current_audio" padding="sm"
-                class="hidden md:flex  bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover
+                class="relative hidden md:flex  bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover
           flex-col items-center justify-evenly р-[300px] md:h-[500px]">
+        <Button  @click.stop="stopAudio" size="small" outlined
+                 class="absolute top-4 right-4"
+                rounded icon="pi pi-times"/>
         <div class="text-center">
           <TypingText28 :text="current_audio?.name" class="mb-1"/>
           <p class="text-gray-500">{{ current_audio?.description }}</p>

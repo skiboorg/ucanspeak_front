@@ -1,9 +1,18 @@
 <script setup lang="ts">
+const authStore = useAuthStore()
+const {user} = storeToRefs(authStore)
+
 const links = [
   {title:'Профиль', to:'/profile'},
   {title:'Избранное', to:'/profile/favorite'},
   {title:'Прогресс', to:'/profile/progress'},
 ]
+
+if (user.value.is_school){
+  links.push(
+      {title:'Ученики', to:'/profile/pupils'},
+  )
+}
 </script>
 
 <template>

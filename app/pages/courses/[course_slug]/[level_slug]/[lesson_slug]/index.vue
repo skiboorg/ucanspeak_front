@@ -349,7 +349,7 @@ const showContent =  computed(()=>{
 
                 <BlockVideoWithPreview :showPreview = "true" :data="block.videos[0]"/>
               </div>
-              <div v-if="block.type3_content" v-html="block.type3_content" class="mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
+              <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
               <div v-if="block.items.length>0" class="space-y-1">
                 <CardVoiceFile
                     v-for="item in block.items"

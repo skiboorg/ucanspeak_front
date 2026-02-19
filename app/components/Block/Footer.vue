@@ -6,7 +6,7 @@ const {user} = storeToRefs(authStore)
 <template>
 <footer class="block md:hidden ">
   <div class="fixed bottom-0 w-full h-[60px] bg-white pt-1 flex items-center justify-evenly border-t border-[#EFEFEF]">
-    <NuxtLink class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/app/pages">
+    <NuxtLink class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/courses">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M6 22C5.45 22 4.97933 21.8043 4.588 21.413C4.19667 21.0217 4.00067 20.5507 4 20V4C4 3.45 4.196 2.97933 4.588 2.588C4.98 2.19667 5.45067 2.00067 6 2H18C18.55 2 19.021 2.196 19.413 2.588C19.805 2.98 20.0007 3.45067 20 4V20C20 20.55 19.8043 21.021 19.413 21.413C19.0217 21.805 18.5507 22.0007 18 22H6ZM6 20H18V4H16V11L13.5 9.5L11 11V4H6V20Z" fill="#8F8FA3"/>
       </svg>
@@ -74,5 +74,5 @@ const {user} = storeToRefs(authStore)
     color: #3333E8
     svg
       path
-        fill: #3333E8
+        stroke: #3333E8
 </style>

@@ -1,6 +1,7 @@
 import { createAuthRepository } from "~/repository/auth";
 import { createLessonsRepository } from "~/repository/lessons";
 import { createTrainerRepository } from "~/repository/trainer";
+import { createSchoolRepository } from "~/repository/school";
 
 export default defineNuxtPlugin({
   name: 'fetch',
@@ -34,6 +35,7 @@ export default defineNuxtPlugin({
       auth: createAuthRepository(appFetch),
       lessons: createLessonsRepository(appFetch),
       trainer: createTrainerRepository(appFetch),
+      school: createSchoolRepository(appFetch),
     };
     
     return {

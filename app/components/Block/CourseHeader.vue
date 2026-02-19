@@ -23,7 +23,7 @@ const props = withDefaults(defineProps<Props>(), {
   <div class=" mb-2 md:mb-4   flex flex-wrap items-center gap-4 md:gap-0 justify-between bg-[#f6f6f9]"
        :class="is_fixed ? 'sticky top-[80px] z-[1000]':''"
   >
-    <div v-if="is_fixed" class="bg-[#f6f6f9] absolute top-[-18px] md:top-[-17px] w-full h-[20px] mb:h-[20px]"></div>
+    <div v-if="is_fixed" class="bg-[#f6f6f9] absolute top-[-24px] md:top-[-17px] w-full h-[24px] mb:h-[20px]"></div>
     <div v-if="is_fixed" class="bg-[#f6f6f9] absolute bottom-[-6px] md:bottom-[-16px] w-full h-[10px] md:h-[20px]"></div>
     <div class="flex items-center gap-4">
       <UIBackBtn :link="prev_link"/>
