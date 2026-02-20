@@ -205,7 +205,7 @@ const stopAudio = async () => {
     <div class="col-span-12 md:col-span-8 pb-20">
 
       <CardBase v-if="show_test" padding="md">
-        <TypingText28 text="Проверьте себя" class="mb-6"/>
+
         <div class="space-y-1 mb-4 ">
           <CardVoiceFile
               v-for="item in topic_data.topic.phrases"

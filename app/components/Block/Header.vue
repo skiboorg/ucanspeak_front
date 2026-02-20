@@ -18,7 +18,7 @@ const links = [
 </script>
 
 <template>
-<header id="top" class="fixed w-full z-50 border-b border-[#EFEFEF] bg-white py-2 md:py-2 mb-2 md:mb-6">
+<header id="top" class="fixed w-full  border-b border-[#EFEFEF] bg-white py-2 md:py-2 mb-2 md:mb-6  z-[1000]">
 
   <div class="container flex items-center justify-between">
     <div class=" flex items-center gap-2">

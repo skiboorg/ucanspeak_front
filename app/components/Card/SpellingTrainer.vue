@@ -196,7 +196,7 @@ const handleKeydown = (event, index) => {
 </template>
 <style>
 .inpuut{
-  caret-color: transparent;
+  caret-color: #ccc;
 }
 
 </style>
