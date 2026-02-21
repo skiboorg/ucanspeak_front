@@ -204,8 +204,8 @@ const showContent =  computed(()=>{
 
 
 <template>
-  <BlockHeader  @back_click="handleBackClick"/>
-  <div class="container pb-[60px] lg:pb-10 !pt-20">
+  <BlockHeader :is_lesson_header="true" :lesson_title="lesson.title" @back_click="handleBackClick"/>
+  <div class="container pb-[60px] lg:pb-10 pt-24">
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -216,7 +216,7 @@ const showContent =  computed(()=>{
   ]"
   />
 
-  <BlockCourseHeader :is_fixed="true" :title="lesson.title" show_profile/>
+  <BlockCourseHeader class="hidden md:block" :is_fixed="true" :title="lesson.title" show_profile/>
   <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
     <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
   </a>
@@ -224,7 +224,7 @@ const showContent =  computed(()=>{
 
   <div class="grid grid-cols-12 gap-0 md:gap-4">
     <div class="col-span-12 md:col-span-3 ">
-      <div class="sticky top-40">
+      <div class="sticky top-0 md:top-40">
         <CardBase  v-if="showMenu" padding="sm" class="mb-4 h-auto md:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
           <p
               v-for="(module, i) in lesson.modules"
@@ -299,10 +299,13 @@ const showContent =  computed(()=>{
       </template>
       <template v-else>
         <template v-if="viewMode === 'audio'">
-          <CardBase padding="sm" class=" bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover flex flex-col items-center justify-evenly h-[400px]">
+          <CardBase padding="sm" class=" bg-[url('/a_bg.png')] relative bg-top bg-no-repeat bg-cover flex flex-col items-center justify-evenly h-[400px]">
             <div class="space-y-4 text-center">
               <TypingText28 text="Аудиоурок"/>
               <p class="text-gray-500">{{lesson.title}}</p>
+            </div>
+            <div class="block md:hidden absolute top-4 right-4">
+              <Button  @click.stop="handleBackClick" size="small" outlined rounded icon="pi pi-times"/>
             </div>
 
 <!--            <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="lesson.file"></audio>-->
@@ -349,7 +352,7 @@ const showContent =  computed(()=>{
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
 
-                <BlockVideoWithPreview :showPreview = "true" :data="block.videos[0]"/>
+                <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
               <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
               <div v-if="block.items.length>0" class="space-y-1">

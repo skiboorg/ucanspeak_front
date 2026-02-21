@@ -1,4 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
+  console.log(to);
+  if (to.fullPath==='/') return navigateTo({ name: 'courses' })
+
   const authStore = useAuthStore()
   const {user} = storeToRefs(authStore)
 
@@ -8,7 +11,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
   if(to.meta.auth || to.meta.guest){
     if(to.meta.auth && !authStore.user){
-      return navigateTo({ name: 'index' })
+      return navigateTo({ name: 'courses' })
     }
     else if(to.meta.guest && authStore.user){
       return navigateTo({ name: 'courses' })

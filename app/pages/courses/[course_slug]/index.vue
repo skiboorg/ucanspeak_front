@@ -36,7 +36,7 @@ useSeoMeta({
           </div>
           <div v-else>
             <UIPLine  :value="0" class="my-[5px]"/>
-            <p  class="font-normal text-xs leading-[130%] text-[#8f8fa3]">0 из 0 уроков пройдено</p>
+            <p  class="font-normal text-xs leading-[130%] text-[#8f8fa3]">0 из {{level.lessons_count}} уроков пройдено</p>
 
           </div>
 

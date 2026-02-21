@@ -237,9 +237,7 @@ const stopAudio = async () => {
                 class="relative hidden md:flex  bg-[url('/a_bg.png')]  bg-top bg-no-repeat bg-cover
           flex-col items-center justify-evenly р-[300px] md:h-[500px]">
         <div class="absolute top-4 right-4">
-          <Button  @click.stop="stopAudio" size="small" outlined
-
-                   rounded icon="pi pi-times"/>
+          <Button  @click.stop="stopAudio" size="small" outlined rounded icon="pi pi-times"/>
         </div>
 
         <div class="text-center">

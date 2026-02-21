@@ -6,7 +6,7 @@ const {user} = storeToRefs(authStore)
 //   {title:'О проекте',to:'/about'},
 //   {title:'Тарифы',to:'/tariff'},
 // ]
-const props = defineProps(['is_lesson_header'])
+const props = defineProps(['is_lesson_header','lesson_title'])
 const emits = defineEmits(['back_click'])
 const links = [
   {title:'Курс для взрослых',to:'/courses/adult_course'},
@@ -22,11 +22,9 @@ const links = [
 
   <div class="container flex items-center justify-between">
     <div class=" flex items-center gap-2">
-      <div class="block md:hidden">
-
-        <Button v-if="!is_lesson_header" @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
-        <Button v-else @click="emits('back_click')" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
-
+      <div class="flex gap-2 md:hidden">
+        <Button @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
+        <Button v-if="is_lesson_header" @click="emits('back_click')" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
       </div>
       <NuxtLink to="/courses">
         <svg width="137" height="24" viewBox="0 0 137 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -70,6 +68,9 @@ const links = [
       </NuxtLink>
     </div>
 
+  </div>
+  <div class="block md:hidden container mt-2" v-if="is_lesson_header">
+    {{lesson_title}}
   </div>
 </header>
 </template>
