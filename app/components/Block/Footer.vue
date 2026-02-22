@@ -4,8 +4,8 @@ const {user} = storeToRefs(authStore)
 </script>
 
 <template>
-<footer class="block md:hidden ">
-  <div class="fixed bottom-0 w-full h-[60px] bg-white pt-1 flex items-center justify-evenly border-t border-[#EFEFEF]">
+<footer class="block md:hidden relative z-[1000]">
+  <div class="fixed bottom-[-1px] w-full h-[60px] bg-white pt-1 flex items-center justify-evenly border-t border-[#EFEFEF]">
     <NuxtLink class="footer-link flex flex-col items-center justify-center gap-1" exact-active-class="active" active-class="active" to="/courses">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <mask id="path-1-inside-1_53_1391" fill="white">

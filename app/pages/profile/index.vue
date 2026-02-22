@@ -124,15 +124,19 @@ const { send, pending, errors } = useForm({
   <CardBase padding="md">
     <TypingText28 text="Аккаунт" class="mb-6"/>
     <div class="space-y-3">
-      <TypingText18 text="Тип аккаунта" />
-      <p>{{user.is_school ? 'Школа' : 'Ученик'}}</p>
+      <TypingText18 :text="`Тип аккаунта: ${user.is_school ? 'Школа' : 'Ученик'}`" />
+
       <div class="flex justify-between">
-        <div class="">
-          <TypingText18 text="Дата окончания подписки" />
-          <p>{{new Date(user.subscription_expire).toLocaleDateString()}}</p>
-        </div>
-        <Button severity="secondary" outlined label="Продлить"/>
+        <div class="space-y-3">
+          <TypingText18 :text="`Дата окончания подписки: ${new Date(user.subscription_expire).toLocaleDateString()}`" />
+        <TypingText18 :text="`Число одновременных устройств: ${user.max_logins}`" />
       </div>
+        <nuxt-link to="/tariff">
+          <Button severity="secondary" outlined label="Продлить"/>
+        </nuxt-link>
+
+      </div>
+
 
       <TypingText18 text="Email" />
       <UIInput fluid

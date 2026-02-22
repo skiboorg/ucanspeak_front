@@ -14,7 +14,7 @@ const breakpoints = useBreakpoints({
 const activeBreakpoint = breakpoints.active()
 
 const is_mobile = computed(()=>{
-  return activeBreakpoint.value === 'mobile'
+  return activeBreakpoint.value === 'tablet' || activeBreakpoint.value === 'mobile'
 })
 definePageMeta({
   // guest: false,
@@ -205,6 +205,7 @@ const showContent =  computed(()=>{
 
 <template>
   <BlockHeader :is_lesson_header="true" :lesson_title="lesson.title" @back_click="handleBackClick"/>
+
   <div class="container pb-[60px] lg:pb-10 pt-24">
   <BlockBaseBreadcrumbs
       :items="[
@@ -225,7 +226,7 @@ const showContent =  computed(()=>{
   <div class="grid grid-cols-12 gap-0 md:gap-4">
     <div class="col-span-12 md:col-span-3 ">
       <div class="sticky top-0 md:top-40">
-        <CardBase  v-if="showMenu" padding="sm" class="mb-4 h-auto md:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
+        <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 md:mt-0 h-auto md:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
           <p
               v-for="(module, i) in lesson.modules"
               :key="i"
@@ -322,22 +323,17 @@ const showContent =  computed(()=>{
             <div class="space-y-1">
               <CardSpellingTrainer v-for="item in lesson.orthography_items" :item="item" lang="ru"/>
             </div>
-
           </CardBase>
         </template>
         <template v-else-if="viewMode === 'videos'">
           <CardBase padding="sm">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
               <div class="" v-for="video in videos" :key="video.id">
                 {{video.video_number}}
                 <BlockVideoWithPreview :use_modal="true" :showPreview = "true" :data="video"/>
-
               </div>
-
             </div>
-
           </CardBase>
-
         </template>
         <template v-else>
           <div class="space-y-3 mb-6">
@@ -351,7 +347,6 @@ const showContent =  computed(()=>{
 
               </div>
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
-
                 <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
               <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
@@ -482,7 +477,7 @@ const showContent =  computed(()=>{
         </svg>
 
 
-        <p>Меню</p>
+        <p :class="showMenu ? 'text-primary' : ''">Меню</p>
       </div>
       <div @click="fetchTable" class="footer-link flex flex-col items-center justify-center gap-1" >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

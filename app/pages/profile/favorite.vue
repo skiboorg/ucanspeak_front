@@ -61,7 +61,7 @@ const handleTrainerToggleFav = async (id) => {
               </svg>
               <p  class="text-gray-400">Очистить избранное</p>
             </div>
-            <div class="grid grid-cols-2 md:grid-cols-2 gap-1 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-1 mb-6">
 
               <CardDictionaryItem v-if="dictionary_favorites.length>0"
                                   :item="item" v-for="item in dictionary_favorites"

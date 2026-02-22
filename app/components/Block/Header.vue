@@ -24,7 +24,7 @@ const links = [
     <div class=" flex items-center gap-2">
       <div class="flex gap-2 md:hidden">
         <Button @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
-        <Button v-if="is_lesson_header" @click="emits('back_click')" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
+        <Button v-if="is_lesson_header" @click="emits('back_click')" outlined severity="secondary" size="small" icon="pi pi-bars"/>
       </div>
       <NuxtLink to="/courses">
         <svg width="137" height="24" viewBox="0 0 137 24" fill="none" xmlns="http://www.w3.org/2000/svg">

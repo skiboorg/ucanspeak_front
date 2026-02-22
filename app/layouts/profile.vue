@@ -18,7 +18,7 @@ if (user.value.is_school){
 <template>
   <BlockHeader/>
 
-  <div class="container pt-20">
+  <div class="container pt-20 pb-10 md:pb-0">
     <BlockBaseBreadcrumbs
         :items="[
     { label: 'Главная', to: '/' },
@@ -49,5 +49,5 @@ if (user.value.is_school){
     </div>
 
   </div>
-
+  <BlockFooter/>
 </template>
