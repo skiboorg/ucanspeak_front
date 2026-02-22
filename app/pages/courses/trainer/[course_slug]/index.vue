@@ -27,7 +27,7 @@ useSeoMeta({
       </div>
       <div class="w-full flex flex-col gap-[3px]">
 
-        <div class="font-bold text-lg leading-[130%] text-[#778]">{{level.name}}</div>
+        <div class="font-bold text-lg leading-[130%] text-black">{{level.name}}</div>
         <p class="font-normal text-sm leading-[130%] text-[#8f8fa3]">{{level.description}} </p>
 
 
