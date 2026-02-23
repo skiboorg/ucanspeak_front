@@ -48,6 +48,7 @@ const login = async () => {
                v-model="form_data.login"/>
       <UIInput fluid
                placeholder="Введите пароль"
+               type="password"
                label="Пароль"
                id="password"
                v-model="form_data.password"/>

@@ -206,7 +206,7 @@ const showContent =  computed(()=>{
 <template>
   <BlockHeader :is_lesson_header="true" :lesson_title="lesson.title" @back_click="handleBackClick"/>
 
-  <div class="container pb-[60px] lg:pb-10 pt-24">
+  <div class="container pb-[60px] lg:pb-10 pt-20 md:pt-0">
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },

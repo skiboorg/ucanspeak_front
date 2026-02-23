@@ -56,7 +56,7 @@ const onPause = () => {
 
 const toggleFullscreen = () => {
   if (!playerEl.value) return
-
+  isFullscreen.value = !isFullscreen.value
   if (!document.fullscreenElement) {
     playerEl.value.requestFullscreen()
   } else {
@@ -167,6 +167,7 @@ watch(visible, (val) => {
           controlsList="nofullscreen"
 
           class="w-full"
+          :class="isFullscreen ? 'h-svh' : ''"
           @timeupdate="onTimeUpdate"
           @play="onPlay"
           @pause="onPause"
@@ -191,29 +192,29 @@ watch(visible, (val) => {
       </button>
 
       <!-- SUBTITLES (ALWAYS OVER VIDEO) -->
-      <transition name="fade">
+<!--      <transition name="fade">-->
 
-        <div
-            v-if="isFullscreen && currentPhrase"
-            class="absolute bottom-10 left-1/2 -translate-x-1/2
-               z-40 bg-black/70 px-6 py-3 rounded-xl
-               text-center max-w-[90%]"
-        >
-          <div class="text-2xl text-white font-bold">
+<!--        <div-->
+<!--            v-if="isFullscreen && currentPhrase"-->
+<!--            class="absolute bottom-10 left-1/2 -translate-x-1/2-->
+<!--               z-40 bg-black/70 px-6 py-3 rounded-xl-->
+<!--               text-center max-w-[90%]"-->
+<!--        >-->
+<!--          <div class="text-2xl text-white font-bold">-->
 
-            {{ currentPhrase.text_en }}
-          </div>
-          <div class="text-lg text-yellow-300 mt-1">
-            {{ currentPhrase.text_ru }}
-          </div>
-        </div>
-      </transition>
+<!--            {{ currentPhrase.text_en }}-->
+<!--          </div>-->
+<!--          <div class="text-lg text-yellow-300 mt-1">-->
+<!--            {{ currentPhrase.text_ru }}-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </transition>-->
 
       <!-- PHRASES LIST (HIDDEN IN FULLSCREEN) -->
 
-        <div v-if="isPaused">
+        <div v-if="isPaused && !isFullscreen">
           <transition-group
-              v-if="!isFullscreen"
+
               name="fade"
               tag="div"
               class=" bottom-0 left-0 right-0
