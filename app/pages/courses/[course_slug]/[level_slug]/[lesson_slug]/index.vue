@@ -224,7 +224,7 @@ const showContent =  computed(()=>{
 
 
   <div class="grid grid-cols-12 gap-0 md:gap-4">
-    <div class="col-span-12 md:col-span-3 ">
+    <div class="col-span-12 md:col-span-3 pt-0 md:pt-20">
       <div class="sticky top-0 md:top-40">
         <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 md:mt-0 h-auto md:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
           <p
@@ -292,7 +292,7 @@ const showContent =  computed(()=>{
 
     </div>
 
-    <div v-if="showContent" class="col-span-12 md:col-span-6">
+    <div v-if="showContent" class="col-span-12 md:col-span-6 pt-10 md:pt-20">
       <template v-if="loading">
         <div class="space-y-3">
           <SkeletonLessonCard />
@@ -384,7 +384,7 @@ const showContent =  computed(()=>{
         </template>
       </template>
     </div>
-    <div class="hidden md:block col-span-3   ">
+    <div class="hidden md:block col-span-3   pt-0 md:pt-20">
       <CardBase padding="sm" class="h-[75vh] sticky top-40 overflow-x-hidden overflow-y-auto">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"

@@ -41,7 +41,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public:{
-      apiUrl: 'http://localhost:8000',
+      //apiUrl: 'http://localhost:8000',
+      apiUrl: 'https://new.ucanspeak.ru',
     }
   },
   compatibilityDate: '2025-04-07',
