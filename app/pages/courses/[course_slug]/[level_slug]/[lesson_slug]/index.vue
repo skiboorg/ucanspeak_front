@@ -14,7 +14,8 @@ const breakpoints = useBreakpoints({
 const activeBreakpoint = breakpoints.active()
 
 const is_mobile = computed(()=>{
-  return activeBreakpoint.value === 'tablet' || activeBreakpoint.value === 'mobile'
+
+  return  activeBreakpoint.value === 'mobile'
 })
 definePageMeta({
   // guest: false,
@@ -164,6 +165,10 @@ const fetchVideos = async () => {
   }
   if (is_mobile.value) showMenu.value = false
   viewMode.value = "videos"
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
 }
 
 useSeoMeta({
@@ -188,6 +193,10 @@ const toggleView = async (mode:ViewMode)=>{
   viewMode.value = mode
   await nextTick()
   mode === 'audio'? is_play.value = true : is_play.value = false
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
 
 }
 
@@ -196,6 +205,7 @@ const handleBackClick = () => {
 }
 
 const showContent =  computed(()=>{
+  console.log(is_mobile.value)
   if (!is_mobile.value) return true
   return !showMenu.value
 })
@@ -222,10 +232,10 @@ const showContent =  computed(()=>{
     <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
   </a>
 
-
   <div class="grid grid-cols-12 gap-0 md:gap-4">
     <div class="col-span-12 md:col-span-3 pt-0 md:pt-20">
       <div class="sticky top-0 md:top-40">
+
         <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 md:mt-0 h-auto md:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
           <p
               v-for="(module, i) in lesson.modules"
@@ -292,7 +302,7 @@ const showContent =  computed(()=>{
 
     </div>
 
-    <div v-if="showContent" class="col-span-12 md:col-span-6 pt-10 md:pt-20">
+    <div v-if="showContent" class="col-span-12 md:col-span-6 pt-10 md:pt-[82px]">
       <template v-if="loading">
         <div class="space-y-3">
           <SkeletonLessonCard />
