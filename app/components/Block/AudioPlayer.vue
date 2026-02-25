@@ -86,6 +86,7 @@ watch(() => props.play, async (newValue) => {
     }
   } else if (!newValue && isPlaying.value) {
     audio.value.pause()
+    audio.value.currentTime = 0
     isPlaying.value = false
     console.log('paused')
   }
