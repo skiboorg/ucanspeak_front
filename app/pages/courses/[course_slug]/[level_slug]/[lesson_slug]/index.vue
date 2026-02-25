@@ -15,7 +15,7 @@ const activeBreakpoint = breakpoints.active()
 
 const is_mobile = computed(()=>{
 
-  return  activeBreakpoint.value === 'mobile'
+  return  activeBreakpoint.value === 'mobile' || activeBreakpoint.value === 'tablet'
 })
 definePageMeta({
   // guest: false,
@@ -216,7 +216,7 @@ const showContent =  computed(()=>{
 <template>
   <BlockHeader :is_lesson_header="true" :lesson_title="lesson.title" @back_click="handleBackClick"/>
 
-  <div class="container pb-[60px] lg:pb-10 pt-20 md:pt-0">
+  <div class="container pb-[60px] lg:pb-10 pt-20 lg:pt-0">
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -227,16 +227,16 @@ const showContent =  computed(()=>{
   ]"
   />
 
-  <BlockCourseHeader class="hidden md:block" :is_fixed="true" :title="lesson.title" show_profile/>
+  <BlockCourseHeader class="hidden lg:block" :is_fixed="true" :title="lesson.title" show_profile/>
   <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
     <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
   </a>
 
-  <div class="grid grid-cols-12 gap-0 md:gap-4">
-    <div class="col-span-12 md:col-span-3 pt-0 md:pt-20">
-      <div class="sticky top-0 md:top-40">
+  <div class="grid grid-cols-12 gap-0 lg:gap-4">
+    <div class="col-span-12 lg:col-span-3 pt-0 lg:pt-20">
+      <div class="sticky top-0 lg:top-40">
 
-        <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 md:mt-0 h-auto md:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
+        <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 lg:mt-0 h-auto lg:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
           <p
               v-for="(module, i) in lesson.modules"
               :key="i"
@@ -302,7 +302,7 @@ const showContent =  computed(()=>{
 
     </div>
 
-    <div v-if="showContent" class="col-span-12 md:col-span-6 pt-10 md:pt-[82px]">
+    <div v-if="showContent" class="col-span-12 lg:col-span-6 pt-10 lg:pt-[82px]">
       <template v-if="loading">
         <div class="space-y-3">
           <SkeletonLessonCard />
@@ -315,12 +315,12 @@ const showContent =  computed(()=>{
               <TypingText28 text="Аудиоурок"/>
               <p class="text-gray-500">{{lesson.title}}</p>
             </div>
-            <div class="block md:hidden absolute top-4 right-4">
+            <div class="block lg:hidden absolute top-4 right-4">
               <Button  @click.stop="handleBackClick" size="small" outlined rounded icon="pi pi-times"/>
             </div>
 
 <!--            <audio class="w-[80%]" controlsList="nodownload" @contextmenu.prevent controls :src="lesson.file"></audio>-->
-            <div class="px-0 md:px-10 w-full">
+            <div class="px-0 lg:px-10 w-full">
               <BlockAudioPlayer :play="is_play" :src="lesson.file" />
             </div>
 
@@ -348,9 +348,9 @@ const showContent =  computed(()=>{
         <template v-else>
           <div class="space-y-3 mb-6">
             <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
-              <!--              <p class="text-[16px] md:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
+              <!--              <p class="text-[16px] lg:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
 
-              <div class="text-[16px] md:text-lg font-medium mb-3 leading-[110%]" v-html="block.caption === '  None' ? '' : block.caption"></div>
+              <div class="text-[16px] lg:text-lg font-medium mb-3 leading-[110%]" v-html="block.caption === '  None' ? '' : block.caption"></div>
 
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
                 <img @click="videoSelected(block.videos[0].file)" class="cursor-pointer w-[120px] h-[90px] object-contain" src="~assets/images/tutorial_video.png">
@@ -359,7 +359,7 @@ const showContent =  computed(()=>{
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
                 <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
-              <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] leading-[110%] md:text-[16px]"></div>
+              <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] leading-[110%] lg:text-[16px]"></div>
               <div v-if="block.items.length>0" class="space-y-1">
                 <CardVoiceFile
                     v-for="item in block.items"
@@ -394,7 +394,7 @@ const showContent =  computed(()=>{
         </template>
       </template>
     </div>
-    <div class="hidden md:block col-span-3   pt-0 md:pt-20">
+    <div class="hidden lg:block col-span-3   pt-0 lg:pt-20">
       <CardBase padding="sm" class="h-[75vh] sticky top-40 overflow-x-hidden overflow-y-auto">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
@@ -430,7 +430,7 @@ const showContent =  computed(()=>{
   <Dialog v-model:visible="table_modal_visible"
           modal
           :show-header="false"
-          class="relative p-0 w-[90%] md:w-[50%]"
+          class="relative p-0 w-[90%] lg:w-[50%]"
           >
     <i class="pi pi-times absolute top-3 right-3 cursor-pointer z-40" @click="table_modal_visible=false"></i>
     <img class="w-full h-auto object-contain" :src="table"/>
@@ -479,7 +479,7 @@ const showContent =  computed(()=>{
 
   </Dialog>
 
-  <footer class="block md:hidden">
+  <footer class="block lg:hidden">
     <div class="fixed left-0 bottom-0 w-full h-[60px] bg-white pt-3 flex border-t border-[#EFEFEF] items-center justify-evenly z-50">
       <div @click="toggleMenu" class="footer-link flex flex-col items-center justify-center gap-1" >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -18,11 +18,11 @@ const links = [
 </script>
 
 <template>
-<header id="top" class="fixed w-full  border-b border-[#EFEFEF] bg-white py-2 md:py-2 mb-2 md:mb-6  z-[1000]">
+<header id="top" class="fixed w-full  border-b border-[#EFEFEF] bg-white py-2 lg:py-2 mb-2 lg:mb-6  z-[1000]">
 
   <div class="container flex items-center justify-between">
     <div class=" flex items-center gap-2">
-      <div class="flex gap-2 md:hidden">
+      <div class="flex gap-2 lg:hidden">
         <Button @click="$router.back()" outlined severity="secondary" size="small" icon="pi pi-chevron-left"/>
         <Button v-if="is_lesson_header" @click="emits('back_click')" outlined severity="secondary" size="small" icon="pi pi-bars"/>
       </div>
@@ -50,7 +50,7 @@ const links = [
 
     </div>
 
-    <div class="hidden md:flex gap-8 items-center">
+    <div class="hidden lg:flex gap-8 items-center">
       <NuxtLink v-for="link in links" :to="link.to" >{{link.title}}</NuxtLink>
 
     </div>
@@ -60,16 +60,16 @@ const links = [
         <Button severity="secondary" text icon="pi pi-search"/>
       </NuxtLink>
 
-      <NuxtLink class="hidden md:inline-block" v-if="user"  to="/profile">
+      <NuxtLink class="hidden lg:inline-block" v-if="user"  to="/profile">
         <Button severity="secondary" text outlined icon="pi pi-user"/>
       </NuxtLink>
-      <NuxtLink class="hidden md:inline-block" v-else to="/auth">
+      <NuxtLink class="hidden lg:inline-block" v-else to="/auth">
         <Button  label="Вход / Регистрация"/>
       </NuxtLink>
     </div>
 
   </div>
-  <div class="block md:hidden container mt-2" v-if="is_lesson_header">
+  <div class="block lg:hidden container mt-2" v-if="is_lesson_header">
     {{lesson_title}}
   </div>
 </header>

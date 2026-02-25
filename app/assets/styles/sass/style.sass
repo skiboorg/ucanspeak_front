@@ -24,17 +24,19 @@ section
   height: calc(100% - 160px)
   max-width: 650px
 
-  //@media (max-height: 700px)
-  //  height: 70vh
-  //@media (max-width: 1400px)
-  //  max-width: 572px
-  //@media (max-width: 1200px)
-  //  max-width: 484px
-  @media (max-width: 900px)
+  @media (max-height: 700px)
+    height: 70vh
+
+  @media (max-width: 1400px)
+    max-width: 572px
+  @media (max-width: 1200px)
+    max-width: 486px
+  @media (max-width: 1024px)
     max-width: 95vw
     top: 60px
     height: calc(100% - 120px)
     //height: 85vh
+
   & .p-dialog-content
     padding: 0 !important
 
