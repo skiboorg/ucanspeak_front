@@ -284,8 +284,7 @@ const stopAudio = async () => {
 
   <Dialog v-model:visible="test_modal_visible"
           modal
-          header=" "
-
+          :header="topic_data.topic.name"
           class="relative w-svw h-svh"
 
           >

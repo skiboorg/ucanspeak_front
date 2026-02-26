@@ -157,7 +157,16 @@ watch(visible, (val) => {
   </div>
 
 
-  <Dialog v-model:visible="visible" @hide="handleHide"  header="Видео урок" :show-header="false" class="video-modal">
+  <Dialog v-model:visible="visible" @hide="handleHide"  header="Видео урок" :show-header="false" class="video-modal relative">
+    <div class="block lg:hidden absolute bottom-2 right-2">
+      <button
+          class="z-50 text-[#CACACA] bg-black/40 px-3 py-1 rounded"
+          @click="visible=false"
+      >
+        <i class="pi pi-times"></i>
+      </button>
+    </div>
+
     <div  ref="playerEl" class="relative rounded-xl overflow-hidden">
       <!-- VIDEO -->
       <video
@@ -212,7 +221,7 @@ watch(visible, (val) => {
 
       <!-- PHRASES LIST (HIDDEN IN FULLSCREEN) -->
 
-        <div v-if="isPaused && !isFullscreen">
+        <div v-if="isPaused && !isFullscreen" class="relative">
           <transition-group
 
               name="fade"
@@ -231,6 +240,7 @@ watch(visible, (val) => {
                 @toggle_open="handleToggleOpen"
             />
           </transition-group>
+
         </div>
 
 
@@ -240,3 +250,14 @@ watch(visible, (val) => {
 
 
 </template>
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
