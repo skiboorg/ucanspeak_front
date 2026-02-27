@@ -16,6 +16,11 @@ const props = defineProps<{
       text_ru: string
       sound: string
     }[]
+    watermarks: {
+      start_time: string
+      end_time: string
+      text: string
+    }[]
   }
 }>()
 
@@ -106,6 +111,14 @@ const currentPhrase = computed(() =>
     })
 )
 
+const currentWatermark = computed(() =>
+    (props.data.watermarks ?? []).find(w => {
+      const start = parseTime(w.start_time)
+      const end = parseTime(w.end_time)
+      return currentTime.value >= start && currentTime.value <= end
+    })
+)
+
 const visiblePhrases = computed(() =>
     phrases.value.filter(p =>
         parseTime(p.start_time) <= currentTime.value
@@ -184,7 +197,24 @@ watch(visible, (val) => {
 
         <source :src="data.file" type="video/mp4" />
       </video>
+
       <p class="bg-black/40 text-[#CACACA] absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
+      <transition name="fade">
+        <div
+            v-if="currentWatermark"
+            class="absolute top-10 left-1/2 -translate-x-1/2 z-40
+           bg-black/50 px-4 py-2 rounded-xl text-center max-w-[90%]"
+        >
+          <p
+              v-for="(line, i) in currentWatermark.text.split(/\r?\n/)"
+              :key="i"
+              class="text-white font-semibold"
+              :class="isFullscreen ? 'text-2xl' : 'text-sm'"
+          >
+            {{ line }}
+          </p>
+        </div>
+      </transition>
       <!-- FULLSCREEN BUTTON -->
 
       <button

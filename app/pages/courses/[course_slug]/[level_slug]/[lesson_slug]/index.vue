@@ -210,6 +210,17 @@ const showContent =  computed(()=>{
   return !showMenu.value
 })
 
+watch(is_mobile, (newVal, oldVal) => {
+  if (oldVal && !newVal) {
+    // Перешли с мобилки на десктоп — показываем меню
+    showMenu.value = true
+  }
+  if (!oldVal && newVal) {
+    // Перешли с десктопа на мобилку — показываем меню (начальное состояние)
+    showMenu.value = true
+  }
+})
+
 </script>
 
 

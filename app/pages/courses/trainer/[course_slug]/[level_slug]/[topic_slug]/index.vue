@@ -286,6 +286,7 @@ const stopAudio = async () => {
           modal
           :header="topic_data.topic.name"
           class="relative w-svw h-svh"
+          @show="stopAudioMobile"
 
           >
     <div class="space-y-1 mb-4 ">

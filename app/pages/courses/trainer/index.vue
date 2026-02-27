@@ -19,7 +19,7 @@ const {user} = storeToRefs(authStore)
   <BlockCourseHeader title="Тренажер" >
 
   </BlockCourseHeader>
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-2 md:gap-5">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 md:gap-5">
 
     <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`"
               class="flex items-start gap-4 p-3 bg-white border border-[#18181b]/10 rounded-[20px]">
