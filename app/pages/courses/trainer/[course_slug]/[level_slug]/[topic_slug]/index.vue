@@ -67,6 +67,7 @@ const handleToggleFav = async (id) => {
 }
 
 const openTest = () => {
+  openedId.value = null
   show_test.value = true
   show_desktop_player.value = false
   is_play_desktop.value = false
@@ -287,7 +288,7 @@ const stopAudio = async () => {
           :header="topic_data.topic.name"
           class="relative w-svw h-svh"
           @show="stopAudioMobile"
-
+          @hide="openedId=null"
           >
     <div class="space-y-1 mb-4 ">
       <CardVoiceFile

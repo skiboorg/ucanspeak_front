@@ -151,6 +151,11 @@ watch(visible, (val) => {
     nextTick(() => videoEl.value?.play())
   }
 })
+
+const close = () => {
+  isFullscreen.value = false
+  visible.value = false
+}
 </script>
 
 <template>
@@ -202,14 +207,15 @@ watch(visible, (val) => {
       <transition name="fade">
         <div
             v-if="currentWatermark"
-            class="absolute top-10 left-1/2 -translate-x-1/2 z-40
-           bg-black/50 px-4 py-2 rounded-xl text-center max-w-[90%]"
+            :class="isFullscreen ? 'bottom-20 right-5' : 'top-[270px] right-2'"
+            class="absolute   z-40
+           bg-black/30 px-4 py-2 rounded-xl text-center max-w-[90%]"
         >
           <p
               v-for="(line, i) in currentWatermark.text.split(/\r?\n/)"
               :key="i"
-              class="text-white font-semibold"
-              :class="isFullscreen ? 'text-2xl' : 'text-sm'"
+              class="text-white/30 font-semibold"
+              :class="isFullscreen ? 'text-lg' : 'text-xs'"
           >
             {{ line }}
           </p>
@@ -219,7 +225,7 @@ watch(visible, (val) => {
 
       <button
           class="absolute top-2 right-2 z-50 text-[#CACACA] bg-black/40 px-3 py-1 rounded"
-          @click="visible=false"
+          @click="close"
       >
         <i class="pi pi-times"></i>
       </button>
