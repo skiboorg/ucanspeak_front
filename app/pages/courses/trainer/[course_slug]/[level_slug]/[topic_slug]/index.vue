@@ -79,7 +79,8 @@ useSeoMeta({
   title: `${topic_data.value.topic.name}`,
 })
 
-
+const headerText = useState('header_text')
+headerText.value = topic_data.value.topic.name
 const handleToggleOpen = (id: number) => {
   openedId.value = openedId.value === id ? null : id
 }
@@ -113,7 +114,7 @@ const stopAudio = async () => {
     { label: topic_data.level.name, to: `/courses/trainer/${course_slug}/${level_slug}`  },
     { label: topic_data.topic.name  },
   ]"/>
-  <BlockCourseHeader :title="topic_data.topic.name"/>
+
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
     <div class="col-span-12 lg:col-span-4">
       <CardBase padding="sm" class="space-y-3">

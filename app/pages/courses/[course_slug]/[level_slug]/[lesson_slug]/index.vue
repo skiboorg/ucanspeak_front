@@ -50,9 +50,12 @@ const videos = ref([])
 const config = useRuntimeConfig();
 
 const dictionary_direction = ref('ruEN')
-
 const isPlaying = ref(false)
 const audio = new Audio()
+
+const headerText = useState('header_text')
+headerText.value = lesson.value?.title
+
 audio.src = lesson.value.file
 const play = () => {
   if (isPlaying.value) {
@@ -227,7 +230,7 @@ watch(is_mobile, (newVal, oldVal) => {
 <template>
   <BlockHeader :is_lesson_header="true" :lesson_title="lesson.title" @back_click="handleBackClick"/>
 
-  <div class="container pb-[60px] lg:pb-10 pt-20 lg:pt-0">
+  <div class="container pb-[60px] lg:pb-10 pt-20 lg:pt-20">
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -238,14 +241,12 @@ watch(is_mobile, (newVal, oldVal) => {
   ]"
   />
 
-  <BlockCourseHeader class="hidden lg:block" :is_fixed="true" :title="lesson.title" show_profile/>
-  <a v-if="user && user.is_superuser" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
-    <Button outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
-  </a>
+
+
 
   <div class="grid grid-cols-12 gap-0 lg:gap-4">
-    <div class="col-span-12 lg:col-span-3 pt-0 lg:pt-20">
-      <div class="sticky top-0 lg:top-40">
+    <div class="col-span-12 lg:col-span-3 ">
+      <div class="sticky top-20 ">
 
         <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 lg:mt-0 h-auto lg:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
           <p
@@ -307,13 +308,15 @@ watch(is_mobile, (newVal, oldVal) => {
             </svg>
             <p>Аудиоурок</p>
           </div>
-
+          <a v-if="user && user.is_superuser" class="block mt-3" target="_blank" :href="`${config.public.apiUrl}/admin/lesson/lesson/${lesson.id}/change/`">
+            <Button fluid outlined severity="secondary" icon="pi pi-pencil" label="Редактировать урок"/>
+          </a>
         </CardBase>
       </div>
 
     </div>
 
-    <div v-if="showContent" class="col-span-12 lg:col-span-6 pt-10 lg:pt-[82px]">
+    <div v-if="showContent" class="col-span-12 lg:col-span-6 pt-4 lg:pt-0">
       <template v-if="loading">
         <div class="space-y-3">
           <SkeletonLessonCard />
@@ -405,8 +408,8 @@ watch(is_mobile, (newVal, oldVal) => {
         </template>
       </template>
     </div>
-    <div class="hidden lg:block col-span-3   pt-0 lg:pt-20">
-      <CardBase padding="sm" class="h-[75vh] sticky top-40 overflow-x-hidden overflow-y-auto">
+    <div class="hidden lg:block col-span-3   ">
+      <CardBase padding="sm" class="h-[75vh] sticky top-20 overflow-x-hidden overflow-y-auto">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
              @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">

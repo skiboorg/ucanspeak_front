@@ -278,6 +278,7 @@ const close = () => {
           </transition-group>
 
         </div>
+      <div class="w-full h-[200px]"></div>
 
 
 

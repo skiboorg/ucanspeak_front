@@ -6,19 +6,12 @@ const {data:levels_data,pending:pending} = useHttpRequest(await useAsyncData(()=
 useSeoMeta({
   title: `${levels_data.value.course?.name}`,
 })
+const headerText = useState('header_text')
+headerText.value = levels_data.value.course?.name
 </script>
 
 <template>
-  <BlockBaseBreadcrumbs
-      :items="[
-    { label: 'Главная', to: '/' },
-    { label: 'Тренажер', to: '/courses/trainer/' },
-    { label: levels_data.course.name  },
 
-  ]"
-  />
-
-  <BlockCourseHeader :title="levels_data.course.name" />
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 pb-20">
     <NuxtLink v-for="level in levels_data.levels"  :to="`/courses/trainer/${course_slug}/${level.slug}`"
               class="flex  items-center gap-4 p-3 bg-white border border-[#18181b]/10 rounded-[20px]">

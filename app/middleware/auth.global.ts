@@ -1,5 +1,7 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
   console.log(to);
+
+
   if (to.fullPath==='/') return navigateTo({ name: 'courses' })
 
   const authStore = useAuthStore()

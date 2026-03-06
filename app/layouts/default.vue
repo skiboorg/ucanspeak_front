@@ -1,7 +1,7 @@
 <template>
   <BlockHeader/>
 
-  <div class="container lg:pb-[120px] lg:pb-10 !pt-20">
+  <div class="container lg:pb-[120px] pt-16 lg:pt-24">
     <slot/>
   </div>
   <BlockFooter/>

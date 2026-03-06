@@ -13,19 +13,21 @@ if (user.value.is_school){
       {title:'Ученики', to:'/profile/pupils'},
   )
 }
+const headerText = useState('header_text')
+headerText.value = 'Профиль'
 </script>
 
 <template>
   <BlockHeader/>
 
-  <div class="container pt-20 pb-10 md:pb-0">
+  <div class="container pt-16 lg:pt-24 pb-10 md:pb-0">
     <BlockBaseBreadcrumbs
         :items="[
     { label: 'Главная', to: '/' },
     { label: 'Профиль'},
 
   ]"/>
-    <BlockCourseHeader title="Профиль" prev_link="/"/>
+
     <div class="grid grid-cols-12 gap-5">
       <div class="col-span-12 md:col-span-3">
         <CardBase padding="sm" class="sticky top-5 space-y-1">
