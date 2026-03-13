@@ -50,7 +50,7 @@ const {user} = storeToRefs(authStore)
 
         </div>
         <div v-else>
-          <UIPLine  :value="10"
+          <UIPLine  :value="0"
                     :progress_bg_color="course.progress_bg_color"
                     :progress_color ="course.progress_color"
                     class="my-[5px]"/>
