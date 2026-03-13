@@ -50,7 +50,7 @@ const {user} = storeToRefs(authStore)
           <UIPLine
               progress_bg_color="#F2F2FD"
               progress_color ="#8B8BF2"
-              :value="10" class="my-[5px]"/>
+              :value="0" class="my-[5px]"/>
           <p class="font-normal text-xs leading-[130%] text-[#8f8fa3]">0 из {{course.total_levels}} уровней пройдено</p>
 
         </div>

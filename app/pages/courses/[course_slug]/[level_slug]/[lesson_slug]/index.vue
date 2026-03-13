@@ -456,7 +456,14 @@ watch(is_mobile, (newVal, oldVal) => {
 
           class="w-[90%] lg:w-[65%] relative video-modal overflow-hidden"
           >
-    <i class="pi pi-times absolute top-3 right-3 cursor-pointer z-40" @click="video_tutorial_modal_visible=false"></i>
+
+    <div class="px-4 py-2 flex justify-end">
+        <svg @click="video_tutorial_modal_visible=false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#E0E0EB"/>
+          <path d="M8 16L16 8" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M8 8L16 16" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+    </div>
     <video width="100%" height="auto" preload="none" playsinline="true" id="video_player"
            controls="controls" autoplay="autoplay">
       <source :src="tutorial_video" type="video/mp4">
@@ -467,7 +474,13 @@ watch(is_mobile, (newVal, oldVal) => {
           header="Словарь"
           class="relative"
           :style="{ width: '35rem','padding': '0' }">
-
+    <template #closebutton>
+      <svg @click="dictionary_modal_visible=false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#E0E0EB"/>
+        <path d="M8 16L16 8" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M8 8L16 16" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </template>
 
     <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
          @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">

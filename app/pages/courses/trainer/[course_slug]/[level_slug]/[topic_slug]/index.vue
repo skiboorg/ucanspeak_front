@@ -288,9 +288,17 @@ const stopAudio = async () => {
           modal
           :header="topic_data.topic.name"
           class="relative w-svw h-svh"
+
           @show="stopAudioMobile"
           @hide="openedId=null"
           >
+    <template #closebutton>
+      <svg @click="test_modal_visible=false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#E0E0EB"/>
+        <path d="M8 16L16 8" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M8 8L16 16" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </template>
     <div class="space-y-1 mb-4 ">
       <CardVoiceFile
           v-for="item in topic_data.topic.phrases"

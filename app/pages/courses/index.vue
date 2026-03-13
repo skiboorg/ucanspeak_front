@@ -20,9 +20,9 @@ headerText.value = null
   />
 
       <div class="grid  grid-cols-1 lg:grid-cols-3 gap-2 sm:gap-6 pb-20 md:pb-0">
-
-        <CardCourse v-for="course in courses" :key="course.id" :course="course" />
         <CardTrainer/>
+        <CardCourse v-for="course in courses" :key="course.id" :course="course" />
+
       </div>
 
 </template>

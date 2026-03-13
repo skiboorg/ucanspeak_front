@@ -176,16 +176,33 @@ const close = () => {
 
 
   <Dialog v-model:visible="visible" @hide="handleHide"  header="Видео урок" :show-header="false" class="video-modal relative">
-    <div class="block lg:hidden absolute bottom-2 right-2">
-      <button
-          class="z-50 text-[#CACACA] bg-black/40 px-3 py-1 rounded"
-          @click="visible=false"
-      >
-        <i class="pi pi-times"></i>
-      </button>
-    </div>
+<!--    <div class="block lg:hidden absolute bottom-2 right-2">-->
+<!--      <button-->
+<!--          class="z-50 text-[#CACACA] bg-black/40 px-3 py-1 rounded"-->
+<!--          @click="visible=false"-->
+<!--      >-->
+<!--        <i class="pi pi-times"></i>-->
+<!--      </button>-->
+<!--    </div>-->
+    <div class="px-4 py-2 flex justify-between">
+      <p class="text-[12px] text-[#8F8FA3] font-medium p-1 border border-[#E0E0EB] rounded-md ">{{data.video_number}}</p>
+      <div class="flex gap-2 cursor-pointer">
+        <svg @click="toggleFullscreen" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#E0E0EB"/>
+          <path d="M10.75 10.75L7 7M7 7V10.4375M7 7H10.4375" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M13.25 13.25L17 17M17 17L17 13.5625M17 17L13.5625 17" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
+        <svg @click="close" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" stroke="#E0E0EB"/>
+          <path d="M8 16L16 8" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+          <path d="M8 8L16 16" stroke="#8F8FA3" stroke-width="1.2" stroke-linecap="round"/>
+        </svg>
 
-    <div  ref="playerEl" class="relative rounded-xl overflow-hidden">
+
+      </div>
+
+    </div>
+    <div  ref="playerEl" class="relative  overflow-hidden">
       <!-- VIDEO -->
       <video
           ref="videoEl"
@@ -203,7 +220,7 @@ const close = () => {
         <source :src="data.file" type="video/mp4" />
       </video>
 
-      <p class="bg-black/40 text-[#CACACA] absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
+      <p v-if="isFullscreen" class="bg-black/40 text-[#CACACA] absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
       <transition name="fade">
         <div
             v-if="currentWatermark"
@@ -224,12 +241,14 @@ const close = () => {
       <!-- FULLSCREEN BUTTON -->
 
       <button
+          v-if="isFullscreen"
           class="absolute top-2 right-2 z-50 text-[#CACACA] bg-black/40 px-3 py-1 rounded"
           @click="close"
       >
         <i class="pi pi-times"></i>
       </button>
       <button
+          v-if="isFullscreen"
           class="absolute top-2 right-14 z-50 text-[#CACACA] bg-black/40 px-3 py-1 rounded"
           @click="toggleFullscreen"
       >
