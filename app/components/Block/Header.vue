@@ -6,7 +6,7 @@ const {user} = storeToRefs(authStore)
 //   {title:'О проекте',to:'/about'},
 //   {title:'Тарифы',to:'/tariff'},
 // ]
-const props = defineProps(['is_lesson_header','lesson_title'])
+const props = defineProps(['is_lesson_header','lesson_title','is_trainer_header'])
 const emits = defineEmits(['back_click'])
 const links = [
   {title:'Курс для взрослых',to:'/courses/adult_course'},
@@ -49,16 +49,16 @@ console.log(route)
         </svg>
 
       </NuxtLink>
-      <button v-if="headerText" class="hidden lg:flex px-3 py-[6px] bg-[#F6F6F9] border border-[#E0E0EB] rounded  items-center gap-2">
-        {{headerText}}
-      </button>
+
     </div>
 
-
+    <button v-if="headerText" class="hidden lg:flex px-3 py-[6px] bg-[#F6F6F9] border border-[#E0E0EB] rounded  items-center gap-2">
+      {{headerText}}
+    </button>
 
     <div v-if="user" class="flex gap-2 items-center">
 
-      <NuxtLink v-if="user.last_lesson_url" :to="user.last_lesson_url" class="text-sm font-medium text-[#3333e8] hidden sm:flex items-center gap-3">
+      <NuxtLink v-if="route.path ==='/courses' && user.last_lesson_url" :to="user.last_lesson_url" class="text-sm font-medium text-[#3333e8] hidden sm:flex items-center gap-3">
         <button class="px-3 py-2 bg-[#F6F6F9] border border-[#E0E0EB] rounded flex items-center gap-2">
           <span>Продолжить</span>
           <svg width="9" height="12" viewBox="0 0 9 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -97,6 +97,9 @@ console.log(route)
 
   </div>
   <div class="block lg:hidden container mt-2" v-if="is_lesson_header">
+    {{lesson_title}}
+  </div>
+  <div class="block lg:hidden container mt-2" v-if="is_trainer_header">
     {{lesson_title}}
   </div>
 </header>

@@ -1,5 +1,9 @@
 <script setup lang="ts">
-
+definePageMeta({
+  // guest: false,
+  // auth:true,
+  layout: 'trainer'
+})
 type ViewMode = "audio" | "trainer"
 const {$api} = useNuxtApp()
 const {course_slug, level_slug, topic_slug} = useRoute().params
@@ -15,7 +19,17 @@ const show_desktop_player = ref(false)
 const test_modal_visible = ref(false)
 const desktop_player_key = ref(0)
 const openedId = ref<number | null>(null)
-
+const dialogRef = ref()
+const dialogKey = ref(0)
+const onDialogShow = () => {
+  dialogKey.value++
+  nextTick(() => {
+    if (dialogRef.value?.maximize) {
+      dialogRef.value.maximize()
+    }
+  })
+  stopAudioMobile()
+}
 const openAudio = async (file) => {
   // Останавливаем текущее воспроизведение
   is_play_desktop.value = false
@@ -106,6 +120,8 @@ const stopAudio = async () => {
 </script>
 
 <template>
+
+  <BlockHeader :is_trainer_header="true" :lesson_title="topic_data.topic.name" @back_click="$router.back()" />
   <BlockBaseBreadcrumbs
       :items="[
     { label: 'Главная', to: '/' },
@@ -114,7 +130,7 @@ const stopAudio = async () => {
     { label: topic_data.level.name, to: `/courses/trainer/${course_slug}/${level_slug}`  },
     { label: topic_data.topic.name  },
   ]"/>
-
+  <div class="container pb-[60px] lg:pb-10 pt-24 ">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-4">
     <div class="col-span-12 lg:col-span-4">
       <CardBase padding="sm" class="space-y-3">
@@ -153,7 +169,7 @@ const stopAudio = async () => {
               @click.stop="openAudioMobile(audio_file)"
               class="flex items-center gap-5 cursor-pointer"
           >
-            <div class="w-[46px]">
+            <div v-if="selected_audio_id !== audio_file.id" class="w-[46px]">
             <svg width="46" height="46" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect width="46" height="46" rx="23" fill="#EFEFF5"/>
               <path fill-rule="evenodd" clip-rule="evenodd"
@@ -283,13 +299,16 @@ const stopAudio = async () => {
       </CardBase>
     </div>
   </div>
-
+  </div>
   <Dialog v-model:visible="test_modal_visible"
+          :key="dialogKey"
           modal
+          maximizable
+          ref="dialogRef"
           :header="topic_data.topic.name"
           class="relative w-svw h-svh"
 
-          @show="stopAudioMobile"
+          @show="onDialogShow"
           @hide="openedId=null"
           >
     <template #closebutton>
@@ -326,6 +345,8 @@ const stopAudio = async () => {
   </Dialog>
 </template>
 
-<style scoped>
-
+<style >
+.p-dialog-maximize-button {
+  display: none !important;
+}
 </style>

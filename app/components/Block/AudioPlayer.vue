@@ -65,32 +65,61 @@ const duration = ref(0)
 const currentTime = ref(0)
 const progress = ref(0)
 
-
-watch(() => props.play, async (newValue) => {
-  console.log('play changed:', newValue, 'audio:', audio.value)
-
-  await nextTick()
-
-  if (!audio.value) {
-    console.log('audio element not ready')
-    return
+watch(() => props.src, () => {
+  if (audio.value) {
+    audio.value.pause()
+    audio.value.currentTime = 0
   }
+  isPlaying.value = false
+  currentTime.value = 0
+  progress.value = 0
+  duration.value = 0
+})
 
-  if (newValue && !isPlaying.value) {
+// Автоплей — immediate чтобы сработало даже если play уже true при маунте
+watch(() => props.play, async (newValue) => {
+  await nextTick()
+  if (!audio.value) return
+
+  if (newValue) {
     try {
+      audio.value.currentTime = 0  // всегда с начала при автоплее
       await audio.value.play()
       isPlaying.value = true
-      console.log('started playing')
     } catch (error) {
       console.error('play error:', error)
     }
-  } else if (!newValue && isPlaying.value) {
+  } else {
     audio.value.pause()
     audio.value.currentTime = 0
     isPlaying.value = false
-    console.log('paused')
   }
-})
+}, { immediate: true })
+// watch(() => props.play, async (newValue) => {
+//   console.log('play changed:', newValue, 'audio:', audio.value)
+//
+//   await nextTick()
+//
+//   if (!audio.value) {
+//     console.log('audio element not ready')
+//     return
+//   }
+//
+//   if (newValue && !isPlaying.value) {
+//     try {
+//       await audio.value.play()
+//       isPlaying.value = true
+//       console.log('started playing')
+//     } catch (error) {
+//       console.error('play error:', error)
+//     }
+//   } else if (!newValue && isPlaying.value) {
+//     audio.value.pause()
+//     audio.value.currentTime = 0
+//     isPlaying.value = false
+//     console.log('paused')
+//   }
+// })
 
 
 const togglePlay = () => {

@@ -58,16 +58,29 @@ const onPlay = () => {
 const onPause = () => {
   isPaused.value = true
 }
-
 const toggleFullscreen = () => {
+  const video = videoEl.value as any
+  if (video?.webkitEnterFullscreen) {
+    video.webkitDisplayingFullscreen
+        ? video.webkitExitFullscreen()
+        : video.webkitEnterFullscreen()
+    return
+  }
   if (!playerEl.value) return
   isFullscreen.value = !isFullscreen.value
-  if (!document.fullscreenElement) {
-    playerEl.value.requestFullscreen()
-  } else {
-    document.exitFullscreen()
-  }
+  !document.fullscreenElement
+      ? playerEl.value.requestFullscreen()
+      : document.exitFullscreen()
 }
+// const toggleFullscreen = () => {
+//   if (!playerEl.value) return
+//   isFullscreen.value = !isFullscreen.value
+//   if (!document.fullscreenElement) {
+//     playerEl.value.requestFullscreen()
+//   } else {
+//     document.exitFullscreen()
+//   }
+// }
 
 onMounted(() => {
   if(!props.showPreview) return
@@ -209,7 +222,7 @@ const close = () => {
           controls
           preload="metadata"
           controlsList="nofullscreen"
-
+          playsinline
           class="w-full"
           :class="isFullscreen ? 'h-svh' : ''"
           @timeupdate="onTimeUpdate"
@@ -224,7 +237,7 @@ const close = () => {
       <transition name="fade">
         <div
             v-if="currentWatermark"
-            :class="isFullscreen ? 'bottom-20 right-5' : 'top-[270px] right-2'"
+            :class="isFullscreen ? 'bottom-20 right-5' : 'top-2 left-1/2 -translate-x-1/2'"
             class="absolute   z-40
            bg-black/30 px-4 py-2 rounded-xl text-center max-w-[90%]"
         >

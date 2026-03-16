@@ -28,9 +28,9 @@ const {user} = storeToRefs(authStore)
     </div>
 
     <NuxtLink v-for="level in course.levels"  :to="`/courses/${course.slug}/${level.slug}`" class="flex items-center gap-4 p-3 bg-white border border-[#18181b]/10 rounded-[20px]">
-      <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]">
+
         <img :src="level.icon" alt="" class="">
-      </div>
+
       <div class="w-full flex flex-col ">
         <div class="flex items-center">
           <span class="font-bold text-[14px] leading-[130%] text-[#2c2c2c] uppercase">{{level.title}}</span>
