@@ -21,8 +21,8 @@ const desktop_player_key = ref(0)
 const openedId = ref<number | null>(null)
 const dialogRef = ref()
 const dialogKey = ref(0)
+
 const onDialogShow = () => {
-  dialogKey.value++
   nextTick(() => {
     if (dialogRef.value?.maximize) {
       dialogRef.value.maximize()
@@ -116,6 +116,11 @@ const stopAudio = async () => {
   selected_audio_id.value = null
   desktop_player_key.value++
   current_audio.value = null
+}
+
+const onDialogHide = () => {
+  openedId.value = null
+  dialogKey.value++
 }
 </script>
 
@@ -309,7 +314,7 @@ const stopAudio = async () => {
           class="relative w-svw h-svh"
 
           @show="onDialogShow"
-          @hide="openedId=null"
+          @hide="onDialogHide"
           >
     <template #closebutton>
       <svg @click="test_modal_visible=false" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
