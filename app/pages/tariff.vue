@@ -14,7 +14,7 @@ const {user} = storeToRefs(authStore)
     <CardTariff v-for="tariff in tariffs" :key="tariff.id" :tariff="tariff" />
   </div>
   <div v-else class="h-[70vh] flex flex-col items-center justify-center">
-    <NuxtLink   to="/auth">
+    <NuxtLink   to="/login">
       <Button  label="Вход / Регистрация"/>
     </NuxtLink>
   </div>

@@ -74,7 +74,7 @@ const route = useRoute()
 
     </div>
     <div v-else>
-      <NuxtLink class="hidden lg:inline-block" to="/auth">
+      <NuxtLink class="hidden lg:inline-block" to="/login">
         <Button size="small" label="Вход / Регистрация"/>
       </NuxtLink>
     </div>

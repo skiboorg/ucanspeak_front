@@ -1,28 +1,25 @@
 <script setup lang="ts">
 import { useToast } from 'primevue/usetoast';
-
+import { useClipboard } from '@vueuse/core'
 const {$api} = useNuxtApp()
 const authStore = useAuthStore()
 const {user} = storeToRefs(authStore)
 const selectedFile = ref(null)
+const selectedLogoFile = ref(null)
 const fileInput = ref(null)
+const fileInput1 = ref(null)
 const avatarPreview = ref(null)
+const schoolLogoPreview = ref(null)
 const toast = useToast()
 const config = useRuntimeConfig();
 
-
-const time_zones = ref([
-  { name: '(GMT +03:00) Europe/Moscow', code: 'Europe/Moscow' },
-  { name: 'Rome', code: 'RM' },
-  { name: 'London', code: 'LDN' },
-  { name: 'Istanbul', code: 'IST' },
-  { name: 'Paris', code: 'PRS' }
-]);
+const { text, copy, copied} = useClipboard()
 
 const user_data = ref({
   email: user.value.email,
   phone: user.value.phone || null,
   full_name: user.value.full_name || null,
+  is_school: user.value.is_school || null,
   time_zone: { "name": "(GMT +03:00) Europe/Moscow", "code": "Europe/Moscow" },
   password: '',
   password1: '',
@@ -51,6 +48,20 @@ const onFileSelected = (event) => {
   }
   reader.readAsDataURL(file)
   user_data.value.avatar = selectedFile.value
+
+}
+const onSchoolLogoPreviewSelected = (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+  selectedLogoFile.value = file
+
+  // Предпросмотр
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    schoolLogoPreview.value = e.target.result
+  }
+  reader.readAsDataURL(file)
+  user_data.value.logo = selectedLogoFile.value
 
 }
 
@@ -87,6 +98,7 @@ const { send, pending, errors } = useForm({
       <Button
           label="Выбрать файл"
           icon="pi pi-image"
+          size="small"
           @click="fileInput?.click()"
           />
 
@@ -126,15 +138,43 @@ const { send, pending, errors } = useForm({
     <TypingText28 text="Аккаунт" class="mb-6"/>
     <div class="space-y-3">
       <TypingText18 :text="`Тип аккаунта: ${user.is_school ? 'Школа' : 'Ученик'}`" />
-      <TypingText18 v-if="user.is_school" :text="`Ссылка входа: ${config.public.apiUrl}/auth/${user.school_slug}`" />
+      <template v-if="user.is_school">
+        <div class="flex items-center gap-10 mb-6">
+          <img class="w-[137px] h-auto object-contain" :src="schoolLogoPreview || user?.school?.image"/>
 
-      <div class="flex justify-between">
+          <Button
+              label="Выбрать логотип школы"
+              icon="pi pi-image"
+              size="small"
+              @click="fileInput1?.click()"
+          />
+
+          <input
+              type="file"
+              ref="fileInput1"
+              accept="image/*"
+              @change="onSchoolLogoPreviewSelected"
+              class="hidden"
+          />
+
+
+        </div>
+        <div class="flex flex-wrap items-center justify-between">
+          <TypingText18  :text="`Ссылка входа: ${config.public.apiUrl}/login/${user.school.slug}`" />
+          <Button size="small" severity="secondary" @click="copy(`${config.public.apiUrl}/login/${user.school.slug}`)" outlined
+                  :label="copied ? 'Скопировано' : 'Скопировать'"/>
+        </div>
+      </template>
+
+
+
+      <div class="flex flex-wrap justify-between">
         <div class="space-y-3">
           <TypingText18 :text="`Дата окончания подписки: ${new Date(user.subscription_expire).toLocaleDateString()}`" />
         <TypingText18 :text="`Число одновременных устройств: ${user.max_logins}`" />
       </div>
         <nuxt-link to="/tariff">
-          <Button severity="secondary" outlined label="Продлить"/>
+          <Button size="small" severity="secondary" outlined label="Продлить"/>
         </nuxt-link>
 
       </div>
