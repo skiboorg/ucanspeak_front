@@ -1,4 +1,10 @@
 <script setup lang="ts">
+
+definePageMeta({
+  guest: true,
+  layout: 'auth'
+})
+
 const init_form = useRoute().query.form
 
 

@@ -4,7 +4,7 @@ import { useToast } from 'primevue/usetoast';
 const toast = useToast()
 const {$api} = useNuxtApp()
 const loading = ref(false)
-
+defineProps(['school_auth'])
 const form_data = ref({
   login:'',
   password:'',
@@ -39,8 +39,10 @@ const login = async () => {
 <template>
   <CardBase padding="none" extra-class="w-full px-3 lg:px-[240px]">
   <div class="flex flex-col items-center justify-center py-4 md:py-10 md:p-[60px] w-full">
+    <BlockLogo class="mb-4" v-if="school_auth"/>
     <div class="space-y-3 w-full mb-8">
-      <TypingText28 text="Авторизация"/>
+      <TypingText28 v-if="!school_auth" text="Авторизация"/>
+
       <UIInput fluid
                placeholder="Введите адрес почты или телефон"
                label="Email/Логин"
@@ -58,7 +60,7 @@ const login = async () => {
             @click="login"
             :loading="loading"
             label="Войти" />
-    <p>
+    <p v-if="!school_auth">
       У вас нет аккаунта?
       <UILink label="Зарегистрируйтесь"
               link="#"

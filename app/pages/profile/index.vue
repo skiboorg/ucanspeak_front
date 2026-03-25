@@ -8,6 +8,7 @@ const selectedFile = ref(null)
 const fileInput = ref(null)
 const avatarPreview = ref(null)
 const toast = useToast()
+const config = useRuntimeConfig();
 
 
 const time_zones = ref([
@@ -125,6 +126,7 @@ const { send, pending, errors } = useForm({
     <TypingText28 text="Аккаунт" class="mb-6"/>
     <div class="space-y-3">
       <TypingText18 :text="`Тип аккаунта: ${user.is_school ? 'Школа' : 'Ученик'}`" />
+      <TypingText18 v-if="user.is_school" :text="`Ссылка входа: ${config.public.apiUrl}/auth/${user.school_slug}`" />
 
       <div class="flex justify-between">
         <div class="space-y-3">

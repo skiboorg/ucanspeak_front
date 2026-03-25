@@ -234,23 +234,23 @@ const close = () => {
       </video>
 
       <p v-if="isFullscreen" class="bg-black/40 text-[#CACACA] absolute left-2 top-2 py-1 px-2 rounded-lg font-medium">{{data.video_number}}</p>
-      <transition name="fade">
-        <div
-            v-if="currentWatermark"
-            :class="isFullscreen ? 'bottom-20 right-5' : 'top-2 left-1/2 -translate-x-1/2'"
-            class="absolute   z-40
-           bg-black/30 px-4 py-2 rounded-xl text-center max-w-[90%]"
-        >
-          <p
-              v-for="(line, i) in currentWatermark.text.split(/\r?\n/)"
-              :key="i"
-              class="text-white/30 font-semibold"
-              :class="isFullscreen ? 'text-lg' : 'text-xs'"
-          >
-            {{ line }}
-          </p>
-        </div>
-      </transition>
+<!--      <transition name="fade">-->
+<!--        <div-->
+<!--            v-if="currentWatermark"-->
+<!--            :class="isFullscreen ? 'bottom-20 right-5' : 'top-2 left-1/2 -translate-x-1/2'"-->
+<!--            class="absolute   z-40-->
+<!--           bg-black/30 px-4 py-2 rounded-xl text-center max-w-[90%]"-->
+<!--        >-->
+<!--          <p-->
+<!--              v-for="(line, i) in currentWatermark.text.split(/\r?\n/)"-->
+<!--              :key="i"-->
+<!--              class="text-white/30 font-semibold"-->
+<!--              :class="isFullscreen ? 'text-lg' : 'text-xs'"-->
+<!--          >-->
+<!--            {{ line }}-->
+<!--          </p>-->
+<!--        </div>-->
+<!--      </transition>-->
       <!-- FULLSCREEN BUTTON -->
 
       <button

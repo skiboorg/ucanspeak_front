@@ -9,6 +9,10 @@ export function createSchoolRepository(appFetch: typeof $fetch) {
         retrieve(id: string) {
             return appFetch(`/api/user/school-pupils/${id}/`)
         },
+        logo(slug: string) {
+            return appFetch(`/api/user/school?slug=${slug}`)
+        },
+
 
         // Создать нового ученика
         create(body: object) {
@@ -32,5 +36,6 @@ export function createSchoolRepository(appFetch: typeof $fetch) {
                 method: 'DELETE'
             })
         },
+
     }
 }
