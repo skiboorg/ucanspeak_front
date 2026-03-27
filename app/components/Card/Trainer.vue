@@ -28,7 +28,7 @@ const {user} = storeToRefs(authStore)
     <div class="block lg:hidden  text-white left-3 top-3 rounded-lg px-3 py-4 bg-[#9A519F]" >
       <p class="font-medium  text-[16px]">Разговорный тренажер</p>
     </div>
-    <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="flex items-center gap-4 p-3 bg-white border border-[#18181b]/10 rounded-[20px]">
+    <NuxtLink v-for="course in trainer"  :to="`/courses/trainer/${course.slug}`" class="flex items-center gap-4 p-[10px] bg-white border border-[#18181b]/10 rounded-[20px]">
 <!--      <div class="shrink-0 w-16 h-16 flex items-center justify-center rounded-[10px]  border border-[18181b]/[0.5]"> </div>-->
         <img :src="course.icon" alt="" class="">
 

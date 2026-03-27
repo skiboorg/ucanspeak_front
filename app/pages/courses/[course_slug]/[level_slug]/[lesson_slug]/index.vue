@@ -364,7 +364,8 @@ watch(is_mobile, (newVal, oldVal) => {
             <CardBase padding="sm" v-for="(block,index) in module?.blocks" :key="block.id">
               <!--              <p class="text-[16px] lg:text-lg font-medium mb-2">{{module.index}}.{{index+1}}</p>-->
 
-              <div class="text-[16px] lg:text-lg font-medium mb-3 leading-[100%]" v-html="block.caption === '  None' ? '' : block.caption"></div>
+              <div class="text-[16px] lg:text-lg font-medium mb-3 !leading-[110%] text-[#202021]"
+                   v-html="block.caption === '  None' ? '' : block.caption"></div>
 
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length === 0" class="mt-3 ">
                 <img @click="videoSelected(block.videos[0].file)" class="cursor-pointer w-[120px] h-[90px] object-contain" src="~assets/images/tutorial_video.png">
@@ -373,7 +374,7 @@ watch(is_mobile, (newVal, oldVal) => {
               <div v-if="block.videos.length > 0 && block.videos[0].phrases.length > 0" class="mt-3">
                 <BlockVideoWithPreview :showPreview = "false" :data="block.videos[0]"/>
               </div>
-              <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] leading-[100%] lg:text-[16px]"></div>
+              <div v-if="block.type3_content" v-html="block.type3_content" class="block-w-table mt-3 text-[14px] !leading-[110%] lg:text-[16px] text-[#202021]"></div>
               <div v-if="block.items.length>0" class="space-y-1">
                 <CardVoiceFile
                     v-for="item in block.items"

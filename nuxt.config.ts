@@ -6,6 +6,17 @@ export default defineNuxtConfig({
   future: {
     compatibilityVersion: 4
   },
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/png',
+          href: '/fav.png'
+        }
+      ]
+    }
+  },
 
   modules: [
     '@pinia/nuxt',

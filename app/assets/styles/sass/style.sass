@@ -47,3 +47,21 @@ section
     width: 100%
     @media (max-width: 900px)
       width: 700px !important
+
+ul
+  padding-left: 20px !important
+
+  li
+    position: relative
+    margin-bottom: 12px
+    &:last-child
+      margin-bottom: 0
+    &::before
+      position: absolute
+      content: ""
+      width: 8px !important
+      height: 8px !important
+      background: #3333E8
+      border-radius: 100% !important
+      left: -20px !important
+      top: 6px
