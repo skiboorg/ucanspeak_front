@@ -79,6 +79,9 @@ const { send, pending, errors } = useForm({
     await $api.auth.me()
   }
 })
+useSeoMeta({
+  title: `Профиль `,
+})
 </script>
 
 <template>
@@ -134,7 +137,8 @@ const { send, pending, errors } = useForm({
 
 
 </CardBase>
-  <CardBase padding="md">
+
+  <CardBase v-if="!user.is_pupil" padding="md">
     <TypingText28 text="Аккаунт" class="mb-6"/>
     <div class="space-y-3">
       <TypingText18 :text="`Тип аккаунта: ${user.is_school ? 'Школа' : 'Ученик'}`" />

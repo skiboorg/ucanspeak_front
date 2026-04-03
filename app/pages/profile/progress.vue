@@ -1,6 +1,9 @@
 <script setup lang="ts">
 const {$api} = useNuxtApp()
 const {data:courses,pending} = useHttpRequest(await useAsyncData(()=>$api.lessons.courses()))
+useSeoMeta({
+  title: `Прогресс `,
+})
 </script>
 
 <template>

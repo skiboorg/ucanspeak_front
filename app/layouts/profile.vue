@@ -5,8 +5,14 @@ const {user} = storeToRefs(authStore)
 const links = [
   {title:'Профиль', to:'/profile'},
   {title:'Избранное', to:'/profile/favorite'},
-  {title:'Прогресс', to:'/profile/progress'},
+
 ]
+
+if (!user.value.is_school && !user.value.is_pupil) {
+  links.push(
+      {title:'Прогресс', to:'/profile/progress'},
+  )
+}
 
 if (user.value.is_school){
   links.push(
@@ -15,6 +21,8 @@ if (user.value.is_school){
 }
 const headerText = useState('header_text')
 headerText.value = 'Профиль'
+
+
 </script>
 
 <template>

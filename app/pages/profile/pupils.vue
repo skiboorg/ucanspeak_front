@@ -71,6 +71,7 @@ async function submitForm() {
   }
 }
 
+
 async function deletePupil() {
   try {
     await $api.school.destroy(selectedPupil.value.id)
@@ -82,7 +83,22 @@ async function deletePupil() {
   }
 }
 
+  async function logout(data) {
+  try{
+    loading.value = true
+    await $api.auth.logout_user(data.id)
+  }catch(err){
+
+  }finally {
+    loading.value = false
+  }
+
+  }
+
 await fetchPupils()
+useSeoMeta({
+  title: `Ученики `,
+})
 </script>
 
 <template>
@@ -104,6 +120,7 @@ await fetchPupils()
       <Column header="Действия" style="width: 120px">
         <template #body="{ data }">
           <div class="flex gap-2">
+            <Button icon="pi pi-sign-out" severity="warn" size="small" text @click="logout(data)" />
             <Button icon="pi pi-pencil" severity="secondary" size="small" text @click="openEditDialog(data)" />
             <Button icon="pi pi-trash" severity="danger" size="small" text @click="openDeleteDialog(data)" />
           </div>

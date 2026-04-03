@@ -41,6 +41,9 @@ const handleTrainerToggleFav = async (id) => {
   })
   await refresh_trainer_item_favorites()
 }
+useSeoMeta({
+  title: `Поиск `,
+})
 </script>
 
 <template>

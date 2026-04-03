@@ -26,6 +26,12 @@ export function createAuthRepository(appFetch: typeof $fetch){
             })
             window.location.href='/'
         },
+        async logout_user(user_id){
+            await appFetch('/api/user/logout',{
+                method:'post',
+                body:{user_id}
+            })
+        },
         async update(formData: FormData){
             const response = await appFetch<User>('/api/user/update', {
                 method: 'patch',
