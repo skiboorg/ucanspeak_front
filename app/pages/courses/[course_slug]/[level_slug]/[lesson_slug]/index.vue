@@ -248,7 +248,7 @@ watch(is_mobile, (newVal, oldVal) => {
     <div class="col-span-12 lg:col-span-3 ">
       <div class="sticky top-20 ">
 
-        <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 lg:mt-0 h-auto lg:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1">
+        <CardBase  v-if="showMenu" padding="sm" class="mb-4 mt-4 lg:mt-0 h-auto lg:h-[75vh] overflow-x-hidden overflow-y-auto space-y-1 overscroll-contain">
           <p
               v-for="(module, i) in lesson.modules"
               :key="i"
@@ -410,7 +410,7 @@ watch(is_mobile, (newVal, oldVal) => {
       </template>
     </div>
     <div class="hidden lg:block col-span-3   ">
-      <CardBase padding="sm" class="h-[75vh] sticky top-20 overflow-x-hidden overflow-y-auto">
+      <CardBase padding="sm" class="h-[75vh] sticky top-20 overflow-x-hidden overflow-y-auto overscroll-contain">
         <TypingText20 text="Словарь" class="mb-4"/>
         <div class="border border-[#D1D1E0] rounded-lg px-6 py-3 flex items-center justify-between mb-4 cursor-pointer"
              @click="dictionary_direction === 'ruEN' ? dictionary_direction = 'enRU' : dictionary_direction = 'ruEN'">
